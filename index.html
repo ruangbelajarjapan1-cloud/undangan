@@ -39,11 +39,11 @@
       font-size: 16px;
 
       /* Bright background (blue/orange/gold) */
-      background:
-        radial-gradient(900px 600px at 20% 10%, rgba(246,196,83,.42), transparent 60%),
-        radial-gradient(900px 600px at 80% 20%, rgba(255,138,0,.28), transparent 60%),
-        radial-gradient(1100px 700px at 50% 100%, rgba(26,86,255,.30), transparent 60%),
-        linear-gradient(120deg, rgba(26,86,255,.75), rgba(255,138,0,.45), rgba(246,196,83,.35));
+     background:
+  radial-gradient(900px 600px at 18% 12%, rgba(26,86,255,.55), transparent 60%),
+  radial-gradient(900px 600px at 82% 18%, rgba(255,138,0,.45), transparent 60%),
+  linear-gradient(120deg, rgba(26,86,255,.82), rgba(255,138,0,.55));
+
       background-size: 140% 140%;
       animation: bgShift 12s ease-in-out infinite alternate;
     }
@@ -260,14 +260,14 @@
     .btn:hover{ background: rgba(255,255,255,.16); }
     .btn:active{ transform: scale(.99); }
 
-    .btn.primary{
-      background: linear-gradient(90deg,
-        rgba(26,86,255,.80),
-        rgba(255,138,0,.62),
-        rgba(246,196,83,.55)
-      );
-      border-color: rgba(255,255,255,.34);
-    }
+   .btn.primary{
+  background: linear-gradient(90deg,
+    rgba(26,86,255,.90),
+    rgba(255,138,0,.78)
+  );
+  border-color: rgba(255,255,255,.34);
+}
+
     .btn.ok{
       background: rgba(52,211,153,.20);
       border-color: rgba(52,211,153,.38);
@@ -1399,14 +1399,15 @@ function padN(n, pad){
   return s.length >= pad ? s : "0".repeat(pad - s.length) + s;
 }
 
-function loadImage(url){
-  return new Promise((resolve)=>{
-    const img = new Image();
-    img.onload = ()=>resolve({ ok:true, url });
-    img.onerror = ()=>resolve({ ok:false, url });
-    img.src = url;
-  });
+async function loadImage(url){
+  try{
+    const res = await fetch(url, { method: "HEAD", cache: "no-cache" });
+    return { ok: res.ok, url };
+  }catch{
+    return { ok:false, url };
+  }
 }
+
 
 async function discoverGalleryImages(){
   if(CONFIG.autoGallery && CONFIG.autoGallery.enabled){
