@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#1a0bff" />
+  <meta name="theme-color" content="#1A56FF" />
   <title>RBM Japan • Graduation</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,41 +11,42 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
-   :root{
-  --blue:#1A56FF;
-  --orange:#FF8A00;
-  --gold:#F6C453;
-  --white:#FFFFFF;
+    :root{
+      /* Palette: Blue / White / Gold / Orange */
+      --blue:#1A56FF;
+      --orange:#FF8A00;
+      --gold:#F6C453;
+      --white:#FFFFFF;
 
-  --textInv:#FFFFFF;
-  --muted: rgba(255,255,255,.86);
+      --textInv:#FFFFFF;
+      --muted: rgba(255,255,255,.88);
 
-  --card: rgba(255,255,255,.18);
-  --card2: rgba(255,255,255,.22);
-  --line: rgba(255,255,255,.28);
-
-  --shadow: 0 22px 70px rgba(0,0,0,.30);
-  --r: 22px;
-  --tap: 46px;
-}
+      --shadow: 0 22px 70px rgba(0,0,0,.30);
+      --r: 22px;
+      --tap: 46px;
+    }
 
     *{ box-sizing:border-box; }
     html,body{ height:100%; }
-   body{
-  margin:0;
-  font-family:"Noto Sans","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  color: var(--textInv);
-  overflow-x:hidden;
+    body{
+      margin:0;
+      font-family:"Noto Sans","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color: var(--textInv);
+      overflow-x:hidden;
 
-  background:
-    radial-gradient(900px 600px at 20% 10%, rgba(246,196,83,.42), transparent 60%),
-    radial-gradient(900px 600px at 80% 20%, rgba(255,138,0,.28), transparent 60%),
-    radial-gradient(1100px 700px at 50% 100%, rgba(26,86,255,.30), transparent 60%),
-    linear-gradient(120deg, rgba(26,86,255,.75), rgba(255,138,0,.45), rgba(246,196,83,.35));
-  background-size: 140% 140%;
-  animation: bgShift 12s ease-in-out infinite alternate;
-}
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      font-size: 16px;
 
+      /* Bright background (blue/orange/gold) */
+      background:
+        radial-gradient(900px 600px at 20% 10%, rgba(246,196,83,.42), transparent 60%),
+        radial-gradient(900px 600px at 80% 20%, rgba(255,138,0,.28), transparent 60%),
+        radial-gradient(1100px 700px at 50% 100%, rgba(26,86,255,.30), transparent 60%),
+        linear-gradient(120deg, rgba(26,86,255,.75), rgba(255,138,0,.45), rgba(246,196,83,.35));
+      background-size: 140% 140%;
+      animation: bgShift 12s ease-in-out infinite alternate;
+    }
     @keyframes bgShift{
       0%{ background-position: 0% 30%; }
       100%{ background-position: 100% 70%; }
@@ -58,7 +59,7 @@
       padding: 16px 14px calc(92px + env(safe-area-inset-bottom));
     }
 
-    /* Floating bubbles (lightweight) */
+    /* Floating bubbles */
     .bubbles{
       position: fixed;
       inset: 0;
@@ -71,23 +72,22 @@
       width: 22vmin;
       height: 22vmin;
       border-radius: 999px;
-      filter: blur(0.2px);
-      opacity:.35;
+      opacity:.30;
       background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.55), rgba(255,255,255,.04));
       animation: floatUp 12s linear infinite;
-      border: 1px solid rgba(255,255,255,.20);
+      border: 1px solid rgba(255,255,255,.18);
     }
     @keyframes floatUp{
       0%{ transform: translate3d(0, 110vh, 0) scale(.8); }
       100%{ transform: translate3d(10vw, -30vh, 0) scale(1.15); }
     }
 
-    /* Top minimal bar */
+    /* Top bar */
     .topbar{
       position: sticky; top: 0; z-index: 20;
       backdrop-filter: blur(12px);
-      background: rgba(0,0,0,.18);
-      border-bottom: 1px solid rgba(255,255,255,.16);
+      background: rgba(0,0,0,.35);
+      border-bottom: 1px solid rgba(255,255,255,.18);
     }
     .topbar-inner{
       max-width: 980px; margin:0 auto;
@@ -108,17 +108,15 @@
     }
     .logo img{ width:100%; height:100%; object-fit:cover; display:block; }
     .brand h1{ margin:0; font-size:14px; font-weight:900; line-height:1.1; }
-    .brand p{ margin:2px 0 0; font-size:12px; color: rgba(255,255,255,.80); }
+    .brand p{ margin:2px 0 0; font-size:12px; color: rgba(255,255,255,.88); }
 
-    .right{
-      display:flex; align-items:center; gap:8px;
-    }
+    .right{ display:flex; align-items:center; gap:8px; }
     .chip{
       height: 34px;
       padding: 0 10px;
       border-radius: 999px;
       border: 1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
       display:inline-flex; align-items:center; justify-content:center;
       font-size: 12px;
       cursor: pointer;
@@ -127,14 +125,14 @@
     }
     .chip:active{ transform: scale(.98); }
     .chip.active{
-      background: rgba(255,255,255,.24);
-      border-color: rgba(255,255,255,.35);
+      background: rgba(255,255,255,.18);
+      border-color: rgba(255,255,255,.30);
     }
     .iconBtn{
       width: 38px; height: 38px;
       border-radius: 14px;
       border: 1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
       display:grid; place-items:center;
       cursor:pointer; user-select:none;
       transition: transform .12s ease, background .2s ease;
@@ -142,7 +140,7 @@
     .iconBtn:active{ transform: scale(.98); }
     .iconBtn:hover{ background: rgba(255,255,255,.16); }
 
-    /* Cover full-screen like LinkUndangan */
+    /* Cover full-screen */
     .coverWrap{
       position: fixed;
       inset: 0;
@@ -166,7 +164,7 @@
       overflow:hidden;
       border: 1px solid rgba(255,255,255,.22);
       box-shadow: var(--shadow);
-      background: rgba(255,255,255,.10);
+      background: rgba(0,0,0,.24);
       position:relative;
       transform: translateY(8px);
       animation: popIn .7s ease both;
@@ -188,7 +186,7 @@
       opacity:0;
       transition: opacity 1.1s ease;
       animation: kenburns 16s ease-in-out infinite;
-      filter: saturate(1.15) contrast(1.05);
+      filter: saturate(1.10) contrast(1.06);
     }
     .slide.active{ opacity:1; }
     @keyframes kenburns{
@@ -207,24 +205,28 @@
     }
     .badgeRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
     .badge{
-  border: 1px solid rgba(246,196,83,.45);
-  background: rgba(255,255,255,.14);
-}
-
-    .toLine{ margin-top: 10px; font-size: 12px; color: rgba(255,255,255,.85); }
+      font-size: 12px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(246,196,83,.45);
+      background: rgba(0,0,0,.22);
+    }
+    .toLine{ margin-top: 10px; font-size: 12px; color: rgba(255,255,255,.88); }
     .coverTitle{
       margin: 6px 0 8px;
       font-size: clamp(22px, 4.5vw, 40px);
       line-height: 1.12;
       font-weight: 950;
       letter-spacing:.2px;
+      text-shadow: 0 2px 18px rgba(0,0,0,.55);
     }
     .coverDesc{
       margin: 0;
-      color: rgba(255,255,255,.88);
+      color: rgba(255,255,255,.90);
       font-size: 14px;
       line-height: 1.7;
       max-width: 72ch;
+      text-shadow: 0 2px 14px rgba(0,0,0,.45);
     }
     .btnRow{
       margin-top: 14px;
@@ -240,7 +242,7 @@
       padding: 0 14px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.22);
-      background: rgba(255,255,255,.12);
+      background: rgba(0,0,0,.22);
       color: var(--textInv);
       font-weight: 900;
       font-size: 13px;
@@ -253,19 +255,19 @@
       position:relative;
       overflow:hidden;
       transition: transform .12s ease, background .2s ease;
+      text-shadow: 0 2px 12px rgba(0,0,0,.45);
     }
     .btn:hover{ background: rgba(255,255,255,.16); }
     .btn:active{ transform: scale(.99); }
 
-   .btn.primary{
-  background: linear-gradient(90deg,
-    rgba(26,86,255,.78),
-    rgba(255,138,0,.62),
-    rgba(246,196,83,.55)
-  );
-  border-color: rgba(255,255,255,.34);
-}
-
+    .btn.primary{
+      background: linear-gradient(90deg,
+        rgba(26,86,255,.80),
+        rgba(255,138,0,.62),
+        rgba(246,196,83,.55)
+      );
+      border-color: rgba(255,255,255,.34);
+    }
     .btn.ok{
       background: rgba(52,211,153,.20);
       border-color: rgba(52,211,153,.38);
@@ -291,15 +293,22 @@
     .section{ margin-top: 14px; position:relative; z-index: 5; }
     .card{
       border-radius: var(--r);
-      border: 1px solid rgba(255,255,255,.20);
-      background: rgba(255,255,255,.10);
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(8, 10, 18, .46); /* lebih solid agar teks jelas */
       box-shadow: 0 16px 50px rgba(0,0,0,.22);
       overflow:hidden;
     }
     .cardBody{ padding: 16px; }
-    .card h2{ margin:0 0 10px; font-size: 15px; font-weight: 950; letter-spacing:.2px; }
-    .mutedText{ color: rgba(255,255,255,.82); font-size: 12px; line-height: 1.6; }
-    .hr{ height:1px; background: rgba(255,255,255,.18); margin: 12px 0; }
+    .card h2{
+      margin:0 0 10px;
+      font-size: 15px;
+      font-weight: 950;
+      letter-spacing:.2px;
+      color: rgba(255,255,255,.98);
+      text-shadow: 0 2px 18px rgba(0,0,0,.55);
+    }
+    .mutedText{ color: rgba(255,255,255,.88); font-size: 12px; line-height: 1.6; }
+    .hr{ height:1px; background: rgba(255,255,255,.22); margin: 12px 0; }
 
     .grid{
       display:grid;
@@ -316,9 +325,12 @@
       gap: 8px 12px;
       font-size: 13px;
       align-items:start;
+      color: rgba(255,255,255,.97);
+      text-shadow: 0 2px 14px rgba(0,0,0,.45);
     }
     @media (max-width: 520px){
-      .kv{ grid-template-columns: 1fr; }
+      .kv{ grid-template-columns: 1fr; font-size: 14px; }
+      .mutedText{ font-size: 13px; }
     }
 
     /* Countdown */
@@ -333,10 +345,14 @@
       padding: 10px 8px;
       border-radius: 18px;
       border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
+      background: rgba(8,10,18,.40);
     }
-    .cdNum{ font-size: 20px; font-weight: 950; }
-    .cdLbl{ font-size: 11px; color: rgba(255,255,255,.82); margin-top:4px; }
+    .cdNum{
+      font-size: 20px;
+      font-weight: 950;
+      text-shadow: 0 2px 14px rgba(0,0,0,.35);
+    }
+    .cdLbl{ font-size: 11px; color: rgba(255,255,255,.88); margin-top:4px; }
 
     /* Hadith */
     .arabic{
@@ -346,12 +362,19 @@
       text-align:right;
       padding: 10px 12px;
       border-radius: 18px;
-      background: rgba(255,255,255,.10);
-      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(0,0,0,.28);
+      border: 1px solid rgba(255,255,255,.22);
       margin: 8px 0 10px;
+      color: rgba(255,255,255,.98);
+      text-shadow: 0 2px 14px rgba(0,0,0,.35);
     }
-    .quote{ font-size:13px; line-height:1.7; color: rgba(255,255,255,.92); }
-    .source{ font-size:12px; color: rgba(255,255,255,.78); margin-top:10px; }
+    .quote{
+      font-size:13px;
+      line-height:1.7;
+      color: rgba(255,255,255,.95);
+      text-shadow: 0 2px 14px rgba(0,0,0,.45);
+    }
+    .source{ font-size:12px; color: rgba(255,255,255,.88); margin-top:10px; }
 
     /* Classes */
     .classGrid{
@@ -361,40 +384,100 @@
     }
     @media (max-width: 900px){ .classGrid{ grid-template-columns: repeat(2,1fr); } }
     @media (max-width: 520px){ .classGrid{ grid-template-columns: 1fr; } }
+
     .classCard{
       border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
+      background: rgba(8,10,18,.40);
       border-radius: 18px;
       padding: 12px;
     }
-    .classCard b{ display:block; font-weight: 950; }
-    .classCard .small{ font-size:12px; color: rgba(255,255,255,.82); margin-top:6px; line-height:1.6; }
-
-    /* Gallery */
-    .gallery{
-      display:grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 10px;
-    }
-    @media (max-width: 900px){ .gallery{ grid-template-columns: repeat(3,1fr); } }
-    @media (max-width: 620px){ .gallery{ grid-template-columns: repeat(2,1fr); } }
-    .gItem{
-      border-radius: 18px;
-      overflow:hidden;
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
-      aspect-ratio: 1 / 1;
-      cursor:pointer;
-      position:relative;
-    }
-    .gItem img{
-      width:100%; height:100%;
-      object-fit:cover;
+    .classCard b{
       display:block;
-      transform: scale(1.03);
-      transition: transform .35s ease;
+      font-weight: 950;
+      text-shadow: 0 2px 14px rgba(0,0,0,.45);
     }
-    .gItem:active img{ transform: scale(1.08); }
+    .classCard .small{ font-size:12px; color: rgba(255,255,255,.88); margin-top:6px; line-height:1.6; }
+
+    /* ===== Gallery Carousel ===== */
+    .carousel{
+      position: relative;
+      overflow: hidden;
+      border-radius: 22px;
+      border: 1px solid rgba(255,255,255,.18);
+      background: rgba(8,10,18,.34);
+    }
+    .carouselTrack{
+      display: flex;
+      transition: transform .55s cubic-bezier(.2,.9,.2,1);
+      will-change: transform;
+    }
+    .carouselItem{
+      min-width: 100%;
+      aspect-ratio: 16 / 10;
+      position: relative;
+      user-select: none;
+    }
+    @media (max-width: 520px){
+      .carouselItem{ aspect-ratio: 16 / 12; }
+    }
+    .carouselItem img{
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transform: scale(1.02);
+    }
+    .carouselItem::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(0,0,0,.06), rgba(0,0,0,.30));
+      pointer-events:none;
+    }
+    .carouselCtrl{
+      position:absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(0,0,0,.28);
+      backdrop-filter: blur(10px);
+      color: rgba(255,255,255,.95);
+      display:grid;
+      place-items:center;
+      cursor:pointer;
+      user-select:none;
+    }
+    .carouselCtrl:active{ transform: translateY(-50%) scale(.98); }
+    .carouselCtrl.prev{ left: 10px; }
+    .carouselCtrl.next{ right: 10px; }
+
+    .carouselDots{
+      position:absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 10px;
+      display:flex;
+      gap: 6px;
+      z-index: 3;
+      padding: 6px 8px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.22);
+      border: 1px solid rgba(255,255,255,.18);
+      backdrop-filter: blur(10px);
+    }
+    .dot{
+      width: 7px; height: 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.45);
+      cursor:pointer;
+    }
+    .dot.active{ background: rgba(255,255,255,.92); }
+
+    /* Lightbox */
     .lightbox{
       position:fixed; inset:0; z-index: 70;
       background: rgba(0,0,0,.78);
@@ -414,14 +497,14 @@
 
     /* Forms */
     form{ display:grid; gap:10px; }
-    label{ font-size:12px; color: rgba(255,255,255,.90); }
+    label{ font-size:12px; color: rgba(255,255,255,.95); text-shadow: 0 2px 14px rgba(0,0,0,.45); }
     input, select, textarea{
       width:100%;
       min-height: var(--tap);
       padding: 10px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.20);
-      background: rgba(0,0,0,.18);
+      background: rgba(8,10,18,.40);
       color: var(--textInv);
       outline:none;
     }
@@ -436,23 +519,24 @@
       padding: 10px 12px;
       border-radius: 16px;
       border: 1px solid rgba(255,255,255,.20);
-      background: rgba(255,255,255,.10);
+      background: rgba(8,10,18,.40);
       cursor:pointer;
       user-select:none;
       font-size: 13px;
+      text-shadow: 0 2px 14px rgba(0,0,0,.45);
     }
     .radio input{ width:auto; }
 
     .gbList{ display:grid; gap:10px; }
     .gbItem{
       border:1px solid rgba(255,255,255,.18);
-      background: rgba(255,255,255,.10);
+      background: rgba(8,10,18,.40);
       border-radius: 18px;
       padding: 12px;
     }
-    .gbItem .meta{ font-size:12px; color: rgba(255,255,255,.78); margin-top:6px; }
+    .gbItem .meta{ font-size:12px; color: rgba(255,255,255,.88); margin-top:6px; }
 
-    /* Reveal animation per section */
+    /* Reveal animation */
     .reveal{
       opacity: 0;
       transform: translateY(14px) scale(.995);
@@ -463,7 +547,7 @@
       transform: translateY(0) scale(1);
     }
 
-    /* Bottom nav (mobile friendly) */
+    /* Bottom nav */
     .bottomNav{
       position: fixed;
       left: 50%;
@@ -472,7 +556,7 @@
       z-index: 25;
       width: min(520px, calc(100vw - 18px));
       border-radius: 22px;
-      background: rgba(0,0,0,.22);
+      background: rgba(0,0,0,.32);
       border: 1px solid rgba(255,255,255,.20);
       backdrop-filter: blur(12px);
       box-shadow: 0 18px 60px rgba(0,0,0,.28);
@@ -491,7 +575,7 @@
       justify-content:center;
       gap: 4px;
       font-size: 10px;
-      color: rgba(255,255,255,.88);
+      color: rgba(255,255,255,.92);
       text-decoration:none;
       border: 1px solid transparent;
     }
@@ -507,7 +591,7 @@
       right: 14px;
       bottom: calc(90px + env(safe-area-inset-bottom));
       z-index: 90;
-      background: rgba(0,0,0,.35);
+      background: rgba(0,0,0,.40);
       border: 1px solid rgba(255,255,255,.20);
       border-radius: 18px;
       padding: 12px 12px;
@@ -515,11 +599,12 @@
       max-width: 420px;
       display:none;
       backdrop-filter: blur(12px);
-      color: rgba(255,255,255,.95);
+      color: rgba(255,255,255,.98);
+      text-shadow: 0 2px 14px rgba(0,0,0,.45);
     }
     .toast.show{ display:block; }
 
-    /* Confetti canvas */
+    /* Confetti */
     #confetti{
       position: fixed;
       inset: 0;
@@ -529,83 +614,18 @@
     }
     body.opened #confetti{ display:block; }
 
-    /* Accessibility: reduce motion */
+    /* Reduce motion */
     @media (prefers-reduced-motion: reduce){
       body{ animation:none; }
       .slide{ animation:none; }
       .reveal{ transition:none; }
       .bubble{ animation:none; }
+      .carouselTrack{ transition:none; }
     }
-    /* ===== FIX: Readability / Kontras teks ===== */
-body{
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
-  font-size: 16px; /* pastikan base cukup besar di mobile */
-}
-
-/* Topbar lebih kontras */
-.topbar{
-  background: rgba(0,0,0,.35) !important;
-  border-bottom: 1px solid rgba(255,255,255,.18) !important;
-}
-
-/* Semua card dibuat lebih gelap agar teks jelas */
-.card,
-.classCard,
-.cdBox,
-.badge,
-.radio,
-.gbItem,
-input, select, textarea{
-  background: rgba(10, 12, 20, .38) !important;
-  border-color: rgba(255,255,255,.22) !important;
-}
-
-/* Teks umum di dalam card */
-.cardBody,
-.kv,
-.quote,
-label{
-  color: rgba(255,255,255,.96) !important;
-}
-
-/* Muted text jangan terlalu pucat */
-.mutedText,
-.source,
-.cdLbl,
-.classCard .small,
-.toLine,
-.coverDesc{
-  color: rgba(255,255,255,.86) !important;
-}
-
-/* Headings & judul card dibuat “nendang” */
-.card h2,
-.classCard b,
-.coverTitle{
-  color: rgba(255,255,255,.98) !important;
-  text-shadow: 0 2px 14px rgba(0,0,0,.40);
-}
-
-/* Angka countdown lebih tebal */
-.cdNum{
-  font-weight: 950 !important;
-  text-shadow: 0 2px 14px rgba(0,0,0,.35);
-}
-
-/* Arabic box lebih jelas */
-.arabic{
-  background: rgba(0,0,0,.28) !important;
-  border-color: rgba(255,255,255,.22) !important;
-  color: rgba(255,255,255,.98) !important;
-  text-shadow: 0 2px 14px rgba(0,0,0,.35);
-}
-
   </style>
 </head>
 
 <body>
-  <!-- Decorative bubbles -->
   <div class="bubbles" aria-hidden="true">
     <div class="bubble" style="left:5%; animation-delay:0s; width:18vmin; height:18vmin;"></div>
     <div class="bubble" style="left:30%; animation-delay:2s; width:22vmin; height:22vmin;"></div>
@@ -632,7 +652,7 @@ label{
         <div class="toLine" id="toLine" data-i18n="to_default">Kepada Yth: Tamu Undangan</div>
         <div class="coverTitle" data-i18n="cover_title">Undangan Kelulusan Siswa RBM Japan</div>
         <p class="coverDesc" data-i18n="cover_desc">
-          Mari rayakan pencapaian para siswa. Klik tombol di bawah untuk membuka undangan dan mengisi RSVP.
+          Klik tombol di bawah untuk membuka undangan dan mengisi daftar kehadiran/RSVP.
         </p>
 
         <div class="btnRow">
@@ -650,7 +670,7 @@ label{
     <div class="topbar-inner">
       <div class="brand">
         <div class="logo">
-          <!-- TEMPAT LOGO: taruh di assets/logo.png -->
+          <!-- LOGO: undangan/assets/logo.png -->
           <img src="./assets/logo.png" alt="RBM Japan Logo" />
         </div>
         <div>
@@ -729,17 +749,27 @@ label{
       </div>
     </section>
 
+    <!-- Gallery Carousel -->
     <section class="section card reveal" id="gallery">
       <div class="cardBody">
         <h2 data-i18n="sec_gallery">Galeri</h2>
         <div class="mutedText" data-i18n="gallery_desc">
-          Taruh foto di folder assets/photos/ lalu sesuaikan daftar nama file di CONFIG.galleryImages.
+          Taruh foto di folder assets/photos/. Otomatis terdeteksi jika namanya berurutan (01.jpg, 02.jpg, 03.jpg, dst).
         </div>
         <div class="hr"></div>
-        <div class="gallery" id="galleryGrid"></div>
+
+        <div class="carousel" id="galleryCarousel">
+          <div class="carouselTrack" id="carouselTrack"></div>
+
+          <button class="carouselCtrl prev" id="carPrev" type="button" aria-label="prev">‹</button>
+          <button class="carouselCtrl next" id="carNext" type="button" aria-label="next">›</button>
+
+          <div class="carouselDots" id="carouselDots"></div>
+        </div>
       </div>
     </section>
 
+    <!-- Lightbox -->
     <div class="lightbox" id="lightbox" aria-hidden="true">
       <img id="lightboxImg" alt="preview" />
     </div>
@@ -841,7 +871,7 @@ label{
     </section>
   </div>
 
-  <!-- Bottom navigation (mobile) -->
+  <!-- Bottom navigation -->
   <nav class="bottomNav" aria-label="Navigation">
     <a class="navItem active" href="#detail" data-nav="detail">
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h16M4 18h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -867,7 +897,7 @@ label{
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <!-- Musik (opsional): assets/bgm.mp3 -->
+  <!-- Music (optional): undangan/assets/bgm.mp3 -->
   <audio id="bgm" loop preload="none">
     <source src="./assets/bgm.mp3" type="audio/mpeg" />
   </audio>
@@ -885,19 +915,30 @@ const CONFIG = {
   mapQuery: "十日市場地区センター",
   ENDPOINT: "https://script.google.com/macros/s/AKfycbwGA8_bsewf_rmdF4DbRQoT0pRR2dQ03DUHRwZIJP0K847smDncQWiNQzur9Cl34eKu/exec", // Apps Script Web App URL (opsional)
 
-  // TEMPAT FOTO COVER (animasi slideshow)
+  // Cover slideshow (manual)
   coverImages: [
     "./assets/photos/01.jpg",
     "./assets/photos/02.jpg",
     "./assets/photos/03.jpg"
   ],
-  // TEMPAT FOTO GALERI
+
+  // Gallery (auto-detect 01..50)
+  autoGallery: {
+    enabled: true,
+    prefix: "./assets/photos/",
+    start: 1,
+    end: 50,
+    pad: 2,
+    ext: "jpg"
+  },
+
+  // fallback manual (kalau autoGallery dimatikan / tidak menemukan foto)
   galleryImages: [
     "./assets/photos/01.jpg",
     "./assets/photos/02.jpg",
-    "./assets/photos/03.jpg",
-    "./assets/photos/04.jpg"
+    "./assets/photos/03.jpg"
   ],
+
   classes: [
     { name: "Kelas Qur’an Darat", desc: "Program pembinaan tilawah dan pemahaman dasar." },
     { name: "Kelas Iqro’ Darat", desc: "Penguatan baca tulis Al-Qur’an (tahap Iqro’)." },
@@ -938,7 +979,7 @@ const I18N = {
     classes_desc:"Berikut daftar kelas (bisa ditambah kapan saja).",
 
     sec_gallery:"Galeri",
-    gallery_desc:"Taruh foto di folder assets/photos/ lalu sesuaikan daftar nama file di CONFIG.galleryImages.",
+    gallery_desc:"Taruh foto di folder assets/photos/. Otomatis terdeteksi jika namanya berurutan (01.jpg, 02.jpg, 03.jpg, dst).",
 
     sec_guestbook:"Buku Tamu",
     guestbook_desc:"Isi ucapan singkat. Jika endpoint Google Sheet diaktifkan, ucapan bisa ditampilkan publik (JSONP).",
@@ -993,7 +1034,7 @@ const I18N = {
     classes_desc:"Class list (you can add more later).",
 
     sec_gallery:"Gallery",
-    gallery_desc:"Put photos in assets/photos/ and update CONFIG.galleryImages.",
+    gallery_desc:"Put photos in assets/photos/. Auto-detected if numbered (01.jpg, 02.jpg, 03.jpg, ...).",
 
     sec_guestbook:"Guestbook",
     guestbook_desc:"Leave a message. If Sheets endpoint is enabled, messages can be shown publicly (JSONP).",
@@ -1048,7 +1089,7 @@ const I18N = {
     classes_desc:"クラス一覧（追加可能）",
 
     sec_gallery:"ギャラリー",
-    gallery_desc:"assets/photos/ に写真を入れ、CONFIG.galleryImages を更新してください。",
+    gallery_desc:"assets/photos/ に写真を入れてください。番号形式（01.jpg, 02.jpg...）なら自動検出します。",
 
     sec_guestbook:"ゲストブック",
     guestbook_desc:"メッセージをご記入ください。Sheets連携があれば公開表示も可能（JSONP）。",
@@ -1120,31 +1161,38 @@ function safeText(s){
   return String(s || "").replace(/[<>&"]/g, c => ({ "<":"&lt;", ">":"&gt;", "&":"&amp;", "\"":"&quot;" }[c]));
 }
 
+/***********************
+ * Language (FIX: no optional chaining assignment)
+ ***********************/
 function setLang(lang){
   state.lang = lang;
   document.documentElement.lang = lang;
-  $$(".chip").forEach(c=>c.classList.toggle("active", c.dataset.lang===lang));
-const langSelect = document.getElementById("langSelect");
-if (langSelect) langSelect.value = lang;
 
+  $$(".chip").forEach(c=>c.classList.toggle("active", c.dataset.lang===lang));
+
+  const langSelect = document.getElementById("langSelect");
+  if (langSelect) langSelect.value = lang;
 
   $$("[data-i18n]").forEach(el=>{
     const key = el.getAttribute("data-i18n");
     if(I18N[lang][key] != null) el.textContent = I18N[lang][key];
   });
+
   $("#hadithTranslation").textContent = I18N[lang].hadith_tr;
   $("#hadithSource").textContent = I18N[lang].hadith_src;
 
   $("#whenText").textContent = formatWhen(lang);
   $("#addrText").textContent = CONFIG.addressLine;
-
   $("#btnMap").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONFIG.mapQuery)}`;
 }
 
+/***********************
+ * Cover slideshow
+ ***********************/
 function startSlides(){
   const a = $("#slideA");
   const b = $("#slideB");
-  const imgs = CONFIG.coverImages.filter(Boolean);
+  const imgs = (CONFIG.coverImages || []).filter(Boolean);
   if(imgs.length === 0) return;
 
   const setBg = (el, url)=> el.style.backgroundImage = `url("${url}")`;
@@ -1165,6 +1213,9 @@ function startSlides(){
   }, 5500);
 }
 
+/***********************
+ * Countdown
+ ***********************/
 function startCountdown(){
   const target = new Date(CONFIG.startISO).getTime();
   function tick(){
@@ -1185,6 +1236,9 @@ function startCountdown(){
   setInterval(tick, 1000);
 }
 
+/***********************
+ * Calendar (.ics)
+ ***********************/
 function buildICS(){
   const dtStart = new Date(CONFIG.startISO);
   const dtEnd = new Date(CONFIG.endISO);
@@ -1214,6 +1268,9 @@ function buildICS(){
   ].join("\r\n");
 }
 
+/***********************
+ * Share
+ ***********************/
 async function shareLink(){
   const url = location.href;
   try{
@@ -1228,7 +1285,9 @@ async function shareLink(){
   }
 }
 
-/* Ripple effect */
+/***********************
+ * Ripple
+ ***********************/
 function addRipple(e){
   const btn = e.currentTarget;
   const r = document.createElement("span");
@@ -1243,7 +1302,9 @@ function addRipple(e){
   setTimeout(()=>r.remove(), 600);
 }
 
-/* Confetti (lightweight) */
+/***********************
+ * Confetti
+ ***********************/
 function confettiBurst(durationMs=1500){
   const canvas = $("#confetti");
   const ctx = canvas.getContext("2d");
@@ -1258,7 +1319,7 @@ function confettiBurst(durationMs=1500){
   resize();
   window.addEventListener("resize", resize, { passive:true });
 
-  const colors = ["#ffffff","#ffcc00","#00f5d4","#ff2ad4","#0b2cff"];
+  const colors = ["#ffffff","#F6C453","#FF8A00","#1A56FF"];
   const parts = Array.from({length: 120}, ()=>({
     x: Math.random()*innerWidth,
     y: -20 - Math.random()*innerHeight*0.2,
@@ -1279,9 +1340,8 @@ function confettiBurst(durationMs=1500){
     parts.forEach(p=>{
       p.x += p.vx;
       p.y += p.vy;
-      p.vy += 0.05; // gravity
+      p.vy += 0.05;
       p.rot += p.vr;
-      // wrap sides
       if(p.x < -30) p.x = innerWidth + 30;
       if(p.x > innerWidth + 30) p.x = -30;
 
@@ -1304,7 +1364,9 @@ function confettiBurst(durationMs=1500){
   requestAnimationFrame(frame);
 }
 
-/* Reveal on scroll */
+/***********************
+ * Reveal
+ ***********************/
 function initReveal(){
   const els = $$(".reveal");
   const io = new IntersectionObserver((entries)=>{
@@ -1315,7 +1377,9 @@ function initReveal(){
   els.forEach(el=>io.observe(el));
 }
 
-/* Render classes */
+/***********************
+ * Classes
+ ***********************/
 function renderClasses(){
   $("#classGrid").innerHTML = CONFIG.classes.map(c=>`
     <div class="classCard">
@@ -1325,30 +1389,160 @@ function renderClasses(){
   `).join("");
 }
 
-/* Render gallery */
-function renderGallery(){
-  const imgs = CONFIG.galleryImages.filter(Boolean);
-  $("#galleryGrid").innerHTML = imgs.map((src, idx)=>`
-    <div class="gItem" data-src="${safeText(src)}" aria-label="photo ${idx+1}">
+/***********************
+ * Gallery Carousel (auto detect 01..N)
+ ***********************/
+let CAR = { imgs:[], idx:0, timer:null, dragging:false, startX:0, dx:0 };
+
+function padN(n, pad){
+  const s = String(n);
+  return s.length >= pad ? s : "0".repeat(pad - s.length) + s;
+}
+
+function loadImage(url){
+  return new Promise((resolve)=>{
+    const img = new Image();
+    img.onload = ()=>resolve({ ok:true, url });
+    img.onerror = ()=>resolve({ ok:false, url });
+    img.src = url;
+  });
+}
+
+async function discoverGalleryImages(){
+  if(CONFIG.autoGallery && CONFIG.autoGallery.enabled){
+    const { prefix, start, end, pad, ext } = CONFIG.autoGallery;
+    const candidates = [];
+    for(let i=start; i<=end; i++){
+      candidates.push(prefix + padN(i, pad) + "." + ext);
+    }
+    const results = await Promise.all(candidates.map(loadImage));
+    const found = results.filter(r=>r.ok).map(r=>r.url);
+    if(found.length) return found;
+  }
+  return (CONFIG.galleryImages || []).filter(Boolean);
+}
+
+function buildDots(){
+  const dots = $("#carouselDots");
+  dots.innerHTML = CAR.imgs.map((_, i)=>`<span class="dot ${i===CAR.idx?"active":""}" data-i="${i}"></span>`).join("");
+  $$("#carouselDots .dot").forEach(d=>{
+    d.addEventListener("click", ()=>{
+      goToSlide(parseInt(d.dataset.i,10));
+      restartAutoplay();
+    });
+  });
+}
+
+function updateCarousel(){
+  const track = $("#carouselTrack");
+  const w = $("#galleryCarousel").clientWidth;
+  track.style.transform = `translateX(${-(CAR.idx*w)}px)`;
+  $$("#carouselDots .dot").forEach((d,i)=> d.classList.toggle("active", i===CAR.idx));
+}
+
+function goToSlide(i){
+  if(!CAR.imgs.length) return;
+  CAR.idx = (i + CAR.imgs.length) % CAR.imgs.length;
+  updateCarousel();
+}
+function nextSlide(){ goToSlide(CAR.idx + 1); }
+function prevSlide(){ goToSlide(CAR.idx - 1); }
+
+function startAutoplay(){
+  stopAutoplay();
+  CAR.timer = setInterval(nextSlide, 4200);
+}
+function stopAutoplay(){
+  if(CAR.timer){ clearInterval(CAR.timer); CAR.timer = null; }
+}
+function restartAutoplay(){ stopAutoplay(); startAutoplay(); }
+
+async function renderGallery(){
+  const track = $("#carouselTrack");
+  track.innerHTML = `<div class="mutedText" style="padding:12px;">Loading...</div>`;
+
+  const imgs = await discoverGalleryImages();
+  CAR.imgs = imgs;
+  CAR.idx = 0;
+
+  if(!imgs.length){
+    track.innerHTML = `<div class="mutedText" style="padding:12px;">Belum ada foto.</div>`;
+    $("#carouselDots").innerHTML = "";
+    return;
+  }
+
+  track.innerHTML = imgs.map((src, idx)=>`
+    <div class="carouselItem" data-src="${safeText(src)}" data-idx="${idx}">
       <img src="${safeText(src)}" alt="photo ${idx+1}">
     </div>
   `).join("");
 
-  $$("#galleryGrid .gItem").forEach(el=>{
+  // klik untuk lightbox
+  $$("#carouselTrack .carouselItem").forEach(el=>{
     el.addEventListener("click", ()=>{
       $("#lightboxImg").src = el.dataset.src;
       $("#lightbox").classList.add("show");
       $("#lightbox").setAttribute("aria-hidden","false");
+      stopAutoplay();
     });
   });
+
+  buildDots();
+  updateCarousel();
+  startAutoplay();
+
+  $("#carNext").onclick = ()=>{ nextSlide(); restartAutoplay(); };
+  $("#carPrev").onclick = ()=>{ prevSlide(); restartAutoplay(); };
+
+  // swipe
+  const car = $("#galleryCarousel");
+  car.addEventListener("pointerdown", (e)=>{
+    CAR.dragging = true;
+    CAR.startX = e.clientX;
+    CAR.dx = 0;
+    stopAutoplay();
+    car.setPointerCapture(e.pointerId);
+  });
+  car.addEventListener("pointermove", (e)=>{
+    if(!CAR.dragging) return;
+    CAR.dx = e.clientX - CAR.startX;
+    const w = car.clientWidth;
+    const track = $("#carouselTrack");
+    track.style.transition = "none";
+    track.style.transform = `translateX(${-(CAR.idx*w) + CAR.dx}px)`;
+  });
+  function endDrag(){
+    if(!CAR.dragging) return;
+    CAR.dragging = false;
+    const car = $("#galleryCarousel");
+    const w = car.clientWidth;
+    const track = $("#carouselTrack");
+    track.style.transition = "";
+    const threshold = Math.min(80, w * 0.18);
+    if(CAR.dx > threshold) prevSlide();
+    else if(CAR.dx < -threshold) nextSlide();
+    updateCarousel();
+    restartAutoplay();
+  }
+  car.addEventListener("pointerup", endDrag);
+  car.addEventListener("pointercancel", endDrag);
+
+  window.addEventListener("resize", ()=>updateCarousel(), { passive:true });
 }
+
+/***********************
+ * Lightbox close (restart autoplay)
+ ***********************/
 $("#lightbox").addEventListener("click", ()=>{
   $("#lightbox").classList.remove("show");
   $("#lightbox").setAttribute("aria-hidden","true");
   $("#lightboxImg").src = "";
+  restartAutoplay();
 });
 
-/* Music toggle */
+/***********************
+ * Music
+ ***********************/
 async function toggleMusic(){
   const audio = $("#bgm");
   try{
@@ -1367,13 +1561,14 @@ async function toggleMusic(){
 }
 $("#btnMusic").addEventListener("click", toggleMusic);
 
-/* Bottom nav active highlight */
+/***********************
+ * Bottom nav active highlight
+ ***********************/
 function initBottomNav(){
   const items = $$(".navItem");
   const sections = items.map(i => document.getElementById(i.getAttribute("href").slice(1))).filter(Boolean);
 
   const io = new IntersectionObserver((entries)=>{
-    // pick most visible
     let best = null;
     for(const e of entries){
       if(e.isIntersecting){
@@ -1389,7 +1584,9 @@ function initBottomNav(){
   sections.forEach(s=>io.observe(s));
 }
 
-/* Local + endpoint (optional) */
+/***********************
+ * Local + endpoint (optional)
+ ***********************/
 const KEY_RSVP = "rbm_rsvp_latest_v1";
 const KEY_GB = "rbm_guestbook_local_v1";
 
@@ -1513,7 +1710,9 @@ $("#btnReset").addEventListener("click", ()=>{
   $("#saveInfo").textContent = "";
 });
 
-/* Cover open flow */
+/***********************
+ * Cover open flow
+ ***********************/
 function openInvitation(){
   if(state.opened) return;
   state.opened = true;
@@ -1521,24 +1720,16 @@ function openInvitation(){
   document.body.classList.add("opened");
   confettiBurst(1400);
 
-  // (opsional) start music on open (browser membutuhkan user gesture → ini valid)
+  // optional: start music on open
   toggleMusic().catch(()=>{});
 
-  // scroll to first section after short delay for smoothness
   setTimeout(()=> document.getElementById("detail").scrollIntoView({behavior:"smooth", block:"start"}), 180);
 }
 
-$("#btnOpen").addEventListener("click", (e)=>{
+$("#btnOpen").addEventListener("click", (e)=>{ addRipple(e); openInvitation(); });
+$("#btnShare").addEventListener("click", (e)=>{ addRipple(e); shareLink(); });
+$("#btnCalendar").addEventListener("click", (e)=>{
   addRipple(e);
-  openInvitation();
-});
-
-["btnShare","btnCalendar"].forEach(id=>{
-  const el = document.getElementById(id);
-  el.addEventListener("click", addRipple);
-});
-$("#btnShare").addEventListener("click", shareLink);
-$("#btnCalendar").addEventListener("click", ()=>{
   const ics = buildICS();
   const blob = new Blob([ics], { type:"text/calendar;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -1551,28 +1742,32 @@ $("#btnCalendar").addEventListener("click", ()=>{
   setTimeout(()=>URL.revokeObjectURL(url), 800);
 });
 
-/* Language controls */
+/***********************
+ * Language controls
+ ***********************/
 $$(".chip").forEach(ch => ch.addEventListener("click", ()=> setLang(ch.dataset.lang)));
 $("#langSelect").addEventListener("change", (e)=> setLang(e.target.value));
 
-/* Personalization ?to= */
+/***********************
+ * Personalization ?to=
+ ***********************/
 const to = getQueryParam("to");
 if(to){
   const name = decodeURIComponent(to);
-  const t = document.getElementById("toLine");
+  const t = $("#toLine");
   t.textContent = `Kepada Yth: ${name}`;
-  // prefill
   const rsvpName = document.querySelector('#rsvpForm input[name="name"]');
   const gbName = document.querySelector('#gbForm input[name="name"]');
   if(rsvpName && !rsvpName.value) rsvpName.value = name;
   if(gbName && !gbName.value) gbName.value = name;
 }
 
-/* Init */
+/***********************
+ * Init
+ ***********************/
 setLang("id");
-document.getElementById("whenText").textContent = formatWhen("id");
-document.getElementById("addrText").textContent = CONFIG.addressLine;
-document.getElementById("btnMap").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONFIG.mapQuery)}`;
+$("#addrText").textContent = CONFIG.addressLine;
+$("#btnMap").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONFIG.mapQuery)}`;
 
 renderClasses();
 renderGallery();
