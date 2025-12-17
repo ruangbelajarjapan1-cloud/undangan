@@ -11,6 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
 :root{
@@ -703,10 +704,239 @@ body.opened #confetti{ display:block; }
   .carouselTrack{ transition:none; }
   .sticker{ animation:none; }
 }
+    /* =========================
+   ISLAMIC GRADUATION VIBE
+   ========================= */
+:root{
+  --emerald:#16A34A;      /* nuansa islami */
+  --gold:#F6C453;         /* nuansa “wisuda” */
+}
+
+/* subtle arabesque pattern layer */
+.islamicPattern{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;     /* di atas background, di bawah konten */
+  opacity: .10;
+  mix-blend-mode: soft-light;
+  background:
+    radial-gradient(circle at 20% 30%, rgba(246,196,83,.35), transparent 55%),
+    radial-gradient(circle at 80% 70%, rgba(22,163,74,.20), transparent 60%),
+    repeating-radial-gradient(circle at 50% 50%,
+      rgba(0,183,255,.10) 0 2px,
+      transparent 2px 22px);
+}
+
+/* “bulan sabit” */
+.sticker.crescent{
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 38% 50%, rgba(255,255,255,.92) 0 54%, transparent 55%),
+    radial-gradient(circle at 58% 50%, transparent 0 46%, rgba(255,255,255,.92) 47% 100%);
+}
+
+/* aksen wisuda: primary lebih “emerald + blue”, tetap lembut */
+.btn.primary{
+  background: linear-gradient(90deg, rgba(22,163,74,.92), rgba(0,183,255,.98), rgba(45,125,255,.94));
+}
+
+/* border kartu kasih sedikit “gold” biar terasa wisuda */
+.card{
+  background:
+    linear-gradient(var(--cardBg), var(--cardBg)) padding-box,
+    linear-gradient(90deg,
+      rgba(22,163,74,.40),
+      rgba(0,183,255,.55),
+      rgba(246,196,83,.35)
+    ) border-box;
+}
+
+/* badge lebih “formal” */
+.badge{
+  border-color: rgba(246,196,83,.35);
+}
+
+/* =========================
+   MOBILE OPTIMIZATION
+   ========================= */
+section{ scroll-margin-top: 86px; } /* biar anchor #detail/#rsvp tidak ketutup topbar */
+
+@media (max-width: 720px){
+  .topbar-inner{
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .brand{ min-width: 0; }
+  .right{ flex-wrap: wrap; justify-content:flex-end; }
+
+  .coverMedia{ height: 280px; }
+}
+
+@media (max-width: 520px){
+  body{ font-size: 15px; }
+
+  .container{
+    padding: 12px 12px calc(100px + env(safe-area-inset-bottom));
+  }
+
+  .coverWrap{ padding: 12px 10px; }
+  .coverCard{ border-radius: 22px; }
+  .coverMedia{ height: 240px; }
+
+  .coverTitle{ font-size: clamp(20px, 6.2vw, 30px); }
+  .coverDesc{ font-size: 13px; }
+
+  .btnRow{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .btnRow .btn{ width: 100%; }
+.btnRow .btn.primary{ grid-column: 1 / -1; }
+  /* chip dan tombol kanan jangan kepanjangan */
+  .chip{ height: 32px; padding: 0 9px; }
+  .iconBtn{ width: 36px; height: 36px; }
+
+  /* grid section otomatis 1 kolom */
+  .grid{ grid-template-columns: 1fr; }
+
+  /* countdown biar tidak terlalu sempit */
+  .countdown{ grid-template-columns: repeat(2,1fr); }
+
+  /* bottom nav nyaman untuk jempol */
+  .bottomNav{
+    width: calc(100vw - 14px);
+    padding: 8px;
+    gap: 6px;
+  }
+  .navItem{ min-height: 48px; }
+}
+/* =========================
+   KIDS ISLAMIC GRADUATION DECOR
+   ========================= */
+
+/* 1) “Ribbon” wisuda di bagian atas cover card */
+.coverCard::before{
+  content:"";
+  position:absolute;
+  left: 18px;
+  right: 18px;
+  top: 12px;
+  height: 10px;
+  border-radius: 999px;
+  background: linear-gradient(90deg,
+    rgba(246,196,83,.0),
+    rgba(246,196,83,.65),
+    rgba(0,183,255,.35),
+    rgba(246,196,83,.65),
+    rgba(246,196,83,.0)
+  );
+  filter: blur(.2px);
+  pointer-events:none;
+  z-index: 3;
+}
+
+/* 2) Laurel tipis (nuansa wisuda) — ringan, tidak norak */
+.coverCard::after{
+  content:"";
+  position:absolute;
+  inset: 14px;
+  border-radius: 26px;
+  pointer-events:none;
+  z-index: 2;
+  background:
+    radial-gradient(circle at 12% 42%, rgba(246,196,83,.30) 0 2px, transparent 3px),
+    radial-gradient(circle at 88% 42%, rgba(246,196,83,.30) 0 2px, transparent 3px),
+    linear-gradient(180deg, rgba(246,196,83,.12), rgba(246,196,83,0));
+  opacity: .75;
+  mask:
+    radial-gradient(closest-side at 12% 50%, #000 0 65%, transparent 66%),
+    radial-gradient(closest-side at 88% 50%, #000 0 65%, transparent 66%),
+    linear-gradient(#000,#000);
+  -webkit-mask:
+    radial-gradient(closest-side at 12% 50%, #000 0 65%, transparent 66%),
+    radial-gradient(closest-side at 88% 50%, #000 0 65%, transparent 66%),
+    linear-gradient(#000,#000);
+}
+
+/* 3) Ikon topi wisuda kecil di judul (SVG data URI) */
+.coverTitle{
+  position: relative;
+  padding-left: 44px;
+}
+.coverTitle::before{
+  content:"";
+  position:absolute;
+  left: 0;
+  top: .18em;
+  width: 34px;
+  height: 34px;
+  opacity: .95;
+  background-size: 34px 34px;
+  background-repeat:no-repeat;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M4 24L32 12l28 12-28 12L4 24Z' fill='%2300B7FF'/%3E%3Cpath d='M16 30v10c0 8 32 8 32 0V30l-16 7-16-7Z' fill='%2316A34A'/%3E%3Cpath d='M52 26v16' stroke='%23F6C453' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='52' cy='46' r='4' fill='%23F6C453'/%3E%3C/svg%3E");
+}
+
+/* 4) Tagline islami (duaLine) — rapi, tidak mengganggu */
+.duaLine{
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(8,50,74,.78);
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+}
+.duaLine::before{
+  content:"";
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(246,196,83,.70);
+  box-shadow: 0 0 0 3px rgba(246,196,83,.18);
+}
+
+/* 5) Sedikit “gold highlight” untuk badge (wisuda vibes) */
+.badge{
+  box-shadow: 0 10px 24px rgba(246,196,83,.10);
+}
+
+/* 6) Mobile: judul + ikon tidak kepotong */
+@media (max-width: 520px){
+  .coverTitle{ padding-left: 40px; }
+  .coverTitle::before{
+    width: 30px; height: 30px;
+    background-size: 30px 30px;
+    top: .22em;
+  }
+  .duaLine{ font-size: 11px; }
+}
+/* Pastikan isi cover selalu di atas dekor */
+.coverMedia{ position: relative; z-index: 1; }
+.coverBody{ position: relative; z-index: 5; }
+
+/* Dekor coverCard jangan mengalahkan konten */
+.coverCard::before{ z-index: 2; }
+.coverCard::after{ z-index: 2; }
+
+/* Font Arab untuk hadits + dua */
+.arabic, .duaAr{
+  font-family: "Noto Naskh Arabic","Noto Sans","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+}
+
+/* Dua line styling */
+.duaLine{ display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+.duaAr{ font-weight:700; }
+.duaSep{ opacity:.7; }
+.duaLt{ color: rgba(8,50,74,.78); }
+
   </style>
 </head>
 
 <body>
+  <div class="islamicPattern" aria-hidden="true"></div>
+
   <div class="bubbles" aria-hidden="true">
     <div class="bubble" style="left:5%; animation-delay:0s; width:18vmin; height:18vmin;"></div>
     <div class="bubble" style="left:30%; animation-delay:2s; width:22vmin; height:22vmin;"></div>
@@ -718,8 +948,11 @@ body.opened #confetti{ display:block; }
   <div class="stickers" aria-hidden="true">
     <div class="sticker cloud" style="left:6%;  --s:92px; --o:.18; --t:18s; --x:0px;  animation-delay:-3s;"></div>
     <div class="sticker star"  style="left:18%; --s:56px; --o:.16; --t:15s; --x:10px; animation-delay:-8s;"></div>
+    <div class="sticker crescent" style="left:44%; --s:62px; --o:.13; --t:19s; --x:-6px; animation-delay:-11s;"></div>
+
     <div class="sticker cloud" style="left:72%; --s:86px; --o:.16; --t:20s; --x:-8px; animation-delay:-6s;"></div>
     <div class="sticker star soft" style="left:86%; --s:48px; --o:.14; --t:16s; --x:6px;  animation-delay:-10s;"></div>
+    
   </div>
 
   <canvas id="confetti"></canvas>
@@ -743,6 +976,11 @@ body.opened #confetti{ display:block; }
         <p class="coverDesc" data-i18n="cover_desc">
           Klik tombol di bawah untuk membuka undangan dan mengisi daftar kehadiran/RSVP.
         </p>
+<div class="duaLine" data-i18n="dua_line">
+  <span class="duaAr">بارك الله فيكم</span>
+  <span class="duaSep">—</span>
+  <span class="duaLt">Semoga Allah memberkahi.</span>
+</div>
 
         <div class="btnRow">
           <button class="btn primary" id="btnOpen" type="button" data-i18n="btn_open">Buka Undangan</button>
@@ -999,6 +1237,7 @@ const I18N = {
     to_default:"Kepada Yth: Tamu Undangan",
     cover_title:"Undangan Kelulusan Siswa RBM Japan",
     cover_desc:"Klik tombol di bawah untuk membuka undangan dan mengisi daftar hadir/RSVP.",
+    dua_line:"بارك الله فيكم — Semoga Allah memberkahi.",
     btn_open:"Buka Undangan",
     btn_share:"Bagikan",
     btn_map:"Buka Peta",
@@ -1049,6 +1288,7 @@ const I18N = {
     to_default:"To: Invited Guest",
     cover_title:"RBM Japan Student Graduation Ceremony Invitation",
     cover_desc:"Let’s celebrate our students’ achievement. Tap below to open the invitation and submit your RSVP.",
+    dua_line:"بارك الله فيكم — May Allah bless you.",
     btn_open:"Open Invitation",
     btn_share:"Share",
     btn_map:"Open Map",
@@ -1099,6 +1339,7 @@ const I18N = {
     to_default:"ご招待：ゲスト様",
     cover_title:"RBM Japan 卒業式のご案内",
     cover_desc:"生徒の門出を一緒にお祝いしましょう。下のボタンから招待状を開き、出欠をご回答ください。",
+    dua_line:"بارك الله فيكم — May Allah bless you.",
     btn_open:"招待状を開く",
     btn_share:"共有",
     btn_map:"地図を開く",
