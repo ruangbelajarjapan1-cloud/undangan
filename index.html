@@ -536,6 +536,71 @@
       .reveal{ transition:none; }
       .bubble{ animation:none; }
     }
+    /* ===== FIX: Readability / Kontras teks ===== */
+body{
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-size: 16px; /* pastikan base cukup besar di mobile */
+}
+
+/* Topbar lebih kontras */
+.topbar{
+  background: rgba(0,0,0,.35) !important;
+  border-bottom: 1px solid rgba(255,255,255,.18) !important;
+}
+
+/* Semua card dibuat lebih gelap agar teks jelas */
+.card,
+.classCard,
+.cdBox,
+.badge,
+.radio,
+.gbItem,
+input, select, textarea{
+  background: rgba(10, 12, 20, .38) !important;
+  border-color: rgba(255,255,255,.22) !important;
+}
+
+/* Teks umum di dalam card */
+.cardBody,
+.kv,
+.quote,
+label{
+  color: rgba(255,255,255,.96) !important;
+}
+
+/* Muted text jangan terlalu pucat */
+.mutedText,
+.source,
+.cdLbl,
+.classCard .small,
+.toLine,
+.coverDesc{
+  color: rgba(255,255,255,.86) !important;
+}
+
+/* Headings & judul card dibuat “nendang” */
+.card h2,
+.classCard b,
+.coverTitle{
+  color: rgba(255,255,255,.98) !important;
+  text-shadow: 0 2px 14px rgba(0,0,0,.40);
+}
+
+/* Angka countdown lebih tebal */
+.cdNum{
+  font-weight: 950 !important;
+  text-shadow: 0 2px 14px rgba(0,0,0,.35);
+}
+
+/* Arabic box lebih jelas */
+.arabic{
+  background: rgba(0,0,0,.28) !important;
+  border-color: rgba(255,255,255,.22) !important;
+  color: rgba(255,255,255,.98) !important;
+  text-shadow: 0 2px 14px rgba(0,0,0,.35);
+}
+
   </style>
 </head>
 
