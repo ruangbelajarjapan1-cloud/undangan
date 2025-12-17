@@ -789,32 +789,23 @@
             </div>
           </div>
 
-          <div class="row2">
-            <div>
-              <label data-i18n="f_guests">Jumlah orang</label>
-              <select name="guests">
-                <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
-              </select>
-            </div>
-            <div>
-              <label data-i18n="f_lang">Bahasa</label>
-              <select name="lang" id="langSelect">
-                <option value="id">Indonesia</option>
-                <option value="en">English</option>
-                <option value="ja">日本語</option>
-              </select>
-            </div>
-          </div>
+         <div>
+  <label data-i18n="f_guests">Jumlah orang</label>
+  <select name="guests">
+    <option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option>
+  </select>
+</div>
+<div>
+            <label data-i18n="f_note">Catatan (opsional)</label>
+            <textarea name="note" placeholder="Contoh: hadir 2 orang, dsb."></textarea>
+</div>
 
           <div>
             <label>Pesan / Ucapan</label>
             <textarea name="message" required placeholder="Tulis ucapan singkat..."></textarea>
           </div>
 
-          <div>
-            <label data-i18n="f_note">Catatan (opsional)</label>
-            <textarea name="note" placeholder="Contoh: hadir 2 orang, dsb."></textarea>
-          </div>
+          
 
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
             <button class="btn ok" type="submit" data-i18n="btn_submit">Kirim RSVP</button>
