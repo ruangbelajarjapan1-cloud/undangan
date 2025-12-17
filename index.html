@@ -1,0 +1,1287 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#0b1220" />
+  <title>RBM Japan • Graduation Invitation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+JP:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root{
+      --bg:#070b14;
+      --card:#0f172a;
+      --text:#eaf0ff;
+      --muted:#9fb0d0;
+      --accent:#7dd3fc;
+      --accent2:#a78bfa;
+      --ok:#34d399;
+      --danger:#fb7185;
+      --line: rgba(255,255,255,.10);
+      --shadow: 0 18px 60px rgba(0,0,0,.45);
+      --r: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      color:var(--text);
+      background:
+        radial-gradient(1100px 700px at 80% -10%, rgba(167,139,250,.22), transparent 55%),
+        radial-gradient(900px 600px at 10% 10%, rgba(125,211,252,.18), transparent 60%),
+        linear-gradient(180deg, #050812 0%, var(--bg) 70%);
+      font-family:"Noto Sans","Noto Sans JP",system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      letter-spacing:.2px;
+    }
+    a{color:inherit}
+    .container{max-width:980px;margin:0 auto;padding:18px 14px 70px}
+
+    /* Top nav */
+    .topbar{
+      position:sticky; top:0; z-index:30;
+      backdrop-filter: blur(10px);
+      background: rgba(7,11,20,.55);
+      border-bottom:1px solid var(--line);
+    }
+    .topbar-inner{
+      max-width:980px; margin:0 auto;
+      padding:10px 14px;
+      display:flex; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .brand{display:flex; gap:10px; align-items:center; min-width:240px}
+    .logo{
+      width:44px;height:44px;border-radius:999px;
+      border:1px solid rgba(255,255,255,.16);
+      background: rgba(255,255,255,.06);
+      overflow:hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,.35);
+      display:grid;place-items:center;
+    }
+    .logo img{width:100%;height:100%;object-fit:cover;display:block}
+    .brand h1{margin:0;font-size:14px;line-height:1.15;font-weight:800}
+    .brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    .nav{
+      display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+      font-size:12px; color:rgba(234,240,255,.85);
+    }
+    .nav a{
+      text-decoration:none;
+      padding:7px 10px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.05);
+    }
+    .nav a:hover{background: rgba(255,255,255,.09)}
+    .right{
+      display:flex; gap:8px; align-items:center;
+    }
+    .chip{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      padding:8px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      user-select:none;
+      transition:.15s;
+    }
+    .chip.active{
+      background: rgba(125,211,252,.18);
+      border-color: rgba(125,211,252,.35);
+    }
+    .btnIcon{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      width:38px;height:38px;
+      border-radius:12px;
+      display:grid;place-items:center;
+      cursor:pointer;
+      user-select:none;
+    }
+    .btnIcon:hover{background: rgba(255,255,255,.10)}
+    @media (max-width: 860px){
+      .nav{display:none}
+    }
+
+    /* Cover (LinkUndangan style) */
+    .cover{
+      margin-top: 14px;
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      overflow:hidden;
+      box-shadow: var(--shadow);
+      position:relative;
+      min-height: 520px;
+      background: rgba(255,255,255,.04);
+    }
+    .coverMedia{
+      position:absolute; inset:0;
+      background: #050812;
+    }
+    .slide{
+      position:absolute; inset:0;
+      background-size: cover;
+      background-position:center;
+      transform: scale(1.06);
+      opacity:0;
+      transition: opacity 1.1s ease;
+      animation: kenburns 16s ease-in-out infinite;
+      filter: saturate(1.08) contrast(1.05);
+    }
+    .slide.active{opacity:1}
+    @keyframes kenburns{
+      0%{ transform: scale(1.06) translate3d(0,0,0); }
+      50%{ transform: scale(1.14) translate3d(-1.8%, -1.2%, 0); }
+      100%{ transform: scale(1.06) translate3d(0,0,0); }
+    }
+    .coverOverlay{
+      position:absolute; inset:0;
+      background:
+        linear-gradient(180deg, rgba(5,8,18,.10) 0%, rgba(5,8,18,.70) 55%, rgba(5,8,18,.90) 100%);
+    }
+    .coverContent{
+      position:relative;
+      padding: 26px 18px 18px;
+      display:flex;
+      flex-direction:column;
+      min-height: 520px;
+      justify-content:flex-end;
+      gap: 12px;
+    }
+    .badgeRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .badge{
+      display:inline-flex; gap:8px; align-items:center;
+      font-size:12px;
+      padding:7px 10px;
+      border-radius:999px;
+      background: rgba(255,255,255,.07);
+      border:1px solid rgba(255,255,255,.12);
+    }
+    .toLine{
+      font-size: 12px;
+      color: rgba(234,240,255,.85);
+    }
+    .coverTitle{
+      margin: 2px 0 0;
+      font-size: clamp(24px, 4vw, 38px);
+      line-height:1.12;
+      font-weight:900;
+      letter-spacing:.3px;
+    }
+    .coverDesc{
+      margin:0;
+      color: rgba(234,240,255,.85);
+      max-width: 76ch;
+      font-size: 14px;
+      line-height: 1.7;
+    }
+    .coverActions{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top: 8px}
+    .btn{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: var(--text);
+      padding:10px 12px;
+      border-radius: 14px;
+      cursor:pointer;
+      font-weight: 800;
+      font-size: 13px;
+      user-select:none;
+      transition:.15s;
+      display:inline-flex; gap:10px; align-items:center;
+    }
+    .btn:hover{background: rgba(255,255,255,.10)}
+    .btn.primary{
+      background: linear-gradient(135deg, rgba(125,211,252,.24), rgba(167,139,250,.20));
+      border-color: rgba(125,211,252,.35);
+    }
+    .btn.ok{
+      background: rgba(52,211,153,.12);
+      border-color: rgba(52,211,153,.35);
+    }
+    .btn.danger{
+      background: rgba(251,113,133,.10);
+      border-color: rgba(251,113,133,.35);
+    }
+
+    /* Sections */
+    .section{margin-top: 14px}
+    .card{
+      border:1px solid var(--line);
+      border-radius: var(--r);
+      background: rgba(255,255,255,.04);
+      box-shadow: 0 12px 40px rgba(0,0,0,.25);
+      overflow:hidden;
+    }
+    .cardBody{padding: 16px}
+    .card h2{
+      margin:0 0 10px;
+      font-size: 15px;
+      letter-spacing:.2px;
+    }
+    .muted{color:var(--muted)}
+    .hr{height:1px;background:var(--line);margin:12px 0}
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+    }
+    @media (max-width: 900px){ .grid{grid-template-columns: 1fr;} }
+
+    .kv{
+      display:grid;
+      grid-template-columns: 140px 1fr;
+      gap: 8px 12px;
+      font-size: 13px;
+      align-items:start;
+    }
+    @media (max-width: 520px){ .kv{grid-template-columns:1fr;} }
+
+    /* Countdown */
+    .countdown{
+      display:grid;
+      grid-template-columns: repeat(4,1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    .cdBox{
+      text-align:center;
+      padding: 10px 8px;
+      border-radius: 14px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+    }
+    .cdNum{font-size:20px;font-weight:900}
+    .cdLbl{font-size:11px;color:var(--muted);margin-top:4px}
+
+    /* Hadith */
+    .arabic{
+      font-size: 18px;
+      line-height: 1.9;
+      direction: rtl;
+      text-align:right;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      margin: 8px 0 10px;
+    }
+    .quote{font-size:13px;line-height:1.7;color:rgba(234,240,255,.86)}
+    .source{font-size:12px;color:var(--muted);margin-top:10px}
+
+    /* Classes */
+    .classGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 900px){ .classGrid{grid-template-columns: repeat(2,1fr);} }
+    @media (max-width: 520px){ .classGrid{grid-template-columns: 1fr;} }
+    .classCard{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .classCard b{display:block}
+    .classCard .small{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.6}
+
+    /* Gallery */
+    .gallery{
+      display:grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    @media (max-width: 900px){ .gallery{grid-template-columns: repeat(3,1fr);} }
+    @media (max-width: 620px){ .gallery{grid-template-columns: repeat(2,1fr);} }
+    .gItem{
+      position:relative;
+      border-radius: 16px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      aspect-ratio: 1 / 1;
+      cursor:pointer;
+    }
+    .gItem img{width:100%;height:100%;object-fit:cover;display:block; transform: scale(1.02)}
+    .lightbox{
+      position:fixed; inset:0; z-index: 60;
+      background: rgba(0,0,0,.78);
+      display:none;
+      align-items:center; justify-content:center;
+      padding: 18px;
+    }
+    .lightbox.show{display:flex}
+    .lightbox img{
+      max-width: min(980px, 94vw);
+      max-height: 84vh;
+      border-radius: 18px;
+      border:1px solid rgba(255,255,255,.14);
+      box-shadow: var(--shadow);
+      background:#0b1220;
+    }
+
+    /* RSVP + Guestbook */
+    form{display:grid;gap:10px}
+    label{font-size:12px;color:rgba(234,240,255,.82)}
+    input, select, textarea{
+      width:100%;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+    }
+    textarea{min-height:92px; resize:vertical}
+    .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    @media (max-width: 520px){ .row2{grid-template-columns:1fr} }
+    .radioRow{display:flex; flex-wrap:wrap; gap:10px}
+    .radio{
+      display:flex; gap:8px; align-items:center;
+      padding: 10px 10px;
+      border-radius: 12px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      cursor:pointer;
+      user-select:none;
+      font-size: 13px;
+    }
+    .radio input{width:auto}
+
+    .gbList{display:grid; gap:10px}
+    .gbItem{
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(255,255,255,.04);
+      border-radius: 16px;
+      padding: 12px;
+    }
+    .gbItem .meta{font-size:12px;color:var(--muted);margin-top:6px}
+    .toast{
+      position: fixed;
+      right: 14px;
+      bottom: 14px;
+      z-index: 80;
+      background: rgba(15,26,46,.92);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 14px;
+      padding: 12px 12px;
+      box-shadow: var(--shadow);
+      max-width: 420px;
+      display:none;
+    }
+    .toast.show{display:block}
+
+    .footer{
+      margin-top: 18px;
+      text-align:center;
+      color: rgba(159,176,208,.9);
+      font-size: 12px;
+      padding: 18px 6px 0;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo" title="RBM Japan Logo">
+          <!-- Tempat LOGO: taruh file di assets/logo.png -->
+          <img id="logoImg" alt="RBM Japan" src="./assets/logo.png" />
+        </div>
+        <div>
+          <h1 data-i18n="top_title">RBM Japan • Kelulusan</h1>
+          <p data-i18n="top_sub">Undangan Web + RSVP</p>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <a href="#detail" data-i18n="nav_detail">Detail</a>
+        <a href="#kelas" data-i18n="nav_classes">Kelas</a>
+        <a href="#gallery" data-i18n="nav_gallery">Galeri</a>
+        <a href="#guestbook" data-i18n="nav_guestbook">Buku Tamu</a>
+        <a href="#rsvp" data-i18n="nav_rsvp">RSVP</a>
+      </nav>
+
+      <div class="right">
+        <div class="chip active" data-lang="id">ID</div>
+        <div class="chip" data-lang="en">EN</div>
+        <div class="chip" data-lang="ja">日本語</div>
+
+        <!-- Musik toggle -->
+        <div class="btnIcon" id="btnMusic" title="Music">
+          ♪
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- COVER -->
+    <section class="cover" id="cover">
+      <div class="coverMedia">
+        <!-- Foto animasi untuk cover: atur di CONFIG.coverImages -->
+        <div class="slide active" id="slideA"></div>
+        <div class="slide" id="slideB"></div>
+      </div>
+      <div class="coverOverlay"></div>
+
+      <div class="coverContent">
+        <div class="badgeRow">
+          <div class="badge" data-i18n="badge_event">Acara Kelulusan</div>
+          <div class="badge" id="badgeDate">24 Januari 2026</div>
+          <div class="badge">十日市場地区センター</div>
+        </div>
+
+        <div class="toLine" id="toLine" data-i18n="to_default">Kepada Yth: Tamu Undangan</div>
+        <h2 class="coverTitle" data-i18n="cover_title">Undangan Kelulusan Siswa RBM Japan</h2>
+        <p class="coverDesc" data-i18n="cover_desc">
+          Mari rayakan pencapaian para siswa. Silakan buka undangan dan konfirmasi kehadiran Anda.
+        </p>
+
+        <div class="coverActions">
+          <button class="btn primary" id="btnOpen" type="button" data-i18n="btn_open">Buka Undangan</button>
+          <button class="btn" id="btnShare" type="button" data-i18n="btn_share">Bagikan</button>
+          <a class="btn" id="btnMap" target="_blank" rel="noopener" data-i18n="btn_map">Buka Peta</a>
+          <button class="btn" id="btnCalendar" type="button" data-i18n="btn_calendar">Tambah ke Kalender</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- DETAIL + HADITH -->
+    <section class="section grid" id="detail">
+      <div class="card">
+        <div class="cardBody">
+          <h2 data-i18n="sec_detail">Detail Acara</h2>
+          <div class="kv">
+            <div class="muted" data-i18n="k_when">Waktu</div>
+            <div id="whenText"></div>
+
+            <div class="muted" data-i18n="k_where">Tempat</div>
+            <div>
+              <div><b>十日市場地区センター</b></div>
+              <div class="muted" style="font-size:12px;margin-top:2px" id="addrText"></div>
+            </div>
+
+            <div class="muted" data-i18n="k_access">Akses</div>
+            <div data-i18n="access_text">± 5–6 menit jalan kaki dari JR 横浜線 十日市場駅.</div>
+          </div>
+
+          <div class="hr"></div>
+
+          <h2 data-i18n="sec_countdown">Hitung Mundur</h2>
+          <div class="countdown" aria-live="polite">
+            <div class="cdBox"><div class="cdNum" id="cdDays">—</div><div class="cdLbl" data-i18n="cd_days">Hari</div></div>
+            <div class="cdBox"><div class="cdNum" id="cdHours">—</div><div class="cdLbl" data-i18n="cd_hours">Jam</div></div>
+            <div class="cdBox"><div class="cdNum" id="cdMins">—</div><div class="cdLbl" data-i18n="cd_mins">Menit</div></div>
+            <div class="cdBox"><div class="cdNum" id="cdSecs">—</div><div class="cdLbl" data-i18n="cd_secs">Detik</div></div>
+          </div>
+
+          <div class="hr"></div>
+
+          <div class="quote" data-i18n="note_text">
+            Dress code rapi & sopan. Mohon hadir 15 menit lebih awal untuk registrasi.
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="cardBody">
+          <h2 data-i18n="sec_hadith">Kutipan Hadits Shahih</h2>
+          <div class="arabic">
+            وَمَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ
+          </div>
+          <div class="quote" id="hadithTranslation"></div>
+          <div class="source" id="hadithSource"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KELAS -->
+    <section class="section" id="kelas">
+      <div class="card">
+        <div class="cardBody">
+          <h2 data-i18n="sec_classes">Kelas yang Diwisuda</h2>
+          <div class="muted" style="font-size:12px;margin-bottom:12px" data-i18n="classes_desc">
+            Berikut daftar kelas (bisa ditambah kapan saja).
+          </div>
+
+          <div class="classGrid" id="classGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GALLERY -->
+    <section class="section" id="gallery">
+      <div class="card">
+        <div class="cardBody">
+          <h2 data-i18n="sec_gallery">Galeri</h2>
+          <div class="muted" style="font-size:12px;margin-bottom:12px" data-i18n="gallery_desc">
+            Taruh foto di folder assets/photos/ lalu sesuaikan daftar nama file di CONFIG.galleryImages.
+          </div>
+          <div class="gallery" id="galleryGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="lightbox" id="lightbox" aria-hidden="true">
+      <img id="lightboxImg" alt="preview" />
+    </div>
+
+    <!-- GUESTBOOK -->
+    <section class="section" id="guestbook">
+      <div class="card">
+        <div class="cardBody">
+          <h2 data-i18n="sec_guestbook">Buku Tamu</h2>
+          <div class="muted" style="font-size:12px;margin-bottom:12px" data-i18n="guestbook_desc">
+            Isi ucapan singkat. Jika endpoint Google Sheet diaktifkan, ucapan bisa ditampilkan publik (via JSONP).
+          </div>
+
+          <form id="gbForm">
+            <div class="row2">
+              <div>
+                <label data-i18n="f_name">Nama</label>
+                <input name="name" required placeholder="Nama Anda" />
+              </div>
+              <div>
+                <label data-i18n="f_contact">Kontak (Email / WhatsApp)</label>
+                <input name="contact" placeholder="opsional" />
+              </div>
+            </div>
+            <div>
+              <label data-i18n="f_message">Pesan / ucapan (opsional)</label>
+              <textarea name="message" required placeholder="Tulis ucapan singkat..."></textarea>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <button class="btn ok" type="submit" data-i18n="btn_send_message">Kirim Ucapan</button>
+              <button class="btn danger" type="button" id="gbReload" data-i18n="btn_refresh">Muat Ulang</button>
+              <span class="muted" style="font-size:12px" id="gbInfo"></span>
+            </div>
+          </form>
+
+          <div class="hr"></div>
+          <div class="gbList" id="gbList"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RSVP -->
+    <section class="section" id="rsvp">
+      <div class="card">
+        <div class="cardBody">
+          <h2 data-i18n="sec_rsvp">RSVP (Konfirmasi Kehadiran)</h2>
+          <div class="muted" style="font-size:12px;margin-bottom:12px" data-i18n="rsvp_hint">
+            Isi form di bawah. Jika endpoint Google Sheet belum diaktifkan, data tetap tersimpan di perangkat Anda (local).
+          </div>
+
+          <form id="rsvpForm">
+            <div class="row2">
+              <div>
+                <label data-i18n="f_name">Nama</label>
+                <input name="name" autocomplete="name" required placeholder="Nama Anda" />
+              </div>
+              <div>
+                <label data-i18n="f_contact">Kontak (Email / WhatsApp)</label>
+                <input name="contact" autocomplete="email" placeholder="opsional" />
+              </div>
+            </div>
+
+            <div>
+              <label data-i18n="f_attendance">Kehadiran</label>
+              <div class="radioRow">
+                <label class="radio">
+                  <input type="radio" name="attendance" value="yes" required />
+                  <span data-i18n="att_yes">Hadir</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="attendance" value="no" />
+                  <span data-i18n="att_no">Tidak dapat hadir</span>
+                </label>
+                <label class="radio">
+                  <input type="radio" name="attendance" value="maybe" />
+                  <span data-i18n="att_maybe">Masih ragu</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="row2">
+              <div>
+                <label data-i18n="f_guests">Jumlah orang</label>
+                <select name="guests">
+                  <option value="1">1</option>
+                  <option value="2">2</option>
+                  <option value="3">3</option>
+                  <option value="4">4</option>
+                </select>
+              </div>
+              <div>
+                <label data-i18n="f_lang">Bahasa</label>
+                <select name="lang" id="langSelect">
+                  <option value="id">Indonesia</option>
+                  <option value="en">English</option>
+                  <option value="ja">日本語</option>
+                </select>
+              </div>
+            </div>
+
+            <div>
+              <label data-i18n="f_note">Catatan (opsional)</label>
+              <textarea name="note" placeholder="Contoh: hadir 2 orang, dsb."></textarea>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+              <button class="btn ok" type="submit" data-i18n="btn_submit">Kirim RSVP</button>
+              <button class="btn danger" type="button" id="btnReset" data-i18n="btn_reset">Reset</button>
+              <span class="muted" style="font-size:12px" id="saveInfo"></span>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div>RBM Japan • Graduation Ceremony</div>
+      <div class="muted" style="margin-top:6px" data-i18n="footer_note">
+        Logo/foto tinggal Anda upload ke folder assets/ sesuai petunjuk.
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <!-- Musik: taruh file di assets/bgm.mp3 (opsional) -->
+  <audio id="bgm" loop preload="none">
+    <source src="./assets/bgm.mp3" type="audio/mpeg" />
+  </audio>
+
+  <script>
+    /***********************
+     * CONFIG (ubah di sini)
+     ***********************/
+    const CONFIG = {
+      orgName: "RBM Japan",
+      eventTitle: "RBM Japan Student Graduation Ceremony",
+      // Anda belum memberi jam; default saya set 13:00–16:00 JST. Silakan ubah.
+      startISO: "2026-01-24T13:00:00+09:00",
+      endISO:   "2026-01-24T16:00:00+09:00",
+      venueName: "十日市場地区センター",
+      addressLine: "〒226-0025 神奈川県横浜市緑区十日市場町808-3",
+      mapQuery: "十日市場地区センター",
+
+      // Google Apps Script Web App URL (nanti Anda isi):
+      // contoh: "https://script.google.com/macros/s/AKfycbXXXX/exec"
+      ENDPOINT: "https://script.google.com/macros/s/AKfycbwGA8_bsewf_rmdF4DbRQoT0pRR2dQ03DUHRwZIJP0K847smDncQWiNQzur9Cl34eKu/exec",
+
+      // Cover images (tempat FOTO animasi cover)
+      // Anda bisa ganti jadi file lokal: "./assets/photos/01.jpg", dst.
+      coverImages: [
+        "./assets/photos/01.jpg",
+        "./assets/photos/02.jpg",
+        "./assets/photos/03.jpg"
+      ],
+
+      // Gallery images (tempat FOTO galeri)
+      galleryImages: [
+        "./assets/photos/01.jpg",
+        "./assets/photos/02.jpg",
+        "./assets/photos/03.jpg",
+        "./assets/photos/04.jpg"
+      ],
+
+      classes: [
+        { name: "Kelas Qur’an Darat", desc: "Program pembinaan tilawah dan pemahaman dasar." },
+        { name: "Kelas Iqro’ Darat", desc: "Penguatan baca tulis Al-Qur’an (tahap Iqro’)." },
+        { name: "Kelas PAI Semester 1", desc: "Materi PAI semester 1." },
+        { name: "Kelas PAI Semester 2", desc: "Materi PAI semester 2." },
+        { name: "Kelas Nuroniyah Kids", desc: "Kelas anak-anak (kids)." },
+      ]
+    };
+
+    /***********************
+     * i18n
+     ***********************/
+    const I18N = {
+      id: {
+        top_title: "RBM Japan • Kelulusan",
+        top_sub: "Undangan Web + RSVP",
+        nav_detail:"Detail", nav_classes:"Kelas", nav_gallery:"Galeri", nav_guestbook:"Buku Tamu", nav_rsvp:"RSVP",
+
+        badge_event:"Acara Kelulusan",
+        to_default:"Kepada Yth: Tamu Undangan",
+        cover_title:"Undangan Kelulusan Siswa RBM Japan",
+        cover_desc:"Mari rayakan pencapaian para siswa. Silakan buka undangan dan konfirmasi kehadiran Anda.",
+        btn_open:"Buka Undangan",
+        btn_share:"Bagikan",
+        btn_map:"Buka Peta",
+        btn_calendar:"Tambah ke Kalender",
+
+        sec_detail:"Detail Acara",
+        k_when:"Waktu", k_where:"Tempat", k_access:"Akses",
+        access_text:"± 5–6 menit jalan kaki dari JR 横浜線 十日市場駅.",
+        sec_countdown:"Hitung Mundur",
+        cd_days:"Hari", cd_hours:"Jam", cd_mins:"Menit", cd_secs:"Detik",
+        note_text:"Dress code rapi & sopan. Mohon hadir 15 menit lebih awal untuk registrasi.",
+
+        sec_hadith:"Kutipan Hadits Shahih",
+        hadith_tr:"“Barangsiapa menempuh jalan untuk mencari ilmu, maka Allah akan memudahkan baginya jalan menuju surga.”",
+        hadith_src:"HR. Muslim (no. 2699) — potongan lafaz tentang menuntut ilmu.",
+
+        sec_classes:"Kelas yang Diwisuda",
+        classes_desc:"Berikut daftar kelas (bisa ditambah kapan saja).",
+
+        sec_gallery:"Galeri",
+        gallery_desc:"Taruh foto di folder assets/photos/ lalu sesuaikan daftar nama file di CONFIG.galleryImages.",
+
+        sec_guestbook:"Buku Tamu",
+        guestbook_desc:"Isi ucapan singkat. Jika endpoint Google Sheet diaktifkan, ucapan bisa ditampilkan publik (via JSONP).",
+
+        sec_rsvp:"RSVP (Konfirmasi Kehadiran)",
+        rsvp_hint:"Isi form di bawah. Jika endpoint Google Sheet belum diaktifkan, data tetap tersimpan di perangkat Anda (local).",
+
+        f_name:"Nama",
+        f_contact:"Kontak (Email / WhatsApp)",
+        f_message:"Pesan / ucapan (opsional)",
+        f_attendance:"Kehadiran",
+        att_yes:"Hadir", att_no:"Tidak dapat hadir", att_maybe:"Masih ragu",
+        f_guests:"Jumlah orang",
+        f_lang:"Bahasa",
+        f_note:"Catatan (opsional)",
+
+        btn_send_message:"Kirim Ucapan",
+        btn_refresh:"Muat Ulang",
+        btn_submit:"Kirim RSVP",
+        btn_reset:"Reset",
+
+        toast_share:"Link undangan disalin.",
+        toast_music_on:"Musik: ON",
+        toast_music_off:"Musik: OFF",
+        toast_saved_local:"Tersimpan di perangkat (local).",
+        toast_sent:"Terkirim.",
+        toast_failed:"Gagal kirim ke server. Tetap tersimpan lokal.",
+
+        footer_note:"Logo/foto tinggal Anda upload ke folder assets/ sesuai petunjuk."
+      },
+      en: {
+        top_title:"RBM Japan • Graduation",
+        top_sub:"Web Invitation + RSVP",
+        nav_detail:"Details", nav_classes:"Classes", nav_gallery:"Gallery", nav_guestbook:"Guestbook", nav_rsvp:"RSVP",
+
+        badge_event:"Graduation Ceremony",
+        to_default:"To: Invited Guest",
+        cover_title:"RBM Japan Student Graduation Ceremony Invitation",
+        cover_desc:"Let’s celebrate our students’ achievement. Please open the invitation and confirm your attendance.",
+        btn_open:"Open Invitation",
+        btn_share:"Share",
+        btn_map:"Open Map",
+        btn_calendar:"Add to Calendar",
+
+        sec_detail:"Event Details",
+        k_when:"When", k_where:"Where", k_access:"Access",
+        access_text:"Approx. 5–6 minutes walk from JR Yokohama Line Tokaichiba Station.",
+        sec_countdown:"Countdown",
+        cd_days:"Days", cd_hours:"Hours", cd_mins:"Minutes", cd_secs:"Seconds",
+        note_text:"Dress neatly and respectfully. Please arrive 15 minutes early for registration.",
+
+        sec_hadith:"Authentic Hadith Quote",
+        hadith_tr:"“Whoever travels a path in search of knowledge, Allah will make easy for him a path to Paradise.”",
+        hadith_src:"Sahih Muslim (no. 2699) — excerpt on seeking knowledge.",
+
+        sec_classes:"Graduating Classes",
+        classes_desc:"Class list (you can add more later).",
+
+        sec_gallery:"Gallery",
+        gallery_desc:"Put photos in assets/photos/ and update CONFIG.galleryImages.",
+
+        sec_guestbook:"Guestbook",
+        guestbook_desc:"Leave a short message. If Sheets endpoint is enabled, messages can be shown publicly (JSONP).",
+
+        sec_rsvp:"RSVP (Attendance Confirmation)",
+        rsvp_hint:"Fill in the form. If Google Sheet endpoint is not enabled, your response is saved locally.",
+
+        f_name:"Name",
+        f_contact:"Contact (Email / WhatsApp)",
+        f_message:"Message (optional)",
+        f_attendance:"Attendance",
+        att_yes:"Attending", att_no:"Not attending", att_maybe:"Maybe",
+        f_guests:"Number of people",
+        f_lang:"Language",
+        f_note:"Note (optional)",
+
+        btn_send_message:"Send Message",
+        btn_refresh:"Refresh",
+        btn_submit:"Submit RSVP",
+        btn_reset:"Reset",
+
+        toast_share:"Invitation link copied.",
+        toast_music_on:"Music: ON",
+        toast_music_off:"Music: OFF",
+        toast_saved_local:"Saved locally on your device.",
+        toast_sent:"Sent.",
+        toast_failed:"Server failed. Still saved locally.",
+
+        footer_note:"Upload logo/photos into assets/ as instructed."
+      },
+      ja: {
+        top_title:"RBM Japan • 卒業式",
+        top_sub:"Web招待状 + RSVP",
+        nav_detail:"詳細", nav_classes:"クラス", nav_gallery:"ギャラリー", nav_guestbook:"ゲストブック", nav_rsvp:"RSVP",
+
+        badge_event:"卒業式",
+        to_default:"ご招待：ゲスト様",
+        cover_title:"RBM Japan 卒業式のご案内",
+        cover_desc:"生徒の門出を一緒にお祝いしましょう。招待状を開き、出欠をご回答ください。",
+        btn_open:"招待状を開く",
+        btn_share:"共有",
+        btn_map:"地図を開く",
+        btn_calendar:"カレンダーに追加",
+
+        sec_detail:"開催情報",
+        k_when:"日時", k_where:"会場", k_access:"アクセス",
+        access_text:"JR横浜線「十日市場駅」から徒歩約5〜6分。",
+        sec_countdown:"カウントダウン",
+        cd_days:"日", cd_hours:"時間", cd_mins:"分", cd_secs:"秒",
+        note_text:"服装は清潔感のあるものを推奨します。受付のため15分前のご来場にご協力ください。",
+
+        sec_hadith:"真正なハディースの引用",
+        hadith_tr:"「知識を求めて道を歩む者には、アッラーが楽園への道を容易にして下さる」",
+        hadith_src:"サヒーフ・ムスリム（2699）— 知識探求に関する一節。",
+
+        sec_classes:"卒業クラス",
+        classes_desc:"クラス一覧（追加可能）",
+
+        sec_gallery:"ギャラリー",
+        gallery_desc:"assets/photos/ に写真を入れ、CONFIG.galleryImages を更新してください。",
+
+        sec_guestbook:"ゲストブック",
+        guestbook_desc:"メッセージをご記入ください。Sheets連携があれば公開表示も可能（JSONP）。",
+
+        sec_rsvp:"RSVP（出欠回答）",
+        rsvp_hint:"フォームにご入力ください。Sheets未設定でも端末に保存されます。",
+
+        f_name:"お名前",
+        f_contact:"連絡先（Email / WhatsApp）",
+        f_message:"メッセージ（任意）",
+        f_attendance:"出欠",
+        att_yes:"出席", att_no:"欠席", att_maybe:"未定",
+        f_guests:"人数",
+        f_lang:"言語",
+        f_note:"備考（任意）",
+
+        btn_send_message:"送信",
+        btn_refresh:"更新",
+        btn_submit:"送信",
+        btn_reset:"リセット",
+
+        toast_share:"リンクをコピーしました。",
+        toast_music_on:"音楽：ON",
+        toast_music_off:"音楽：OFF",
+        toast_saved_local:"端末に保存しました。",
+        toast_sent:"送信しました。",
+        toast_failed:"サーバー送信に失敗。端末には保存されています。",
+
+        footer_note:"logo/photos は assets/ にアップロードしてください。"
+      }
+    };
+
+    /***********************
+     * State + helpers
+     ***********************/
+    const $ = (q)=>document.querySelector(q);
+    const $$ = (q)=>Array.from(document.querySelectorAll(q));
+    const state = { lang:"id", slideIndex:0, slideFlip:false, musicOn:false };
+
+    function toast(msg){
+      const t = $("#toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(()=>t.classList.remove("show"), 3200);
+    }
+    function pad2(n){ return String(n).padStart(2,"0"); }
+
+    function getQueryParam(name){
+      const u = new URL(location.href);
+      return u.searchParams.get(name);
+    }
+
+    function formatWhen(lang){
+      const s = new Date(CONFIG.startISO);
+      const e = new Date(CONFIG.endISO);
+
+      const yyyy = s.getFullYear();
+      const mm = s.getMonth()+1;
+      const dd = s.getDate();
+      const dow = s.getDay();
+      const dowId = ["Minggu","Senin","Selasa","Rabu","Kamis","Jumat","Sabtu"][dow];
+      const dowEn = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"][dow];
+      const dowJa = ["日","月","火","水","木","金","土"][dow];
+
+      const time = `${pad2(s.getHours())}:${pad2(s.getMinutes())}–${pad2(e.getHours())}:${pad2(e.getMinutes())} JST`;
+      if(lang==="id") return `${dowId}, ${dd} Januari ${yyyy} • ${time}`;
+      if(lang==="en") return `${dowEn}, January ${dd}, ${yyyy} • ${time}`;
+      return `${yyyy}年${mm}月${dd}日（${dowJa}） • ${time}`;
+    }
+
+    function setLang(lang){
+      state.lang = lang;
+      document.documentElement.lang = lang;
+
+      $$(".chip").forEach(c=>c.classList.toggle("active", c.dataset.lang===lang));
+      $("#langSelect").value = lang;
+
+      $$("[data-i18n]").forEach(el=>{
+        const key = el.getAttribute("data-i18n");
+        if(I18N[lang][key] != null) el.textContent = I18N[lang][key];
+      });
+
+      $("#hadithTranslation").textContent = I18N[lang].hadith_tr;
+      $("#hadithSource").textContent = I18N[lang].hadith_src;
+
+      $("#whenText").textContent = formatWhen(lang);
+      $("#badgeDate").textContent = formatWhen(lang).split("•")[0].trim();
+      $("#addrText").textContent = CONFIG.addressLine;
+      $("#btnMap").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONFIG.mapQuery)}`;
+    }
+
+    function startSlides(){
+      const a = $("#slideA");
+      const b = $("#slideB");
+      const imgs = CONFIG.coverImages.filter(Boolean);
+      if(imgs.length === 0) return;
+
+      const setBg = (el, url)=> el.style.backgroundImage = `url("${url}")`;
+      setBg(a, imgs[0]);
+      setBg(b, imgs[1 % imgs.length]);
+
+      setInterval(()=>{
+        state.slideIndex = (state.slideIndex + 1) % imgs.length;
+        const next = imgs[state.slideIndex];
+
+        state.slideFlip = !state.slideFlip;
+        const active = state.slideFlip ? b : a;
+        const inactive = state.slideFlip ? a : b;
+
+        setBg(inactive, next);
+        inactive.classList.add("active");
+        active.classList.remove("active");
+      }, 6000);
+    }
+
+    function startCountdown(){
+      const target = new Date(CONFIG.startISO).getTime();
+      function tick(){
+        const now = Date.now();
+        let diff = Math.max(0, target - now);
+
+        const d = Math.floor(diff / (24*3600*1000)); diff -= d*24*3600*1000;
+        const h = Math.floor(diff / (3600*1000)); diff -= h*3600*1000;
+        const m = Math.floor(diff / (60*1000)); diff -= m*60*1000;
+        const s = Math.floor(diff / 1000);
+
+        $("#cdDays").textContent = d;
+        $("#cdHours").textContent = pad2(h);
+        $("#cdMins").textContent = pad2(m);
+        $("#cdSecs").textContent = pad2(s);
+      }
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    function buildICS(){
+      const dtStart = new Date(CONFIG.startISO);
+      const dtEnd = new Date(CONFIG.endISO);
+      const toICS = (d)=>{
+        const u = new Date(d.getTime());
+        const yyyy = u.getUTCFullYear();
+        const mm = pad2(u.getUTCMonth()+1);
+        const dd = pad2(u.getUTCDate());
+        const hh = pad2(u.getUTCHours());
+        const mi = pad2(u.getUTCMinutes());
+        const ss = pad2(u.getUTCSeconds());
+        return `${yyyy}${mm}${dd}T${hh}${mi}${ss}Z`;
+      };
+      const uid = `rbm-grad-${Date.now()}@rbm-japan`;
+      return [
+        "BEGIN:VCALENDAR",
+        "VERSION:2.0",
+        "PRODID:-//RBM Japan//Graduation//EN",
+        "CALSCALE:GREGORIAN",
+        "METHOD:PUBLISH",
+        "BEGIN:VEVENT",
+        `UID:${uid}`,
+        `DTSTAMP:${toICS(new Date())}`,
+        `DTSTART:${toICS(dtStart)}`,
+        `DTEND:${toICS(dtEnd)}`,
+        `SUMMARY:${CONFIG.eventTitle}`,
+        `LOCATION:${CONFIG.venueName} (${CONFIG.addressLine})`,
+        "DESCRIPTION:RBM Japan Graduation Ceremony",
+        "END:VEVENT",
+        "END:VCALENDAR"
+      ].join("\r\n");
+    }
+
+    async function shareLink(){
+      const url = location.href;
+      try{
+        if(navigator.share){
+          await navigator.share({ title: document.title, url });
+          return;
+        }
+        await navigator.clipboard.writeText(url);
+        toast(I18N[state.lang].toast_share);
+      }catch{
+        prompt("Copy link:", url);
+      }
+    }
+
+    function safeText(s){
+      return String(s || "").replace(/[<>&"]/g, c => ({ "<":"&lt;", ">":"&gt;", "&":"&amp;", "\"":"&quot;" }[c]));
+    }
+
+    function renderClasses(){
+      const grid = $("#classGrid");
+      grid.innerHTML = CONFIG.classes.map(c => `
+        <div class="classCard">
+          <b>${safeText(c.name)}</b>
+          <div class="small">${safeText(c.desc || "")}</div>
+        </div>
+      `).join("");
+    }
+
+    function renderGallery(){
+      const grid = $("#galleryGrid");
+      const imgs = CONFIG.galleryImages.filter(Boolean);
+      grid.innerHTML = imgs.map((src, idx)=>`
+        <div class="gItem" data-src="${safeText(src)}" aria-label="photo ${idx+1}">
+          <img src="${safeText(src)}" alt="photo ${idx+1}">
+        </div>
+      `).join("");
+
+      grid.querySelectorAll(".gItem").forEach(el=>{
+        el.addEventListener("click", ()=>{
+          $("#lightboxImg").src = el.dataset.src;
+          $("#lightbox").classList.add("show");
+          $("#lightbox").setAttribute("aria-hidden", "false");
+        });
+      });
+    }
+
+    $("#lightbox").addEventListener("click", ()=>{
+      $("#lightbox").classList.remove("show");
+      $("#lightbox").setAttribute("aria-hidden", "true");
+      $("#lightboxImg").src = "";
+    });
+
+    // Music toggle (mulai setelah user klik)
+    async function toggleMusic(){
+      const audio = $("#bgm");
+      try{
+        if(!state.musicOn){
+          await audio.play();
+          state.musicOn = true;
+          toast(I18N[state.lang].toast_music_on);
+        }else{
+          audio.pause();
+          state.musicOn = false;
+          toast(I18N[state.lang].toast_music_off);
+        }
+      }catch{
+        // jika file tidak ada / autoplay diblokir
+        toast("Musik tidak bisa diputar (cek file assets/bgm.mp3).");
+      }
+    }
+    $("#btnMusic").addEventListener("click", toggleMusic);
+
+    // Scroll open (LinkUndangan-like)
+    $("#btnOpen").addEventListener("click", ()=>{
+      // biasanya musik mulai ketika dibuka
+      toggleMusic().catch(()=>{});
+      $("#detail").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    $("#btnShare").addEventListener("click", shareLink);
+    $("#btnCalendar").addEventListener("click", ()=>{
+      const ics = buildICS();
+      const blob = new Blob([ics], { type:"text/calendar;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "RBM-Japan-Graduation.ics";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 800);
+    });
+
+    // RSVP + Guestbook storage
+    const KEY_RSVP = "rbm_rsvp_latest_v1";
+    const KEY_GB = "rbm_guestbook_local_v1";
+
+    function saveLocal(key, payload){
+      localStorage.setItem(key, JSON.stringify({ payload, ts: Date.now() }));
+    }
+
+    async function postToEndpoint(payload){
+      if(!CONFIG.ENDPOINT) return { ok:false, reason:"no-endpoint" };
+      const res = await fetch(CONFIG.ENDPOINT, {
+        method:"POST",
+        headers:{ "Content-Type":"application/json" },
+        body: JSON.stringify(payload),
+      });
+      if(!res.ok) throw new Error("HTTP " + res.status);
+      return { ok:true };
+    }
+
+    // Guestbook JSONP loader (tanpa CORS)
+    function loadGuestbookFromEndpoint(){
+      const list = $("#gbList");
+      const info = $("#gbInfo");
+
+      if(!CONFIG.ENDPOINT){
+        info.textContent = I18N[state.lang].toast_saved_local;
+        renderGuestbookLocal();
+        return;
+      }
+
+      // create global callback
+      window.renderGuestbook = function(data){
+        if(!Array.isArray(data)) data = [];
+        if(data.length === 0){
+          list.innerHTML = `<div class="muted">—</div>`;
+          return;
+        }
+        list.innerHTML = data.map(x=>`
+          <div class="gbItem">
+            <div><b>${safeText(x.name || "")}</b></div>
+            <div>${safeText(x.message || "")}</div>
+            <div class="meta">${safeText(x.tsText || "")}</div>
+          </div>
+        `).join("");
+      };
+
+      // inject <script> for JSONP
+      const s = document.createElement("script");
+      const limit = 20;
+      s.src = `${CONFIG.ENDPOINT}?mode=guestbook&limit=${limit}&callback=renderGuestbook&_=${Date.now()}`;
+      s.onerror = ()=>{
+        info.textContent = I18N[state.lang].toast_failed;
+        renderGuestbookLocal();
+      };
+      document.body.appendChild(s);
+      // cleanup old scripts (best-effort)
+      setTimeout(()=>{ try{s.remove()}catch{} }, 8000);
+    }
+
+    function renderGuestbookLocal(){
+      const list = $("#gbList");
+      const arr = JSON.parse(localStorage.getItem(KEY_GB) || "[]");
+      if(arr.length === 0){
+        list.innerHTML = `<div class="muted">—</div>`;
+        return;
+      }
+      list.innerHTML = arr.slice(0, 20).map(x=>`
+        <div class="gbItem">
+          <div><b>${safeText(x.name)}</b></div>
+          <div>${safeText(x.message)}</div>
+          <div class="meta">${safeText(new Date(x.ts).toLocaleString("id-ID"))}</div>
+        </div>
+      `).join("");
+    }
+
+    $("#gbReload").addEventListener("click", loadGuestbookFromEndpoint);
+
+    $("#gbForm").addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const payload = {
+        type: "guestbook",
+        name: String(fd.get("name")||"").trim(),
+        contact: String(fd.get("contact")||"").trim(),
+        message: String(fd.get("message")||"").trim(),
+        lang: state.lang,
+        meta: { page: location.href, ua: navigator.userAgent, ts: new Date().toISOString() }
+      };
+
+      // local append list
+      const arr = JSON.parse(localStorage.getItem(KEY_GB) || "[]");
+      arr.unshift({ name: payload.name, message: payload.message, ts: Date.now() });
+      localStorage.setItem(KEY_GB, JSON.stringify(arr));
+
+      try{
+        if(CONFIG.ENDPOINT) await postToEndpoint(payload);
+        toast(I18N[state.lang].toast_sent);
+      }catch{
+        toast(I18N[state.lang].toast_failed);
+      }finally{
+        e.target.reset();
+        loadGuestbookFromEndpoint();
+      }
+    });
+
+    $("#rsvpForm").addEventListener("submit", async (e)=>{
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      const payload = {
+        type: "rsvp",
+        name: String(fd.get("name")||"").trim(),
+        contact: String(fd.get("contact")||"").trim(),
+        attendance: String(fd.get("attendance")||""),
+        guests: String(fd.get("guests")||"1"),
+        note: String(fd.get("note")||"").trim(),
+        lang: String(fd.get("lang")||state.lang),
+        meta: { page: location.href, ua: navigator.userAgent, ts: new Date().toISOString() },
+        event: { title: CONFIG.eventTitle, startISO: CONFIG.startISO, venue: CONFIG.venueName }
+      };
+
+      saveLocal(KEY_RSVP, payload);
+      $("#saveInfo").textContent = I18N[state.lang].toast_saved_local;
+
+      try{
+        if(CONFIG.ENDPOINT) await postToEndpoint(payload);
+        toast(I18N[state.lang].toast_sent);
+      }catch{
+        toast(I18N[state.lang].toast_failed);
+      } finally {
+        // optional: keep form as-is, or reset
+        // e.target.reset();
+      }
+    });
+
+    $("#btnReset").addEventListener("click", ()=>{
+      $("#rsvpForm").reset();
+      $("#saveInfo").textContent = "";
+    });
+
+    $("#langSelect").addEventListener("change", (e)=> setLang(e.target.value));
+    $$(".chip").forEach(ch=> ch.addEventListener("click", ()=> setLang(ch.dataset.lang)));
+
+    // Personalization: ?to=
+    const to = getQueryParam("to");
+    if(to){
+      const name = decodeURIComponent(to);
+      $("#toLine").textContent = (state.lang==="en") ? `To: ${name}` :
+                                (state.lang==="ja") ? `ご招待：${name} 様` :
+                                `Kepada Yth: ${name}`;
+      // prefill
+      const rsvpName = document.querySelector('#rsvpForm input[name="name"]');
+      const gbName = document.querySelector('#gbForm input[name="name"]');
+      if(rsvpName && !rsvpName.value) rsvpName.value = name;
+      if(gbName && !gbName.value) gbName.value = name;
+    }
+
+    // Init
+    setLang("id");
+    $("#whenText").textContent = formatWhen("id");
+    $("#badgeDate").textContent = "24 Januari 2026";
+
+    renderClasses();
+    renderGallery();
+    startSlides();
+    startCountdown();
+    loadGuestbookFromEndpoint();
+  </script>
+</body>
+</html>
