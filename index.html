@@ -317,11 +317,12 @@ body::after{
     .btn:active{ transform: scale(.99); }
 
    .btn.primary{
-  background: linear-gradient(90deg, rgba(0,194,255,.95), rgba(255,79,216,.88), rgba(255,217,61,.80));
+  background: linear-gradient(90deg, rgba(0,194,255,.95), rgba(255,79,216,.90));
   border-color: rgba(255,255,255,.38);
   box-shadow: 0 14px 40px rgba(0,0,0,.22);
   animation: btnGlow 2.6s ease-in-out infinite alternate;
 }
+
 
 @keyframes btnGlow{
   0%{ transform: translateY(0); filter: brightness(1); }
@@ -371,24 +372,31 @@ body::after{
   z-index: 5;
 }
 
-/* rainbow border animated */
-.card::before{
-  content:"";
-  position:absolute;
-  inset:-1px;
+.card{
+  position: relative;
+  z-index: 5;
+
   border-radius: var(--r);
-  background: linear-gradient(90deg, var(--c1), var(--c2), var(--c3), var(--c4), var(--c5), var(--c1));
-  background-size: 300% 300%;
-  animation: borderShift 7s ease infinite;
-  z-index: -1;
-  filter: saturate(1.2);
+  border: 1px solid transparent;
+  overflow: hidden;
+
+  /* 2-layer background: isi kartu + border gradient (tanpa pelangi) */
+  background:
+    linear-gradient(rgba(8, 10, 18, .46), rgba(8, 10, 18, .46)) padding-box,
+    linear-gradient(90deg, rgba(0,194,255,.95), rgba(255,79,216,.90)) border-box;
+
+  background-size: 100% 100%, 220% 220%;
+  background-position: 0 0, 0% 50%;
+  animation: cardBorderShimmer 6.5s ease-in-out infinite alternate;
+
+  box-shadow: 0 16px 50px rgba(0,0,0,.22);
 }
 
-@keyframes borderShift{
-  0%{ background-position: 0% 50%; }
-  50%{ background-position: 100% 50%; }
-  100%{ background-position: 0% 50%; }
+@keyframes cardBorderShimmer{
+  0%   { background-position: 0 0, 0% 50%;   filter: saturate(1.08) brightness(1.00); }
+  100% { background-position: 0 0, 100% 50%; filter: saturate(1.18) brightness(1.04); }
 }
+
 
     .mutedText{ color: rgba(255,255,255,.88); font-size: 12px; line-height: 1.6; }
     .hr{ height:1px; background: rgba(255,255,255,.22); margin: 12px 0; }
@@ -703,6 +711,78 @@ body::after{
       .bubble{ animation:none; }
       .carouselTrack{ transition:none; }
     }
+    /* ===== Floating Stickers (stars & clouds) ===== */
+.stickers{
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1; /* di atas background, di bawah konten card (konten z-index 5) */
+  overflow: hidden;
+}
+
+.sticker{
+  position: absolute;
+  width: var(--s, 72px);
+  height: var(--s, 72px);
+  opacity: var(--o, .22);
+  transform: translate3d(0,0,0);
+  filter: drop-shadow(0 14px 26px rgba(0,0,0,.18));
+  animation: stickerFloat var(--t, 14s) ease-in-out infinite;
+}
+
+/* Bentuk awan (cloud) */
+.sticker.cloud{
+  background:
+    radial-gradient(circle at 32% 58%, rgba(255,255,255,.92) 0 22%, transparent 24%),
+    radial-gradient(circle at 52% 44%, rgba(255,255,255,.92) 0 28%, transparent 30%),
+    radial-gradient(circle at 72% 58%, rgba(255,255,255,.92) 0 20%, transparent 22%),
+    radial-gradient(60% 55% at 52% 70%, rgba(255,255,255,.92) 0 55%, transparent 57%);
+  border-radius: 999px;
+}
+
+/* Bentuk bintang (star) */
+.sticker.star{
+  background: rgba(255,255,255,.90);
+  clip-path: polygon(
+    50% 0%,
+    62% 34%,
+    98% 35%,
+    69% 57%,
+    80% 92%,
+    50% 72%,
+    20% 92%,
+    31% 57%,
+    2% 35%,
+    38% 34%
+  );
+}
+
+/* Variasi warna lembut (tetap non-pelangi; cuma aksen) */
+.sticker.tint-blue{  background-color: rgba(0,194,255,.28); }
+.sticker.tint-pink{  background-color: rgba(255,79,216,.26); }
+.sticker.tint-yellow{background-color: rgba(255,217,61,.22); }
+
+.sticker.star.tint-blue{   background: rgba(0,194,255,.30); }
+.sticker.star.tint-pink{   background: rgba(255,79,216,.28); }
+.sticker.star.tint-yellow{ background: rgba(255,217,61,.24); }
+
+@keyframes stickerFloat{
+  0%{
+    transform: translate3d(var(--x, 0px), 110vh, 0) rotate(0deg) scale(.95);
+  }
+  50%{
+    transform: translate3d(calc(var(--x, 0px) + 10px), 45vh, 0) rotate(10deg) scale(1.02);
+  }
+  100%{
+    transform: translate3d(calc(var(--x, 0px) - 10px), -25vh, 0) rotate(-8deg) scale(.98);
+  }
+}
+
+/* Reduce motion */
+@media (prefers-reduced-motion: reduce){
+  .sticker{ animation:none; }
+}
+
   </style>
 </head>
 
@@ -715,6 +795,21 @@ body::after{
   </div>
 
   <canvas id="confetti"></canvas>
+<!-- Floating Stickers (stars & clouds) -->
+<div class="stickers" aria-hidden="true">
+  <!-- Cloud group -->
+  <div class="sticker cloud" style="left:6%;  --s:90px; --o:.18; --t:18s; --x:-8px;"></div>
+  <div class="sticker cloud" style="left:72%; --s:78px; --o:.16; --t:20s; --x:12px;"></div>
+
+  <!-- Star group -->
+  <div class="sticker star tint-yellow" style="left:18%; --s:44px; --o:.20; --t:14s; --x:6px;"></div>
+  <div class="sticker star tint-pink"   style="left:42%; --s:52px; --o:.18; --t:16s; --x:-10px;"></div>
+  <div class="sticker star tint-blue"   style="left:86%; --s:40px; --o:.18; --t:15s; --x:8px;"></div>
+
+  <!-- Extra small clouds for depth -->
+  <div class="sticker cloud" style="left:30%; --s:62px; --o:.12; --t:22s; --x:14px;"></div>
+  <div class="sticker cloud" style="left:90%; --s:58px; --o:.11; --t:24s; --x:-12px;"></div>
+</div>
 
   <!-- Cover -->
   <div class="coverWrap" id="coverWrap">
@@ -1027,7 +1122,9 @@ const I18N = {
 
     sec_rsvp:"RSVP (Konfirmasi Kehadiran)",
     rsvp_hint:"Isi form di bawah.",
-men_notice:"<b>Pengumuman:</b> Untuk Bapak-bapak, mohon menunggu di luar ruangan.",
+men_notice_title:"Pengumuman:",
+men_notice_body:"Untuk Bapak-bapak, mohon menunggu di luar ruangan.",
+
     f_name:"Nama",
     f_contact:"Kontak (Email / WhatsApp)",
     f_attendance:"Kehadiran",
@@ -1076,7 +1173,9 @@ men_notice:"<b>Pengumuman:</b> Untuk Bapak-bapak, mohon menunggu di luar ruangan
 
     sec_rsvp:"RSVP (Attendance Confirmation)",
     rsvp_hint:"Fill in the form.",
-men_notice:"<b>Notice:</b> For fathers/men, please wait outside the room.",
+men_notice_title:"Notice:",
+men_notice_body:"For fathers/men, please wait outside the room.",
+,
 
     f_name:"Name",
     f_contact:"Contact (Email / WhatsApp)",
@@ -1126,7 +1225,9 @@ men_notice:"<b>Notice:</b> For fathers/men, please wait outside the room.",
 
     sec_rsvp:"RSVP（出欠回答）",
     rsvp_hint:"フォームにご入力ください。",
-men_notice:"<b>お知らせ：</b> 男性（お父様）は室外でお待ちください。",
+men_notice_title:"お知らせ：",
+men_notice_body:"男性（お父様）は室外でお待ちください。",
+
 
     f_name:"お名前",
     f_contact:"連絡先（Email / WhatsApp）",
