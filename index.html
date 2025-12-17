@@ -823,6 +823,166 @@ section{ scroll-margin-top: 86px; }
   .navItem{ min-height: 48px; }
 }
 
+/* =========================
+   KAIZEN: Wisuda Anak Islami (Extra Animations)
+   ========================= */
+.coverHalo{
+  position:absolute;
+  inset:-18px;
+  border-radius: 44px;
+  pointer-events:none;
+  z-index:0;
+  background: conic-gradient(from 0deg,
+    rgba(246,196,83,.00),
+    rgba(246,196,83,.40),
+    rgba(0,183,255,.22),
+    rgba(22,163,74,.28),
+    rgba(246,196,83,.40),
+    rgba(246,196,83,.00)
+  );
+  filter: blur(16px);
+  opacity: .55;
+  animation: haloSpin 10s linear infinite;
+  mix-blend-mode: soft-light;
+}
+@keyframes haloSpin{ to{ transform: rotate(360deg); } }
+
+.coverBody .badge{ transform-origin: 20% 50%; animation: badgePop .72s cubic-bezier(.2,.9,.2,1) both; }
+.coverBody .badge:nth-child(1){ animation-delay: .06s; }
+.coverBody .badge:nth-child(2){ animation-delay: .12s; }
+.coverBody .badge:nth-child(3){ animation-delay: .18s; }
+@keyframes badgePop{
+  0%{ opacity:0; transform: translateY(10px) scale(.92); }
+  100%{ opacity:1; transform: translateY(0) scale(1); }
+}
+
+.coverTitle{ animation: titleBounce .9s cubic-bezier(.2,.9,.2,1) both; }
+@keyframes titleBounce{
+  0%{ opacity:0; transform: translateY(10px); }
+  70%{ opacity:1; transform: translateY(-2px); }
+  100%{ transform: translateY(0); }
+}
+
+/* Extra stickers: cap / lantern / laurel */
+.sticker.cap,
+.sticker.lantern,
+.sticker.laurel{
+  background-color: transparent;
+  background-repeat:no-repeat;
+  background-position:center;
+  background-size: contain;
+  border-radius: 0;
+}
+.sticker.cap{
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cpath d='M10 34L48 18l38 16-38 16-38-16Z' fill='%2300B7FF' fill-opacity='.22'/%3E%3Cpath d='M24 44v16c0 10 48 10 48 0V44L48 54 24 44Z' fill='%2316A34A' fill-opacity='.22'/%3E%3Cpath d='M78 37v28' stroke='%23F6C453' stroke-opacity='.55' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='78' cy='69' r='5' fill='%23F6C453' fill-opacity='.55'/%3E%3C/svg%3E");
+}
+.sticker.lantern{
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cpath d='M48 10c10 0 18 8 18 18v3H30v-3c0-10 8-18 18-18Z' fill='%23F6C453' fill-opacity='.22'/%3E%3Cpath d='M30 31h36l-6 44H36l-6-44Z' fill='%2300B7FF' fill-opacity='.18'/%3E%3Cpath d='M38 31v44M58 31v44' stroke='%23ffffff' stroke-opacity='.35' stroke-width='3'/%3E%3Cpath d='M44 75h8v7h-8z' fill='%2316A34A' fill-opacity='.22'/%3E%3Cpath d='M48 7v6' stroke='%23ffffff' stroke-opacity='.45' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+}
+.sticker.laurel{
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'%3E%3Cpath d='M34 78c-10-9-16-22-16-36 0-10 3-19 9-27' fill='none' stroke='%2316A34A' stroke-opacity='.26' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M62 78c10-9 16-22 16-36 0-10-3-19-9-27' fill='none' stroke='%23F6C453' stroke-opacity='.28' stroke-width='6' stroke-linecap='round'/%3E%3Ccircle cx='48' cy='74' r='7' fill='%23ffffff' fill-opacity='.16'/%3E%3C/svg%3E");
+}
+
+/* Twinkle for stars/crescents (no transform here, so it won't fight stickerFloat) */
+.sticker.star,
+.sticker.crescent{
+  animation:
+    stickerFloat var(--t, 16s) ease-in-out infinite,
+    twinkle 3.2s ease-in-out infinite;
+}
+@keyframes twinkle{
+  0%,100%{ opacity: var(--o,.16); filter: drop-shadow(0 12px 24px rgba(0,60,120,.10)) brightness(1); }
+  50%{ opacity: calc(var(--o,.16) + .08); filter: drop-shadow(0 16px 30px rgba(0,60,120,.14)) brightness(1.16); }
+}
+
+/* Celebration mode: a short “wow” moment after opening */
+body.celebrate::before{ opacity: .26; }
+body.celebrate .card{ animation-duration: 5.2s; }
+body.celebrate .btn.primary{ filter: brightness(1.07); }
+
+/* Tap sparkle trail (kids vibe) */
+.tapSparkle{
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  left: 0; top: 0;
+  pointer-events:none;
+  z-index: 80;
+  opacity: 0;
+  background: rgba(255,255,255,.85);
+  clip-path: polygon(
+    50% 0%,
+    62% 34%,
+    98% 35%,
+    69% 57%,
+    80% 92%,
+    50% 72%,
+    20% 92%,
+    31% 57%,
+    2% 35%,
+    38% 34%
+  );
+  filter: drop-shadow(0 10px 22px rgba(0,60,120,.14));
+  animation: sparklePop .75s ease-out forwards;
+  mix-blend-mode: soft-light;
+}
+.tapSparkle.crescent{
+  clip-path: none;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 38% 50%, rgba(255,255,255,.92) 0 54%, transparent 55%),
+    radial-gradient(circle at 58% 50%, transparent 0 46%, rgba(255,255,255,.92) 47% 100%);
+  width: 20px; height: 20px;
+}
+@keyframes sparklePop{
+  0%{ opacity:0; transform: translate3d(var(--dx,0px), var(--dy,0px),0) scale(.35) rotate(-12deg); }
+  25%{ opacity:1; }
+  100%{ opacity:0; transform: translate3d(var(--dx,0px), calc(var(--dy,0px) - 22px),0) scale(1.7) rotate(28deg); }
+}
+
+/* Burst pieces (extra celebratory pop on open) */
+.burstPiece{
+  position: fixed;
+  left: 50%;
+  top: 40%;
+  width: 18px;
+  height: 18px;
+  pointer-events:none;
+  z-index: 80;
+  opacity: 0;
+  background: rgba(246,196,83,.70);
+  clip-path: polygon(
+    50% 0%,
+    62% 34%,
+    98% 35%,
+    69% 57%,
+    80% 92%,
+    50% 72%,
+    20% 92%,
+    31% 57%,
+    2% 35%,
+    38% 34%
+  );
+  filter: drop-shadow(0 14px 30px rgba(0,60,120,.14));
+  animation: burstFly .95s cubic-bezier(.2,.9,.2,1) forwards;
+}
+.burstPiece.blue{ background: rgba(0,183,255,.65); }
+.burstPiece.green{ background: rgba(22,163,74,.62); }
+.burstPiece.white{ background: rgba(255,255,255,.78); }
+.burstPiece.crescent{
+  clip-path: none;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 38% 50%, rgba(255,255,255,.92) 0 54%, transparent 55%),
+    radial-gradient(circle at 58% 50%, transparent 0 46%, rgba(255,255,255,.92) 47% 100%);
+  width: 20px; height: 20px;
+}
+@keyframes burstFly{
+  0%{ opacity:0; transform: translate3d(0,0,0) scale(.45) rotate(0deg); }
+  18%{ opacity:1; }
+  100%{ opacity:0; transform: translate3d(var(--tx,0px), var(--ty,0px),0) scale(1.4) rotate(var(--tr,180deg)); }
+}
+
 @media (prefers-reduced-motion: reduce){
   body{ animation:none; }
   .slide{ animation:none; }
@@ -830,6 +990,11 @@ section{ scroll-margin-top: 86px; }
   .bubble{ animation:none; }
   .carouselTrack{ transition:none; }
   .sticker{ animation:none; }
+  .coverHalo{ animation:none; }
+  .coverBody .badge{ animation:none; }
+  .coverTitle{ animation:none; }
+  .tapSparkle, .burstPiece{ animation:none; }
+
 }
   </style>
 </head>
@@ -850,6 +1015,12 @@ section{ scroll-margin-top: 86px; }
     <div class="sticker crescent" style="left:44%; --s:62px; --o:.13; --t:19s; --x:-6px; animation-delay:-11s;"></div>
     <div class="sticker cloud" style="left:72%; --s:86px; --o:.16; --t:20s; --x:-8px; animation-delay:-6s;"></div>
     <div class="sticker star soft" style="left:86%; --s:48px; --o:.14; --t:16s; --x:6px;  animation-delay:-10s;"></div>
+
+    <!-- KAIZEN: extra graduation + islami stickers -->
+    <div class="sticker cap" style="left:10%; --s:64px; --o:.14; --t:17s; --x:6px;  animation-delay:-5s;"></div>
+    <div class="sticker lantern" style="left:28%; --s:58px; --o:.13; --t:20s; --x:-4px; animation-delay:-12s;"></div>
+    <div class="sticker laurel" style="left:56%; --s:66px; --o:.12; --t:21s; --x:2px;  animation-delay:-9s;"></div>
+    <div class="sticker cap" style="left:78%; --s:54px; --o:.12; --t:18s; --x:-6px; animation-delay:-14s;"></div>
   </div>
 
   <canvas id="confetti"></canvas>
@@ -857,6 +1028,7 @@ section{ scroll-margin-top: 86px; }
   <!-- Cover -->
   <div class="coverWrap" id="coverWrap">
     <div class="coverCard" role="dialog" aria-modal="true" aria-label="Undangan">
+      <div class="coverHalo" aria-hidden="true"></div>
       <div class="coverMedia">
         <div class="slide active" id="slideA"></div>
         <div class="slide" id="slideB"></div>
@@ -1534,6 +1706,69 @@ function confettiBurst(durationMs=1400){
 }
 
 /***********************
+ * KAIZEN: Kids sparkle trail + burst (wisuda islami)
+ ***********************/
+function celebrateMode(ms=2600){
+  document.body.classList.add("celebrate");
+  clearTimeout(celebrateMode._t);
+  celebrateMode._t = setTimeout(()=>document.body.classList.remove("celebrate"), ms);
+}
+
+function spawnTapSparkles(x, y, count=4){
+  const frag = document.createDocumentFragment();
+  for(let i=0;i<count;i++){
+    const sp = document.createElement("span");
+    const cres = Math.random() < 0.28;
+    sp.className = "tapSparkle" + (cres ? " crescent" : "");
+    const jitterX = (Math.random()*2-1) * 14;
+    const jitterY = (Math.random()*2-1) * 12;
+    sp.style.left = (x + jitterX) + "px";
+    sp.style.top  = (y + jitterY) + "px";
+    sp.style.setProperty("--dx", ((Math.random()*2-1) * 18) + "px");
+    sp.style.setProperty("--dy", ((Math.random()*2-1) * 10) + "px");
+    frag.appendChild(sp);
+    setTimeout(()=>sp.remove(), 900);
+  }
+  document.body.appendChild(frag);
+}
+
+function starsBurst(){
+  // origin: center of cover card if visible, else center of screen
+  let ox = innerWidth/2, oy = innerHeight*0.35;
+  const cc = document.querySelector(".coverCard");
+  if(cc){
+    const r = cc.getBoundingClientRect();
+    ox = r.left + r.width/2;
+    oy = r.top + r.height*0.38;
+  }
+  const colors = ["white","blue","green"];
+  const n = 26;
+  for(let i=0;i<n;i++){
+    const el = document.createElement("span");
+    const isCres = Math.random() < 0.22;
+    el.className = "burstPiece " + colors[Math.floor(Math.random()*colors.length)] + (isCres ? " crescent" : "");
+    el.style.left = ox + "px";
+    el.style.top  = oy + "px";
+
+    const ang = Math.random() * Math.PI * 2;
+    const dist = 140 + Math.random()*180;
+    el.style.setProperty("--tx", (Math.cos(ang)*dist) + "px");
+    el.style.setProperty("--ty", (Math.sin(ang)*dist) + "px");
+    el.style.setProperty("--tr", (Math.random()*360) + "deg");
+
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(), 1100);
+  }
+}
+
+// Sparkle trail on tap/click (lightweight)
+document.addEventListener("pointerdown", (e)=>{
+  // avoid stealing interactions: purely visual
+  if(!e.isPrimary) return;
+  spawnTapSparkles(e.clientX, e.clientY, 4);
+}, { passive:true });
+
+/***********************
  * Reveal
  ***********************/
 function initReveal(){
@@ -1827,6 +2062,9 @@ function openInvitation(){
 
   document.body.classList.add("opened");
   confettiBurst(1400);
+  // KAIZEN: extra burst + short celebration mode
+  starsBurst();
+  celebrateMode(2600);
   setTimeout(()=> document.getElementById("detail").scrollIntoView({behavior:"smooth", block:"start"}), 180);
 }
 
