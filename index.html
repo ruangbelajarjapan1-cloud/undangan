@@ -307,6 +307,17 @@
     }
     .mutedText{ color: rgba(255,255,255,.88); font-size: 12px; line-height: 1.6; }
     .hr{ height:1px; background: rgba(255,255,255,.22); margin: 12px 0; }
+.notice{
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.22);
+  background: linear-gradient(90deg, rgba(255,138,0,.18), rgba(26,86,255,.14));
+  padding: 12px 12px;
+  color: rgba(255,255,255,.98);
+  font-size: 13px;
+  line-height: 1.6;
+  text-shadow: 0 2px 14px rgba(0,0,0,.45);
+}
+.notice b{ font-weight: 950; }
 
     .grid{
       display:grid;
@@ -764,9 +775,15 @@
       <div class="cardBody">
         <h2 data-i18n="sec_rsvp">RSVP (Konfirmasi Kehadiran)</h2>
         <div class="mutedText" data-i18n="rsvp_hint">
-          Isi form di bawah ini.
-        </div>
-        <div class="hr"></div>
+  Isi form di bawah ini.
+</div>
+
+<div class="notice" data-i18n="men_notice">
+  <b>Pengumuman:</b> Untuk Bapak-bapak, mohon menunggu di luar ruangan.
+</div>
+
+<div class="hr"></div>
+
 
         <form id="rsvpForm">
           <div class="row2">
@@ -923,6 +940,7 @@ const I18N = {
 
     sec_rsvp:"RSVP (Konfirmasi Kehadiran)",
     rsvp_hint:"Isi form di bawah.",
+men_notice:"<b>Pengumuman:</b> Untuk Bapak-bapak, mohon menunggu di luar ruangan."
 
     f_name:"Nama",
     f_contact:"Kontak (Email / WhatsApp)",
@@ -972,6 +990,7 @@ const I18N = {
 
     sec_rsvp:"RSVP (Attendance Confirmation)",
     rsvp_hint:"Fill in the form.",
+men_notice:"<b>Notice:</b> For fathers/men, please wait outside the room."
 
     f_name:"Name",
     f_contact:"Contact (Email / WhatsApp)",
@@ -1021,6 +1040,7 @@ const I18N = {
 
     sec_rsvp:"RSVP（出欠回答）",
     rsvp_hint:"フォームにご入力ください。",
+men_notice:"<b>お知らせ：</b> 男性（お父様）は室外でお待ちください。"
 
     f_name:"お名前",
     f_contact:"連絡先（Email / WhatsApp）",
@@ -1551,7 +1571,8 @@ $("#rsvpForm").addEventListener("submit", async (e)=>{
     contact: String(fd.get("contact")||"").trim(),
     attendance: String(fd.get("attendance")||""),
     guests: String(fd.get("guests")||"1"),
-    lang: String(fd.get("lang")||state.lang),
+    lang: state.lang,
+
     message: String(fd.get("message")||"").trim(),
     note: String(fd.get("note")||"").trim(),
     ts: new Date().toISOString(),
@@ -1619,7 +1640,7 @@ $("#btnCalendar").addEventListener("click", (e)=>{
  * Language controls
  ***********************/
 $$(".chip").forEach(ch => ch.addEventListener("click", ()=> setLang(ch.dataset.lang)));
-$("#langSelect").addEventListener("change", (e)=> setLang(e.target.value));
+
 
 /***********************
  * Personalization ?to=
