@@ -774,43 +774,7 @@
       <img id="lightboxImg" alt="preview" />
     </div>
 
-    <section class="section card reveal" id="guestbook">
-      <div class="cardBody">
-        <h2 data-i18n="sec_guestbook">Buku Tamu</h2>
-        <div class="mutedText" data-i18n="guestbook_desc">
-          Isi ucapan singkat. Jika endpoint Google Sheet diaktifkan, ucapan bisa ditampilkan publik (JSONP).
-        </div>
-        <div class="hr"></div>
-
-        <form id="gbForm">
-          <div class="row2">
-            <div>
-              <label data-i18n="f_name">Nama</label>
-              <input name="name" required placeholder="Nama Anda" />
-            </div>
-            <div>
-              <label data-i18n="f_contact">Kontak (Email / WhatsApp)</label>
-              <input name="contact" placeholder="opsional" />
-            </div>
-          </div>
-          <div>
-            <label data-i18n="f_message">Pesan / ucapan</label>
-            <textarea name="message" required placeholder="Tulis ucapan singkat..."></textarea>
-          </div>
-
-          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-            <button class="btn ok" type="submit" data-i18n="btn_send_message">Kirim Ucapan</button>
-            <button class="btn danger" type="button" id="gbReload" data-i18n="btn_refresh">Muat Ulang</button>
-            <span class="mutedText" id="gbInfo"></span>
-          </div>
-        </form>
-
-        <div class="hr"></div>
-        <div class="gbList" id="gbList"></div>
-      </div>
-    </section>
-
-    <section class="section card reveal" id="rsvp">
+       <section class="section card reveal" id="rsvp">
       <div class="cardBody">
         <h2 data-i18n="sec_rsvp">RSVP (Konfirmasi Kehadiran)</h2>
         <div class="mutedText" data-i18n="rsvp_hint">
@@ -860,7 +824,10 @@
             <label data-i18n="f_note">Catatan (opsional)</label>
             <textarea name="note" placeholder="Contoh: hadir 2 orang, dsb."></textarea>
           </div>
-
+<div>
+  <label>Pesan / Ucapan</label>
+  <textarea name="message" required placeholder="Tulis ucapan singkat..."></textarea>
+</div>
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
             <button class="btn ok" type="submit" data-i18n="btn_submit">Kirim RSVP</button>
             <button class="btn danger" type="button" id="btnReset" data-i18n="btn_reset">Reset</button>
@@ -885,10 +852,7 @@
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16v12H4V7Z" stroke="currentColor" stroke-width="2"/><path d="M8 11l2 2 3-3 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Galeri</span>
     </a>
-    <a class="navItem" href="#guestbook" data-nav="guestbook">
-      <svg viewBox="0 0 24 24" fill="none"><path d="M6 4h12v16H6V4Z" stroke="currentColor" stroke-width="2"/><path d="M8 8h8M8 12h8M8 16h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <span>Ucapan</span>
-    </a>
+   
     <a class="navItem" href="#rsvp" data-nav="rsvp">
       <svg viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 12a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" stroke="currentColor" stroke-width="2"/></svg>
       <span>RSVP</span>
@@ -1401,12 +1365,13 @@ function padN(n, pad){
 
 async function loadImage(url){
   try{
-    const res = await fetch(url, { method: "HEAD", cache: "no-cache" });
+    const res = await fetch(url, { method:"HEAD", cache:"no-cache" });
     return { ok: res.ok, url };
   }catch{
     return { ok:false, url };
   }
 }
+
 
 
 async function discoverGalleryImages(){
@@ -1593,14 +1558,37 @@ const KEY_GB = "rbm_guestbook_local_v1";
 
 async function postToEndpoint(payload){
   if(!CONFIG.ENDPOINT) return { ok:false, reason:"no-endpoint" };
-  const res = await fetch(CONFIG.ENDPOINT, {
-    method:"POST",
-    headers:{ "Content-Type":"application/json" },
-    body: JSON.stringify(payload),
-  });
-  if(!res.ok) throw new Error("HTTP " + res.status);
-  return { ok:true };
+
+  // kirim sebagai x-www-form-urlencoded agar tidak memicu preflight CORS
+  const params = new URLSearchParams();
+  for(const [k,v] of Object.entries(payload)){
+    if(v == null) continue;
+    if(typeof v === "object") params.set(k, JSON.stringify(v));
+    else params.set(k, String(v));
+  }
+
+  // 1) Prioritas: sendBeacon (paling aman untuk cross-origin)
+  try{
+    if(navigator.sendBeacon){
+      const blob = new Blob([params.toString()], { type:"application/x-www-form-urlencoded;charset=UTF-8" });
+      const ok = navigator.sendBeacon(CONFIG.ENDPOINT, blob);
+      return { ok, via:"beacon" };
+    }
+  }catch{}
+
+  // 2) Fallback: fetch no-cors (tidak bisa baca response, tapi tidak error CORS)
+  try{
+    await fetch(CONFIG.ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      body: params
+    });
+    return { ok:true, via:"no-cors" };
+  }catch(e){
+    return { ok:false, reason:String(e) };
+  }
 }
+
 
 function renderGuestbookLocal(){
   const list = $("#gbList");
@@ -1683,17 +1671,42 @@ $("#gbForm").addEventListener("submit", async (e)=>{
 $("#rsvpForm").addEventListener("submit", async (e)=>{
   e.preventDefault();
   const fd = new FormData(e.target);
+
   const payload = {
     type: "rsvp",
     name: String(fd.get("name")||"").trim(),
     contact: String(fd.get("contact")||"").trim(),
     attendance: String(fd.get("attendance")||""),
     guests: String(fd.get("guests")||"1"),
-    note: String(fd.get("note")||"").trim(),
+    message: String(fd.get("message")||"").trim(),   // <— ucapan digabung di sini
+    note: String(fd.get("note")||"").trim(),         // opsional, boleh dihapus kalau tidak dipakai
     lang: String(fd.get("lang")||state.lang),
-    meta: { page: location.href, ua: navigator.userAgent, ts: new Date().toISOString() },
-    event: { title: CONFIG.eventTitle, startISO: CONFIG.startISO, venue: CONFIG.venueName }
+    ts: new Date().toISOString(),
+    eventTitle: CONFIG.eventTitle,
+    startISO: CONFIG.startISO,
+    venue: CONFIG.venueName
   };
+
+  // selalu simpan lokal dulu (agar tidak pernah "hilang")
+  localStorage.setItem(KEY_RSVP, JSON.stringify(payload));
+  $("#saveInfo").textContent = "Tersimpan di perangkat.";
+
+  // kirim ke server kalau ada endpoint — jangan bikin user merasa gagal
+  if(CONFIG.ENDPOINT){
+    const res = await postToEndpoint(payload);
+    if(res.ok){
+      toast("Terkirim.");
+    }else{
+      toast("Tersimpan di perangkat. (Server belum aktif / diblokir)");
+    }
+  }else{
+    toast("Tersimpan di perangkat.");
+  }
+
+  // optional: reset form setelah kirim
+  e.target.reset();
+});
+
 
   localStorage.setItem(KEY_RSVP, JSON.stringify(payload));
   $("#saveInfo").textContent = I18N[state.lang].toast_saved_local;
