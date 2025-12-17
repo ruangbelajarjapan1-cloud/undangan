@@ -6,13 +6,16 @@
   <meta name="theme-color" content="#1A56FF" />
   <title>RBM Japan • Graduation</title>
 
+  <!-- Prevent favicon 404 if you don't have favicon.ico -->
+  <link rel="icon" href="data:,">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;600;700;800&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      /* Palette: Blue / White / Gold / Orange */
+      /* Palette: Blue / Orange (bright) */
       --blue:#1A56FF;
       --orange:#FF8A00;
       --gold:#F6C453;
@@ -38,11 +41,11 @@
       text-rendering: optimizeLegibility;
       font-size: 16px;
 
-      /* Bright background (blue/orange/gold) */
-     background:
-  radial-gradient(900px 600px at 18% 12%, rgba(26,86,255,.55), transparent 60%),
-  radial-gradient(900px 600px at 82% 18%, rgba(255,138,0,.45), transparent 60%),
-  linear-gradient(120deg, rgba(26,86,255,.82), rgba(255,138,0,.55));
+      /* Bright background (blue/orange) */
+      background:
+        radial-gradient(900px 600px at 18% 12%, rgba(26,86,255,.55), transparent 60%),
+        radial-gradient(900px 600px at 82% 18%, rgba(255,138,0,.45), transparent 60%),
+        linear-gradient(120deg, rgba(26,86,255,.82), rgba(255,138,0,.55));
 
       background-size: 140% 140%;
       animation: bgShift 12s ease-in-out infinite alternate;
@@ -260,13 +263,10 @@
     .btn:hover{ background: rgba(255,255,255,.16); }
     .btn:active{ transform: scale(.99); }
 
-   .btn.primary{
-  background: linear-gradient(90deg,
-    rgba(26,86,255,.90),
-    rgba(255,138,0,.78)
-  );
-  border-color: rgba(255,255,255,.34);
-}
+    .btn.primary{
+      background: linear-gradient(90deg, rgba(26,86,255,.90), rgba(255,138,0,.78));
+      border-color: rgba(255,255,255,.34);
+    }
 
     .btn.ok{
       background: rgba(52,211,153,.20);
@@ -285,16 +285,14 @@
       pointer-events:none;
       mix-blend-mode: overlay;
     }
-    @keyframes ripple{
-      to{ transform: scale(6); opacity:0; }
-    }
+    @keyframes ripple{ to{ transform: scale(6); opacity:0; } }
 
     /* Content cards */
     .section{ margin-top: 14px; position:relative; z-index: 5; }
     .card{
       border-radius: var(--r);
       border: 1px solid rgba(255,255,255,.22);
-      background: rgba(8, 10, 18, .46); /* lebih solid agar teks jelas */
+      background: rgba(8, 10, 18, .46);
       box-shadow: 0 16px 50px rgba(0,0,0,.22);
       overflow:hidden;
     }
@@ -315,9 +313,7 @@
       grid-template-columns: 1.2fr .8fr;
       gap: 14px;
     }
-    @media (max-width: 900px){
-      .grid{ grid-template-columns: 1fr; }
-    }
+    @media (max-width: 900px){ .grid{ grid-template-columns: 1fr; } }
 
     .kv{
       display:grid;
@@ -417,9 +413,7 @@
       position: relative;
       user-select: none;
     }
-    @media (max-width: 520px){
-      .carouselItem{ aspect-ratio: 16 / 12; }
-    }
+    @media (max-width: 520px){ .carouselItem{ aspect-ratio: 16 / 12; } }
     .carouselItem img{
       width: 100%;
       height: 100%;
@@ -526,15 +520,6 @@
       text-shadow: 0 2px 14px rgba(0,0,0,.45);
     }
     .radio input{ width:auto; }
-
-    .gbList{ display:grid; gap:10px; }
-    .gbItem{
-      border:1px solid rgba(255,255,255,.18);
-      background: rgba(8,10,18,.40);
-      border-radius: 18px;
-      padding: 12px;
-    }
-    .gbItem .meta{ font-size:12px; color: rgba(255,255,255,.88); margin-top:6px; }
 
     /* Reveal animation */
     .reveal{
@@ -774,11 +759,12 @@
       <img id="lightboxImg" alt="preview" />
     </div>
 
-       <section class="section card reveal" id="rsvp">
+    <!-- RSVP (merged with message/ucapan) -->
+    <section class="section card reveal" id="rsvp">
       <div class="cardBody">
         <h2 data-i18n="sec_rsvp">RSVP (Konfirmasi Kehadiran)</h2>
         <div class="mutedText" data-i18n="rsvp_hint">
-          Isi form di bawah ini. (untuk Bapak-bapak harap menunggu di luar).
+          Isi form di bawah ini.
         </div>
         <div class="hr"></div>
 
@@ -821,13 +807,15 @@
           </div>
 
           <div>
+            <label>Pesan / Ucapan</label>
+            <textarea name="message" required placeholder="Tulis ucapan singkat..."></textarea>
+          </div>
+
+          <div>
             <label data-i18n="f_note">Catatan (opsional)</label>
             <textarea name="note" placeholder="Contoh: hadir 2 orang, dsb."></textarea>
           </div>
-<div>
-  <label>Pesan / Ucapan</label>
-  <textarea name="message" required placeholder="Tulis ucapan singkat..."></textarea>
-</div>
+
           <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
             <button class="btn ok" type="submit" data-i18n="btn_submit">Kirim RSVP</button>
             <button class="btn danger" type="button" id="btnReset" data-i18n="btn_reset">Reset</button>
@@ -852,7 +840,6 @@
       <svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16v12H4V7Z" stroke="currentColor" stroke-width="2"/><path d="M8 11l2 2 3-3 5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
       <span>Galeri</span>
     </a>
-   
     <a class="navItem" href="#rsvp" data-nav="rsvp">
       <svg viewBox="0 0 24 24" fill="none"><path d="M7 12l3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 12a8 8 0 1 1-16 0 8 8 0 0 1 16 0Z" stroke="currentColor" stroke-width="2"/></svg>
       <span>RSVP</span>
@@ -872,21 +859,20 @@
  ***********************/
 const CONFIG = {
   eventTitle: "RBM Japan Student Graduation Ceremony",
-  startISO: "2026-01-24T13:00:00+09:00",  // ubah jam jika sudah final
+  startISO: "2026-01-24T13:00:00+09:00",
   endISO:   "2026-01-24T16:00:00+09:00",
   venueName: "十日市場地区センター",
   addressLine: "〒226-0025 神奈川県横浜市緑区十日市場町808-3",
   mapQuery: "十日市場地区センター",
-  ENDPOINT: "https://script.google.com/macros/s/AKfycbwGA8_bsewf_rmdF4DbRQoT0pRR2dQ03DUHRwZIJP0K847smDncQWiNQzur9Cl34eKu/exec", // Apps Script Web App URL (opsional)
 
-  // Cover slideshow (manual)
+  ENDPOINT: "https://script.google.com/macros/s/AKfycbwGA8_bsewf_rmdF4DbRQoT0pRR2dQ03DUHRwZIJP0K847smDncQWiNQzur9Cl34eKu/exec",
+
   coverImages: [
     "./assets/photos/01.jpg",
     "./assets/photos/02.jpg",
     "./assets/photos/03.jpg"
   ],
 
-  // Gallery (auto-detect 01..50)
   autoGallery: {
     enabled: true,
     prefix: "./assets/photos/",
@@ -896,7 +882,6 @@ const CONFIG = {
     ext: "jpg"
   },
 
-  // fallback manual (kalau autoGallery dimatikan / tidak menemukan foto)
   galleryImages: [
     "./assets/photos/01.jpg",
     "./assets/photos/02.jpg",
@@ -940,36 +925,30 @@ const I18N = {
     hadith_src:"HR. Muslim (no. 2699) — potongan lafaz tentang menuntut ilmu.",
 
     sec_classes:"Kelas yang Diwisuda",
-    classes_desc:"Berikut daftar kelas RBM Japan",
+    classes_desc:"Berikut daftar kelas (bisa ditambah kapan saja).",
 
     sec_gallery:"Galeri",
-    gallery_desc:"Galeri RBM Japan",
-
-    sec_guestbook:"Buku Tamu",
-    guestbook_desc:"Isi ucapan singkat",
+    gallery_desc:"Taruh foto di folder assets/photos/ (01.jpg, 02.jpg, 03.jpg, dst).",
 
     sec_rsvp:"RSVP (Konfirmasi Kehadiran)",
-    rsvp_hint:"Isi form kehadiran di bawah",
+    rsvp_hint:"Isi form di bawah.",
 
     f_name:"Nama",
     f_contact:"Kontak (Email / WhatsApp)",
-    f_message:"Pesan / ucapan",
     f_attendance:"Kehadiran",
     att_yes:"Hadir", att_no:"Tidak dapat hadir", att_maybe:"Masih ragu",
     f_guests:"Jumlah orang",
     f_lang:"Bahasa",
     f_note:"Catatan (opsional)",
-    btn_send_message:"Kirim Ucapan",
-    btn_refresh:"Muat Ulang",
     btn_submit:"Kirim RSVP",
     btn_reset:"Reset",
 
     toast_share:"Link undangan disalin.",
     toast_music_on:"Musik: ON",
     toast_music_off:"Musik: OFF",
-    toast_saved_local:"Tersimpan di perangkat (local).",
+    toast_saved_local:"Tersimpan di perangkat.",
     toast_sent:"Terkirim.",
-    toast_failed:"Gagal kirim ke server. Tetap tersimpan lokal."
+    toast_failed:"Tersimpan di perangkat. (Server belum merespons)"
   },
   en: {
     top_title:"RBM Japan • Graduation",
@@ -998,33 +977,27 @@ const I18N = {
     classes_desc:"Class list (you can add more later).",
 
     sec_gallery:"Gallery",
-    gallery_desc:"Put photos in assets/photos/. Auto-detected if numbered (01.jpg, 02.jpg, 03.jpg, ...).",
-
-    sec_guestbook:"Guestbook",
-    guestbook_desc:"Leave a message. If Sheets endpoint is enabled, messages can be shown publicly (JSONP).",
+    gallery_desc:"Put photos in assets/photos/ (01.jpg, 02.jpg, 03.jpg, ...).",
 
     sec_rsvp:"RSVP (Attendance Confirmation)",
-    rsvp_hint:"Fill in the form. If endpoint is not enabled, your response is saved locally.",
+    rsvp_hint:"Fill in the form.",
 
     f_name:"Name",
     f_contact:"Contact (Email / WhatsApp)",
-    f_message:"Message",
     f_attendance:"Attendance",
     att_yes:"Attending", att_no:"Not attending", att_maybe:"Maybe",
     f_guests:"Number of people",
     f_lang:"Language",
     f_note:"Note (optional)",
-    btn_send_message:"Send Message",
-    btn_refresh:"Refresh",
     btn_submit:"Submit RSVP",
     btn_reset:"Reset",
 
     toast_share:"Invitation link copied.",
     toast_music_on:"Music: ON",
     toast_music_off:"Music: OFF",
-    toast_saved_local:"Saved locally on your device.",
+    toast_saved_local:"Saved on your device.",
     toast_sent:"Sent.",
-    toast_failed:"Server failed. Still saved locally."
+    toast_failed:"Saved on device. (Server not responding)"
   },
   ja: {
     top_title:"RBM Japan • 卒業式",
@@ -1053,24 +1026,18 @@ const I18N = {
     classes_desc:"クラス一覧（追加可能）",
 
     sec_gallery:"ギャラリー",
-    gallery_desc:"assets/photos/ に写真を入れてください。番号形式（01.jpg, 02.jpg...）なら自動検出します。",
-
-    sec_guestbook:"ゲストブック",
-    guestbook_desc:"メッセージをご記入ください。Sheets連携があれば公開表示も可能（JSONP）。",
+    gallery_desc:"assets/photos/ に写真を入れてください（01.jpg, 02.jpg...）。",
 
     sec_rsvp:"RSVP（出欠回答）",
-    rsvp_hint:"フォームにご入力ください。未設定でも端末に保存されます。",
+    rsvp_hint:"フォームにご入力ください。",
 
     f_name:"お名前",
     f_contact:"連絡先（Email / WhatsApp）",
-    f_message:"メッセージ",
     f_attendance:"出欠",
     att_yes:"出席", att_no:"欠席", att_maybe:"未定",
     f_guests:"人数",
     f_lang:"言語",
     f_note:"備考（任意）",
-    btn_send_message:"送信",
-    btn_refresh:"更新",
     btn_submit:"送信",
     btn_reset:"リセット",
 
@@ -1079,7 +1046,7 @@ const I18N = {
     toast_music_off:"音楽：OFF",
     toast_saved_local:"端末に保存しました。",
     toast_sent:"送信しました。",
-    toast_failed:"サーバー送信に失敗。端末には保存されています。"
+    toast_failed:"端末に保存しました。（サーバー未応答）"
   }
 };
 
@@ -1126,7 +1093,7 @@ function safeText(s){
 }
 
 /***********************
- * Language (FIX: no optional chaining assignment)
+ * Language
  ***********************/
 function setLang(lang){
   state.lang = lang;
@@ -1139,7 +1106,7 @@ function setLang(lang){
 
   $$("[data-i18n]").forEach(el=>{
     const key = el.getAttribute("data-i18n");
-    if(I18N[lang][key] != null) el.textContent = I18N[lang][key];
+    if(I18N[lang] && I18N[lang][key] != null) el.textContent = I18N[lang][key];
   });
 
   $("#hadithTranslation").textContent = I18N[lang].hadith_tr;
@@ -1372,8 +1339,6 @@ async function loadImage(url){
   }
 }
 
-
-
 async function discoverGalleryImages(){
   if(CONFIG.autoGallery && CONFIG.autoGallery.enabled){
     const { prefix, start, end, pad, ext } = CONFIG.autoGallery;
@@ -1443,7 +1408,6 @@ async function renderGallery(){
     </div>
   `).join("");
 
-  // klik untuk lightbox
   $$("#carouselTrack .carouselItem").forEach(el=>{
     el.addEventListener("click", ()=>{
       $("#lightboxImg").src = el.dataset.src;
@@ -1460,7 +1424,6 @@ async function renderGallery(){
   $("#carNext").onclick = ()=>{ nextSlide(); restartAutoplay(); };
   $("#carPrev").onclick = ()=>{ prevSlide(); restartAutoplay(); };
 
-  // swipe
   const car = $("#galleryCarousel");
   car.addEventListener("pointerdown", (e)=>{
     CAR.dragging = true;
@@ -1480,7 +1443,6 @@ async function renderGallery(){
   function endDrag(){
     if(!CAR.dragging) return;
     CAR.dragging = false;
-    const car = $("#galleryCarousel");
     const w = car.clientWidth;
     const track = $("#carouselTrack");
     track.style.transition = "";
@@ -1497,7 +1459,7 @@ async function renderGallery(){
 }
 
 /***********************
- * Lightbox close (restart autoplay)
+ * Lightbox close
  ***********************/
 $("#lightbox").addEventListener("click", ()=>{
   $("#lightbox").classList.remove("show");
@@ -1528,7 +1490,7 @@ async function toggleMusic(){
 $("#btnMusic").addEventListener("click", toggleMusic);
 
 /***********************
- * Bottom nav active highlight
+ * Bottom nav active
  ***********************/
 function initBottomNav(){
   const items = $$(".navItem");
@@ -1551,15 +1513,13 @@ function initBottomNav(){
 }
 
 /***********************
- * Local + endpoint (optional)
+ * Local + endpoint (RSVP)
  ***********************/
 const KEY_RSVP = "rbm_rsvp_latest_v1";
-const KEY_GB = "rbm_guestbook_local_v1";
 
 async function postToEndpoint(payload){
   if(!CONFIG.ENDPOINT) return { ok:false, reason:"no-endpoint" };
 
-  // kirim sebagai x-www-form-urlencoded agar tidak memicu preflight CORS
   const params = new URLSearchParams();
   for(const [k,v] of Object.entries(payload)){
     if(v == null) continue;
@@ -1567,7 +1527,6 @@ async function postToEndpoint(payload){
     else params.set(k, String(v));
   }
 
-  // 1) Prioritas: sendBeacon (paling aman untuk cross-origin)
   try{
     if(navigator.sendBeacon){
       const blob = new Blob([params.toString()], { type:"application/x-www-form-urlencoded;charset=UTF-8" });
@@ -1576,7 +1535,6 @@ async function postToEndpoint(payload){
     }
   }catch{}
 
-  // 2) Fallback: fetch no-cors (tidak bisa baca response, tapi tidak error CORS)
   try{
     await fetch(CONFIG.ENDPOINT, {
       method: "POST",
@@ -1589,85 +1547,9 @@ async function postToEndpoint(payload){
   }
 }
 
-
-function renderGuestbookLocal(){
-  const list = $("#gbList");
-  const arr = JSON.parse(localStorage.getItem(KEY_GB) || "[]");
-  if(arr.length === 0){
-    list.innerHTML = `<div class="mutedText">—</div>`;
-    return;
-  }
-  list.innerHTML = arr.slice(0, 20).map(x=>`
-    <div class="gbItem">
-      <div><b>${safeText(x.name)}</b></div>
-      <div>${safeText(x.message)}</div>
-      <div class="meta">${safeText(new Date(x.ts).toLocaleString("id-ID"))}</div>
-    </div>
-  `).join("");
-}
-
-function loadGuestbookFromEndpoint(){
-  const info = $("#gbInfo");
-  if(!CONFIG.ENDPOINT){
-    info.textContent = I18N[state.lang].toast_saved_local;
-    renderGuestbookLocal();
-    return;
-  }
-
-  window.renderGuestbook = function(data){
-    const list = $("#gbList");
-    if(!Array.isArray(data) || data.length === 0){
-      list.innerHTML = `<div class="mutedText">—</div>`;
-      return;
-    }
-    list.innerHTML = data.map(x=>`
-      <div class="gbItem">
-        <div><b>${safeText(x.name || "")}</b></div>
-        <div>${safeText(x.message || "")}</div>
-        <div class="meta">${safeText(x.tsText || "")}</div>
-      </div>
-    `).join("");
-  };
-
-  const s = document.createElement("script");
-  s.src = `${CONFIG.ENDPOINT}?mode=guestbook&limit=20&callback=renderGuestbook&_=${Date.now()}`;
-  s.onerror = ()=>{
-    info.textContent = I18N[state.lang].toast_failed;
-    renderGuestbookLocal();
-  };
-  document.body.appendChild(s);
-  setTimeout(()=>{ try{s.remove()}catch{} }, 8000);
-}
-
-$("#gbReload").addEventListener("click", loadGuestbookFromEndpoint);
-
-$("#gbForm").addEventListener("submit", async (e)=>{
-  e.preventDefault();
-  const fd = new FormData(e.target);
-  const payload = {
-    type: "guestbook",
-    name: String(fd.get("name")||"").trim(),
-    contact: String(fd.get("contact")||"").trim(),
-    message: String(fd.get("message")||"").trim(),
-    lang: state.lang,
-    meta: { page: location.href, ua: navigator.userAgent, ts: new Date().toISOString() }
-  };
-
-  const arr = JSON.parse(localStorage.getItem(KEY_GB) || "[]");
-  arr.unshift({ name: payload.name, message: payload.message, ts: Date.now() });
-  localStorage.setItem(KEY_GB, JSON.stringify(arr));
-
-  try{
-    if(CONFIG.ENDPOINT) await postToEndpoint(payload);
-    toast(I18N[state.lang].toast_sent);
-  }catch{
-    toast(I18N[state.lang].toast_failed);
-  }finally{
-    e.target.reset();
-    loadGuestbookFromEndpoint();
-  }
-});
-
+/***********************
+ * RSVP handler (NO DUPLICATE BLOCK, NO OUTSIDE-AWAIT)
+ ***********************/
 $("#rsvpForm").addEventListener("submit", async (e)=>{
   e.preventDefault();
   const fd = new FormData(e.target);
@@ -1678,45 +1560,31 @@ $("#rsvpForm").addEventListener("submit", async (e)=>{
     contact: String(fd.get("contact")||"").trim(),
     attendance: String(fd.get("attendance")||""),
     guests: String(fd.get("guests")||"1"),
-    message: String(fd.get("message")||"").trim(),   // <— ucapan digabung di sini
-    note: String(fd.get("note")||"").trim(),         // opsional, boleh dihapus kalau tidak dipakai
     lang: String(fd.get("lang")||state.lang),
+    message: String(fd.get("message")||"").trim(),
+    note: String(fd.get("note")||"").trim(),
     ts: new Date().toISOString(),
+    page: location.href,
     eventTitle: CONFIG.eventTitle,
     startISO: CONFIG.startISO,
     venue: CONFIG.venueName
   };
 
-  // selalu simpan lokal dulu (agar tidak pernah "hilang")
-  localStorage.setItem(KEY_RSVP, JSON.stringify(payload));
-  $("#saveInfo").textContent = "Tersimpan di perangkat.";
-
-  // kirim ke server kalau ada endpoint — jangan bikin user merasa gagal
-  if(CONFIG.ENDPOINT){
-    const res = await postToEndpoint(payload);
-    if(res.ok){
-      toast("Terkirim.");
-    }else{
-      toast("Tersimpan di perangkat. (Server belum aktif / diblokir)");
-    }
-  }else{
-    toast("Tersimpan di perangkat.");
-  }
-
-  // optional: reset form setelah kirim
-  e.target.reset();
-});
-
-
   localStorage.setItem(KEY_RSVP, JSON.stringify(payload));
   $("#saveInfo").textContent = I18N[state.lang].toast_saved_local;
 
-  try{
-    if(CONFIG.ENDPOINT) await postToEndpoint(payload);
-    toast(I18N[state.lang].toast_sent);
-  }catch{
-    toast(I18N[state.lang].toast_failed);
+  if(CONFIG.ENDPOINT){
+    const res = await postToEndpoint(payload);
+    if(res && res.ok){
+      toast(I18N[state.lang].toast_sent);
+    }else{
+      toast(I18N[state.lang].toast_failed);
+    }
+  }else{
+    toast(I18N[state.lang].toast_saved_local);
   }
+
+  e.target.reset();
 });
 
 $("#btnReset").addEventListener("click", ()=>{
@@ -1734,8 +1602,8 @@ function openInvitation(){
   document.body.classList.add("opened");
   confettiBurst(1400);
 
-  // optional: start music on open
-  toggleMusic().catch(()=>{});
+  // If you do NOT want autoplay music on open, comment the next line:
+  // toggleMusic().catch(()=>{});
 
   setTimeout(()=> document.getElementById("detail").scrollIntoView({behavior:"smooth", block:"start"}), 180);
 }
@@ -1771,9 +1639,7 @@ if(to){
   const t = $("#toLine");
   t.textContent = `Kepada Yth: ${name}`;
   const rsvpName = document.querySelector('#rsvpForm input[name="name"]');
-  const gbName = document.querySelector('#gbForm input[name="name"]');
   if(rsvpName && !rsvpName.value) rsvpName.value = name;
-  if(gbName && !gbName.value) gbName.value = name;
 }
 
 /***********************
@@ -1789,7 +1655,6 @@ startSlides();
 startCountdown();
 initReveal();
 initBottomNav();
-loadGuestbookFromEndpoint();
 </script>
 </body>
 </html>
