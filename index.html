@@ -771,6 +771,51 @@ textarea{ min-height: 92px; resize: vertical; }
 }
 .toast.show{ display:block; }
 
+/* KAIZEN: Full-colour kids background FX (stars/lanterns/confetti — no faces) */
+#kidsFx{
+  position: fixed;
+  inset: 0;
+  pointer-events:none;
+  z-index: 2;
+  opacity: .55;               /* terlihat (full colour), tapi tetap sopan */
+  mix-blend-mode: screen;     /* bikin warna “nge-pop” di background */
+}
+body.opened #kidsFx{ opacity: .62; } /* sedikit lebih meriah setelah dibuka */
+
+/* KAIZEN: Rainbow aura khusus untuk section Kelas (lebih “hidup”) */
+#kelas{
+  isolation: isolate;
+}
+#kelas::before{
+  content:"";
+  position:absolute;
+  inset:-90px;
+  pointer-events:none;
+  z-index: 0;
+  opacity: .24;
+  filter: blur(22px);
+  transform: translate3d(0,0,0);
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255,0,110,.32), transparent 48%),
+    radial-gradient(circle at 88% 22%, rgba(58,134,255,.30), transparent 52%),
+    radial-gradient(circle at 78% 88%, rgba(6,214,160,.26), transparent 56%),
+    radial-gradient(circle at 22% 86%, rgba(255,183,3,.26), transparent 55%),
+    conic-gradient(from 90deg,
+      rgba(255,183,3,.22),
+      rgba(131,56,236,.20),
+      rgba(255,94,94,.22),
+      rgba(0,183,255,.18),
+      rgba(255,183,3,.22)
+    );
+  animation: kelasAuraSpin 10s linear infinite;
+}
+#kelas .cardBody{ position:relative; z-index: 1; }
+
+@keyframes kelasAuraSpin{
+  0%{ transform: rotate(0deg) scale(1.02); }
+  100%{ transform: rotate(360deg) scale(1.02); }
+}
+
 /* Confetti */
 #confetti{
   position: fixed;
@@ -984,6 +1029,7 @@ body.celebrate .btn.primary{ filter: brightness(1.07); }
 }
 
 @media (prefers-reduced-motion: reduce){
+  #kidsFx{ display:none; }
   body{ animation:none; }
   .slide{ animation:none; }
   .reveal{ transition:none; }
@@ -1022,6 +1068,8 @@ body.celebrate .btn.primary{ filter: brightness(1.07); }
     <div class="sticker laurel" style="left:56%; --s:66px; --o:.12; --t:21s; --x:2px;  animation-delay:-9s;"></div>
     <div class="sticker cap" style="left:78%; --s:54px; --o:.12; --t:18s; --x:-6px; animation-delay:-14s;"></div>
   </div>
+
+  <canvas id="kidsFx"></canvas>
 
   <canvas id="confetti"></canvas>
 
@@ -2140,6 +2188,261 @@ if(to){
 }
 
 /***********************
+ * KAIZEN: Full-colour Kids FX Canvas (stars / crescents / lanterns / confetti)
+ * - no creatures, no eyes
+ * - drawn as abstract shapes
+ ***********************/
+function initKidsFx(){
+  const canvas = document.getElementById("kidsFx");
+  if(!canvas) return;
+
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if(reduce) return;
+
+  const ctx = canvas.getContext("2d", { alpha:true });
+  let W=0, H=0, DPR=1;
+  const palette = [
+    "rgba(255,94,94,.85)",   // coral
+    "rgba(255,183,3,.85)",   // sunny gold
+    "rgba(58,134,255,.80)",  // bright blue
+    "rgba(6,214,160,.78)",   // mint
+    "rgba(131,56,236,.75)",  // purple
+    "rgba(255,0,110,.72)",   // magenta
+    "rgba(0,183,255,.75)",   // sky accent
+    "rgba(246,196,83,.82)"   // graduation gold
+  ];
+
+  const rand = (a,b)=> a + Math.random()*(b-a);
+  const pick = (arr)=> arr[(Math.random()*arr.length)|0];
+
+  function resize(){
+    DPR = Math.min(2, window.devicePixelRatio || 1);
+    W = Math.floor(innerWidth);
+    H = Math.floor(innerHeight);
+    canvas.width  = Math.floor(W * DPR);
+    canvas.height = Math.floor(H * DPR);
+    canvas.style.width = W + "px";
+    canvas.style.height = H + "px";
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+  }
+  resize();
+  window.addEventListener("resize", resize, { passive:true });
+
+  function drawStar(x,y,r,rot,color,alpha=1){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
+
+    const spikes = 5;
+    const inner = r*0.45;
+    ctx.beginPath();
+    for(let i=0;i<spikes*2;i++){
+      const ang = (Math.PI/spikes)*i;
+      const rr = (i%2===0) ? r : inner;
+      ctx.lineTo(Math.cos(ang)*rr, Math.sin(ang)*rr);
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.restore();
+  }
+
+  function drawCrescent(x,y,r,rot,color,alpha=1){
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.globalAlpha = alpha;
+
+    // outer moon
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(0,0,r,0,Math.PI*2);
+    ctx.fill();
+
+    // cut-out (same as background using destination-out)
+    ctx.globalCompositeOperation = "destination-out";
+    ctx.beginPath();
+    ctx.arc(r*0.35,0,r*0.92,0,Math.PI*2);
+    ctx.fill();
+
+    ctx.restore();
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  function drawLantern(x,y,s,rot,color,alpha=1){
+    // abstract lantern: no face, no “window eyes”
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.globalAlpha = alpha;
+
+    // body
+    ctx.fillStyle = color;
+    const w = s*0.72, h = s*0.92;
+    const r = Math.max(6, s*0.18);
+    roundRect(-w/2,-h/2,w,h,r);
+    ctx.fill();
+
+    // top cap
+    ctx.globalAlpha = alpha*0.9;
+    ctx.fillStyle = "rgba(255,255,255,.22)";
+    roundRect(-w*0.28, -h*0.62, w*0.56, h*0.16, r*0.7);
+    ctx.fill();
+
+    // bottom tassel (simple)
+    ctx.globalAlpha = alpha*0.75;
+    ctx.strokeStyle = "rgba(255,255,255,.30)";
+    ctx.lineWidth = Math.max(1.6, s*0.06);
+    ctx.beginPath();
+    ctx.moveTo(0, h*0.48);
+    ctx.lineTo(0, h*0.66);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function roundRect(x,y,w,h,r){
+    const rr = Math.min(r, w/2, h/2);
+    ctx.beginPath();
+    ctx.moveTo(x+rr,y);
+    ctx.arcTo(x+w,y,x+w,y+h,rr);
+    ctx.arcTo(x+w,y+h,x,y+h,rr);
+    ctx.arcTo(x,y+h,x,y,rr);
+    ctx.arcTo(x,y,x+w,y,rr);
+    ctx.closePath();
+  }
+
+  function edgeX(){
+    // bias ke pinggir agar tidak menutupi konten
+    const side = Math.random() < 0.5;
+    const pad = Math.min(140, W*0.18);
+    if(side) return rand(-20, pad);
+    return rand(W-pad, W+20);
+  }
+
+  function makeParticle(yInit){
+    const t = Math.random();
+    const type =
+      t < 0.50 ? "star" :
+      t < 0.72 ? "confetti" :
+      t < 0.86 ? "crescent" :
+      "lantern";
+
+    const size = type==="lantern" ? rand(18, 34) : rand(10, 22);
+    const p = {
+      type,
+      x: edgeX(),
+      y: (typeof yInit==="number") ? yInit : rand(-H, H),
+      s: size,
+      rot: rand(-1, 1),
+      vr: rand(-0.012, 0.012),
+      vy: rand(0.22, 0.65),
+      vx: rand(-0.14, 0.14),
+      wob: rand(0.6, 1.4),
+      ph: rand(0, Math.PI*2),
+      c: pick(palette),
+      a: (type==="lantern") ? rand(0.16, 0.26) : rand(0.14, 0.24)
+    };
+    return p;
+  }
+
+  const N = Math.max(34, Math.min(56, Math.floor(W/22)));
+  const parts = Array.from({length:N}, (_,i)=> makeParticle(rand(-H, H)));
+
+  let rafId = 0;
+  function tick(t){
+    ctx.clearRect(0,0,W,H);
+
+    // subtle glow dots (full-colour but tiny)
+    ctx.save();
+    ctx.globalAlpha = 0.08;
+    for(let i=0;i<10;i++){
+      const gx = (i%2===0) ? rand(0, W*0.18) : rand(W*0.82, W);
+      const gy = rand(0,H);
+      ctx.fillStyle = pick(palette);
+      ctx.beginPath();
+      ctx.arc(gx, gy, rand(1.2,2.2), 0, Math.PI*2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    for(const p of parts){
+      p.y += p.vy;
+      p.x += p.vx + Math.sin(t*0.0012 + p.ph) * p.wob;
+      p.rot += p.vr;
+
+      if(p.y > H + 60){
+        // respawn dari atas
+        const np = makeParticle(rand(-120,-20));
+        Object.assign(p, np);
+      }
+      // wrap horizontal
+      if(p.x < -120) p.x = W + 120;
+      if(p.x > W + 120) p.x = -120;
+
+      const alpha = p.a;
+      if(p.type === "star"){
+        drawStar(p.x,p.y,p.s, p.rot, p.c, alpha);
+      }else if(p.type === "crescent"){
+        drawCrescent(p.x,p.y, p.s*0.62, p.rot, p.c, alpha);
+      }else if(p.type === "lantern"){
+        drawLantern(p.x,p.y, p.s, p.rot*0.6, p.c, alpha);
+      }else{
+        // confetti
+        ctx.save();
+        ctx.translate(p.x,p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = alpha;
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.s*0.4, -p.s*0.18, p.s*0.8, p.s*0.36);
+        ctx.restore();
+      }
+    }
+
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame(tick);
+
+  // public burst
+  window.__kidsFxBurstAt = function(x,y){
+    const burstN = 18;
+    for(let i=0;i<burstN;i++){
+      const p = makeParticle(y);
+      p.x = x;
+      p.y = y;
+      const ang = rand(0, Math.PI*2);
+      const spd = rand(1.2, 2.6);
+      p.vx = Math.cos(ang)*spd;
+      p.vy = Math.sin(ang)*spd;
+      p.wob = rand(0.2, 0.8);
+      p.a = rand(0.20, 0.32);
+      p.s = p.type==="lantern" ? rand(16,26) : rand(10,18);
+      p.vr = rand(-0.06, 0.06);
+      // insert as temporary particle with lifespan
+      p.life = 0;
+      p.maxLife = rand(55, 85);
+      parts.push(p);
+    }
+  };
+
+  // prune extra burst particles gradually
+  function prune(){
+    for(let i=parts.length-1;i>=0;i--){
+      const p = parts[i];
+      if(p.maxLife){
+        p.life++;
+        // dampen
+        p.vx *= 0.985; p.vy *= 0.985;
+        if(p.life > p.maxLife) parts.splice(i,1);
+      }
+    }
+    requestAnimationFrame(prune);
+  }
+  requestAnimationFrame(prune);
+}
+
+/***********************
  * Init
  ***********************/
 setLang("id");
@@ -2152,6 +2455,20 @@ startSlides();
 startCountdown();
 initReveal();
 initBottomNav();
+initKidsFx();
+// KAIZEN: extra colourful burst on open (background only)
+try{
+  const _b = document.getElementById("btnOpen");
+  if(_b){
+    _b.addEventListener("click", ()=>{
+      if(window.__kidsFxBurstAt){
+        window.__kidsFxBurstAt(innerWidth/2, innerHeight*0.35);
+        window.__kidsFxBurstAt(innerWidth*0.20, innerHeight*0.30);
+        window.__kidsFxBurstAt(innerWidth*0.80, innerHeight*0.30);
+      }
+    }, { passive:true });
+  }
+}catch(_e){}
   </script>
 </body>
 </html>
