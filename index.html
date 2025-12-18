@@ -250,6 +250,12 @@ body::after{
 }
 .iconBtn:active{ transform: scale(.98); }
 .iconBtn:hover{ background: rgba(255,255,255,.85); }
+.iconBtn.active{
+  background: linear-gradient(90deg, rgba(255,183,3,.92), rgba(255,0,110,.72));
+  border-color: rgba(255,183,3,.28);
+  color: #fff;
+  box-shadow: 0 12px 30px rgba(255,0,110,.14);
+}
 
 /* Cover */
 .coverWrap{
@@ -777,10 +783,11 @@ textarea{ min-height: 92px; resize: vertical; }
   inset: 0;
   pointer-events:none;
   z-index: 2;
-  opacity: .55;               /* terlihat (full colour), tapi tetap sopan */
-  mix-blend-mode: screen;     /* bikin warna “nge-pop” di background */
+  opacity: .86;               /* lebih kelihatan (full colour) */
+  mix-blend-mode: normal;     /* paling kompatibel */
+  filter: saturate(1.18) contrast(1.08);
 }
-body.opened #kidsFx{ opacity: .62; } /* sedikit lebih meriah setelah dibuka */
+body.opened #kidsFx{ opacity: .92; } /* lebih meriah setelah dibuka */
 
 /* KAIZEN: Rainbow aura khusus untuk section Kelas (lebih “hidup”) */
 #kelas{
@@ -792,7 +799,7 @@ body.opened #kidsFx{ opacity: .62; } /* sedikit lebih meriah setelah dibuka */
   inset:-90px;
   pointer-events:none;
   z-index: 0;
-  opacity: .24;
+  opacity: .34;
   filter: blur(22px);
   transform: translate3d(0,0,0);
   background:
@@ -1126,6 +1133,7 @@ body.celebrate .btn.primary{ filter: brightness(1.07); }
         <div class="chip" data-lang="en">EN</div>
         <div class="chip" data-lang="ja">日本語</div>
         <div class="iconBtn" id="btnMusic" title="Music">♪</div>
+        <div class="iconBtn" id="btnFx" title="FX">✨</div>
       </div>
     </div>
   </div>
@@ -2194,26 +2202,45 @@ if(to){
  ***********************/
 function initKidsFx(){
   const canvas = document.getElementById("kidsFx");
+  const btnFx  = document.getElementById("btnFx");
   if(!canvas) return;
 
-  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  if(reduce) return;
+  // Default: ON (biar undangan terasa hidup). Bisa dimatikan via tombol ✨.
+  let fxOn = true;
+  try{
+    const stored = localStorage.getItem("rbm_fx");
+    if(stored === "0") fxOn = false;
+    if(stored === "1") fxOn = true;
+  }catch(_e){}
 
-  const ctx = canvas.getContext("2d", { alpha:true });
-  let W=0, H=0, DPR=1;
+  const prefersReduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  let ctx=null, W=0, H=0, DPR=1;
+  let rafId = 0;
+  let pruneId = 0;
+  let running = false;
+  let parts = [];
+
   const palette = [
-    "rgba(255,94,94,.85)",   // coral
-    "rgba(255,183,3,.85)",   // sunny gold
-    "rgba(58,134,255,.80)",  // bright blue
-    "rgba(6,214,160,.78)",   // mint
-    "rgba(131,56,236,.75)",  // purple
-    "rgba(255,0,110,.72)",   // magenta
-    "rgba(0,183,255,.75)",   // sky accent
-    "rgba(246,196,83,.82)"   // graduation gold
+    "rgb(255, 64, 129)",   // pink
+    "rgb(255, 179, 0)",    // gold
+    "rgb(0, 191, 255)",    // sky
+    "rgb(99, 102, 241)",   // indigo
+    "rgb(34, 197, 94)",    // green
+    "rgb(255, 99, 72)",    // coral
+    "rgb(168, 85, 247)",   // purple
+    "rgb(255, 214, 10)"    // bright yellow
   ];
 
   const rand = (a,b)=> a + Math.random()*(b-a);
   const pick = (arr)=> arr[(Math.random()*arr.length)|0];
+
+  function updateBtn(){
+    if(!btnFx) return;
+    btnFx.classList.toggle("active", fxOn);
+    btnFx.textContent = fxOn ? "✨" : "✦";
+    btnFx.title = fxOn ? "FX: ON" : "FX: OFF";
+  }
 
   function resize(){
     DPR = Math.min(2, window.devicePixelRatio || 1);
@@ -2225,18 +2252,19 @@ function initKidsFx(){
     canvas.style.height = H + "px";
     ctx.setTransform(DPR,0,0,DPR,0,0);
   }
-  resize();
-  window.addEventListener("resize", resize, { passive:true });
 
   function drawStar(x,y,r,rot,color,alpha=1){
     ctx.save();
     ctx.translate(x,y);
     ctx.rotate(rot);
     ctx.globalAlpha = alpha;
-    ctx.fillStyle = color;
 
-    const spikes = 5;
-    const inner = r*0.45;
+    // glow (supaya nyata kelihatan)
+    ctx.shadowBlur = 14;
+    ctx.shadowColor = color;
+
+    ctx.fillStyle = color;
+    const spikes = 5, inner = r*0.48;
     ctx.beginPath();
     for(let i=0;i<spikes*2;i++){
       const ang = (Math.PI/spikes)*i;
@@ -2245,6 +2273,15 @@ function initKidsFx(){
     }
     ctx.closePath();
     ctx.fill();
+
+    // tiny highlight
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = alpha*0.35;
+    ctx.fillStyle = "rgba(255,255,255,.9)";
+    ctx.beginPath();
+    ctx.arc(-r*0.15, -r*0.18, Math.max(1.2, r*0.16), 0, Math.PI*2);
+    ctx.fill();
+
     ctx.restore();
   }
 
@@ -2254,52 +2291,21 @@ function initKidsFx(){
     ctx.rotate(rot);
     ctx.globalAlpha = alpha;
 
-    // outer moon
+    ctx.shadowBlur = 10;
+    ctx.shadowColor = color;
+
     ctx.fillStyle = color;
     ctx.beginPath();
     ctx.arc(0,0,r,0,Math.PI*2);
     ctx.fill();
 
-    // cut-out (same as background using destination-out)
     ctx.globalCompositeOperation = "destination-out";
     ctx.beginPath();
-    ctx.arc(r*0.35,0,r*0.92,0,Math.PI*2);
+    ctx.arc(r*0.36,0,r*0.92,0,Math.PI*2);
     ctx.fill();
 
     ctx.restore();
     ctx.globalCompositeOperation = "source-over";
-  }
-
-  function drawLantern(x,y,s,rot,color,alpha=1){
-    // abstract lantern: no face, no “window eyes”
-    ctx.save();
-    ctx.translate(x,y);
-    ctx.rotate(rot);
-    ctx.globalAlpha = alpha;
-
-    // body
-    ctx.fillStyle = color;
-    const w = s*0.72, h = s*0.92;
-    const r = Math.max(6, s*0.18);
-    roundRect(-w/2,-h/2,w,h,r);
-    ctx.fill();
-
-    // top cap
-    ctx.globalAlpha = alpha*0.9;
-    ctx.fillStyle = "rgba(255,255,255,.22)";
-    roundRect(-w*0.28, -h*0.62, w*0.56, h*0.16, r*0.7);
-    ctx.fill();
-
-    // bottom tassel (simple)
-    ctx.globalAlpha = alpha*0.75;
-    ctx.strokeStyle = "rgba(255,255,255,.30)";
-    ctx.lineWidth = Math.max(1.6, s*0.06);
-    ctx.beginPath();
-    ctx.moveTo(0, h*0.48);
-    ctx.lineTo(0, h*0.66);
-    ctx.stroke();
-
-    ctx.restore();
   }
 
   function roundRect(x,y,w,h,r){
@@ -2313,133 +2319,221 @@ function initKidsFx(){
     ctx.closePath();
   }
 
-  function edgeX(){
-    // bias ke pinggir agar tidak menutupi konten
-    const side = Math.random() < 0.5;
-    const pad = Math.min(140, W*0.18);
-    if(side) return rand(-20, pad);
-    return rand(W-pad, W+20);
+  function drawLantern(x,y,s,rot,color,alpha=1){
+    // abstrak, no eyes/no creature
+    ctx.save();
+    ctx.translate(x,y);
+    ctx.rotate(rot);
+    ctx.globalAlpha = alpha;
+
+    ctx.shadowBlur = 16;
+    ctx.shadowColor = color;
+
+    const w = s*0.72, h = s*0.92;
+    const r = Math.max(6, s*0.18);
+
+    ctx.fillStyle = color;
+    roundRect(-w/2,-h/2,w,h,r);
+    ctx.fill();
+
+    // soft vertical stripes (biar kaya lampion, tapi bukan “mata”)
+    ctx.shadowBlur = 0;
+    ctx.globalAlpha = alpha*0.45;
+    ctx.strokeStyle = "rgba(255,255,255,.35)";
+    ctx.lineWidth = Math.max(1.4, s*0.06);
+    ctx.beginPath();
+    ctx.moveTo(-w*0.18, -h*0.34); ctx.lineTo(-w*0.18, h*0.34);
+    ctx.moveTo( w*0.18, -h*0.34); ctx.lineTo( w*0.18, h*0.34);
+    ctx.stroke();
+
+    // tassel
+    ctx.globalAlpha = alpha*0.60;
+    ctx.beginPath();
+    ctx.moveTo(0, h*0.48);
+    ctx.lineTo(0, h*0.66);
+    ctx.stroke();
+
+    ctx.restore();
+  }
+
+  function pickX(){
+    // biar kelihatan di HP juga: sebagian lewat area tengah (lebih soft di tengah)
+    const edgeBias = (W < 620) ? 0.35 : 0.55;
+    if(Math.random() < edgeBias){
+      const side = Math.random() < 0.5;
+      const pad = Math.min(170, W*0.22);
+      return side ? rand(-30, pad) : rand(W-pad, W+30);
+    }
+    return rand(-10, W+10);
   }
 
   function makeParticle(yInit){
     const t = Math.random();
     const type =
-      t < 0.50 ? "star" :
-      t < 0.72 ? "confetti" :
-      t < 0.86 ? "crescent" :
+      t < 0.56 ? "star" :
+      t < 0.80 ? "confetti" :
+      t < 0.92 ? "crescent" :
       "lantern";
 
-    const size = type==="lantern" ? rand(18, 34) : rand(10, 22);
-    const p = {
+    const size = type==="lantern" ? rand(24, 46) : rand(12, 28);
+    const speedScale = prefersReduce ? 0.55 : 1;
+
+    return {
       type,
-      x: edgeX(),
+      x: pickX(),
       y: (typeof yInit==="number") ? yInit : rand(-H, H),
       s: size,
-      rot: rand(-1, 1),
-      vr: rand(-0.012, 0.012),
-      vy: rand(0.22, 0.65),
-      vx: rand(-0.14, 0.14),
-      wob: rand(0.6, 1.4),
+      rot: rand(-1.2, 1.2),
+      vr: rand(-0.020, 0.020) * speedScale,
+      vy: rand(0.40, 0.98) * speedScale,
+      vx: rand(-0.22, 0.22) * speedScale,
+      wob: rand(0.8, 1.8),
       ph: rand(0, Math.PI*2),
       c: pick(palette),
-      a: (type==="lantern") ? rand(0.16, 0.26) : rand(0.14, 0.24)
+      a: (type==="lantern") ? rand(0.26, 0.40) : rand(0.28, 0.48)
     };
-    return p;
   }
 
-  const N = Math.max(34, Math.min(56, Math.floor(W/22)));
-  const parts = Array.from({length:N}, (_,i)=> makeParticle(rand(-H, H)));
+  function seed(){
+    const N = Math.max(52, Math.min(92, Math.floor(W/11)));
+    parts = Array.from({length:N}, ()=> makeParticle(rand(-H, H)));
+  }
 
-  let rafId = 0;
-  function tick(t){
-    ctx.clearRect(0,0,W,H);
+  function start(){
+    if(running) return;
+    running = true;
 
-    // subtle glow dots (full-colour but tiny)
-    ctx.save();
-    ctx.globalAlpha = 0.08;
-    for(let i=0;i<10;i++){
-      const gx = (i%2===0) ? rand(0, W*0.18) : rand(W*0.82, W);
-      const gy = rand(0,H);
-      ctx.fillStyle = pick(palette);
-      ctx.beginPath();
-      ctx.arc(gx, gy, rand(1.2,2.2), 0, Math.PI*2);
-      ctx.fill();
-    }
-    ctx.restore();
+    canvas.style.display = "block"; // override prefers-reduced-motion CSS if needed
+    ctx = canvas.getContext("2d", { alpha:true });
 
-    for(const p of parts){
-      p.y += p.vy;
-      p.x += p.vx + Math.sin(t*0.0012 + p.ph) * p.wob;
-      p.rot += p.vr;
+    resize();
+    window.addEventListener("resize", resize, { passive:true });
 
-      if(p.y > H + 60){
-        // respawn dari atas
-        const np = makeParticle(rand(-120,-20));
-        Object.assign(p, np);
+    seed();
+
+    function tick(t){
+      ctx.clearRect(0,0,W,H);
+
+      // soft full-colour glows (lebih “kids”)
+      ctx.save();
+      ctx.globalAlpha = 0.10;
+      for(let i=0;i<14;i++){
+        const gx = rand(0, W);
+        const gy = rand(0, H);
+        ctx.fillStyle = pick(palette);
+        ctx.beginPath();
+        ctx.arc(gx, gy, rand(1.4, 2.8), 0, Math.PI*2);
+        ctx.fill();
       }
-      // wrap horizontal
-      if(p.x < -120) p.x = W + 120;
-      if(p.x > W + 120) p.x = -120;
+      ctx.restore();
 
-      const alpha = p.a;
-      if(p.type === "star"){
-        drawStar(p.x,p.y,p.s, p.rot, p.c, alpha);
-      }else if(p.type === "crescent"){
-        drawCrescent(p.x,p.y, p.s*0.62, p.rot, p.c, alpha);
-      }else if(p.type === "lantern"){
-        drawLantern(p.x,p.y, p.s, p.rot*0.6, p.c, alpha);
-      }else{
-        // confetti
-        ctx.save();
-        ctx.translate(p.x,p.y);
-        ctx.rotate(p.rot);
-        ctx.globalAlpha = alpha;
-        ctx.fillStyle = p.c;
-        ctx.fillRect(-p.s*0.4, -p.s*0.18, p.s*0.8, p.s*0.36);
-        ctx.restore();
+      for(const p of parts){
+        p.y += p.vy;
+        p.x += p.vx + Math.sin(t*0.0014 + p.ph) * p.wob;
+        p.rot += p.vr;
+
+        if(p.y > H + 70){
+          Object.assign(p, makeParticle(rand(-140,-30)));
+        }
+
+        if(p.x < -140) p.x = W + 140;
+        if(p.x > W + 140) p.x = -140;
+
+        // lebih soft di tengah (biar teks tetap nyaman)
+        let alpha = p.a;
+        if(p.x > W*0.18 && p.x < W*0.82) alpha *= 0.62;
+        alpha *= (0.80 + 0.20*Math.sin(t*0.002 + p.ph));
+
+        if(p.type === "star"){
+          drawStar(p.x,p.y,p.s, p.rot, p.c, alpha);
+        }else if(p.type === "crescent"){
+          drawCrescent(p.x,p.y, p.s*0.62, p.rot, p.c, alpha);
+        }else if(p.type === "lantern"){
+          drawLantern(p.x,p.y, p.s, p.rot*0.55, p.c, alpha*0.95);
+        }else{
+          // confetti (rect)
+          ctx.save();
+          ctx.translate(p.x,p.y);
+          ctx.rotate(p.rot);
+          ctx.globalAlpha = alpha;
+          ctx.fillStyle = p.c;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = p.c;
+          ctx.fillRect(-p.s*0.5, -p.s*0.18, p.s, p.s*0.36);
+          ctx.restore();
+        }
       }
+
+      rafId = requestAnimationFrame(tick);
     }
 
     rafId = requestAnimationFrame(tick);
-  }
-  rafId = requestAnimationFrame(tick);
 
-  // public burst
-  window.__kidsFxBurstAt = function(x,y){
-    const burstN = 18;
-    for(let i=0;i<burstN;i++){
-      const p = makeParticle(y);
-      p.x = x;
-      p.y = y;
-      const ang = rand(0, Math.PI*2);
-      const spd = rand(1.2, 2.6);
-      p.vx = Math.cos(ang)*spd;
-      p.vy = Math.sin(ang)*spd;
-      p.wob = rand(0.2, 0.8);
-      p.a = rand(0.20, 0.32);
-      p.s = p.type==="lantern" ? rand(16,26) : rand(10,18);
-      p.vr = rand(-0.06, 0.06);
-      // insert as temporary particle with lifespan
-      p.life = 0;
-      p.maxLife = rand(55, 85);
-      parts.push(p);
-    }
-  };
-
-  // prune extra burst particles gradually
-  function prune(){
-    for(let i=parts.length-1;i>=0;i--){
-      const p = parts[i];
-      if(p.maxLife){
-        p.life++;
-        // dampen
-        p.vx *= 0.985; p.vy *= 0.985;
-        if(p.life > p.maxLife) parts.splice(i,1);
+    // burst API for open button
+    window.__kidsFxBurstAt = function(x,y){
+      if(!running) return;
+      const burstN = 22;
+      for(let i=0;i<burstN;i++){
+        const p = makeParticle(y);
+        p.x = x; p.y = y;
+        const ang = rand(0, Math.PI*2);
+        const spd = rand(1.4, 3.2);
+        p.vx = Math.cos(ang)*spd;
+        p.vy = Math.sin(ang)*spd;
+        p.wob = rand(0.2, 0.9);
+        p.a = rand(0.34, 0.55);
+        p.s = p.type==="lantern" ? rand(18,30) : rand(10,18);
+        p.vr = rand(-0.08, 0.08);
+        p.life = 0;
+        p.maxLife = rand(55, 90);
+        parts.push(p);
       }
+    };
+
+    // prune burst particles
+    function prune(){
+      if(!running) return;
+      for(let i=parts.length-1;i>=0;i--){
+        const p = parts[i];
+        if(p.maxLife){
+          p.life++;
+          p.vx *= 0.985; p.vy *= 0.985;
+          if(p.life > p.maxLife) parts.splice(i,1);
+        }
+      }
+      pruneId = requestAnimationFrame(prune);
     }
-    requestAnimationFrame(prune);
+    pruneId = requestAnimationFrame(prune);
   }
-  requestAnimationFrame(prune);
+
+  function stop(){
+    running = false;
+    try{ cancelAnimationFrame(rafId); }catch(_e){}
+    try{ cancelAnimationFrame(pruneId); }catch(_e){}
+    try{ window.removeEventListener("resize", resize); }catch(_e){}
+    try{
+      if(ctx) ctx.clearRect(0,0,W,H);
+    }catch(_e){}
+    canvas.style.display = "none";
+    window.__kidsFxBurstAt = function(){};
+  }
+
+  function setFx(on){
+    fxOn = !!on;
+    try{ localStorage.setItem("rbm_fx", fxOn ? "1" : "0"); }catch(_e){}
+    updateBtn();
+    fxOn ? start() : stop();
+  }
+
+  if(btnFx){
+    btnFx.addEventListener("click", (e)=>{
+      addRipple(e);
+      setFx(!fxOn);
+    });
+  }
+
+  updateBtn();
+  setFx(fxOn);
 }
 
 /***********************
