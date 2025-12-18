@@ -1284,11 +1284,11 @@ const CONFIG = {
   ],
 
   classes: [
-    { name: "Kelas Qur’an Darat", desc: "Program pembinaan tilawah dan pemahaman dasar." },
-    { name: "Kelas Iqro’ Darat", desc: "Penguatan baca tulis Al-Qur’an (tahap Iqro’)." },
-    { name: "Kelas PAI Semester 1", desc: "Materi PAI semester 1." },
-    { name: "Kelas PAI Semester 2", desc: "Materi PAI semester 2." },
-    { name: "Kelas Nuroniyah", desc: "Kelas Nuroniyah" }
+    { name: "Kelas Qur’an Darat", desc: "Program pembinaan tilawah dan pemahaman dasar.", i18nNameKey:"class_quran_darat", i18nDescKey:"class_quran_darat_desc" },
+    { name: "Kelas Iqro’ Darat", desc: "Penguatan baca tulis Al-Qur’an (tahap Iqro’).", i18nNameKey:"class_iqro_darat", i18nDescKey:"class_iqro_darat_desc" },
+    { name: "Kelas PAI Semester 1", desc: "Materi PAI semester 1.", i18nNameKey:"class_pai_s1", i18nDescKey:"class_pai_s1_desc" },
+    { name: "Kelas PAI Semester 2", desc: "Materi PAI semester 2.", i18nNameKey:"class_pai_s2", i18nDescKey:"class_pai_s2_desc" },
+    { name: "Kelas Nuroniyah", desc: "Kelas Nuroniyah", i18nNameKey:"class_nuroniyah", i18nDescKey:"class_nuroniyah_desc" }
   ]
 };
 
@@ -1322,6 +1322,16 @@ const I18N = {
 
     sec_classes:"Kelas yang Diwisuda",
     classes_desc:"Kelas yang akan diwisuda",
+    class_quran_darat:"Kelas Qur’an Darat",
+    class_quran_darat_desc:"Program pembinaan tilawah dan pemahaman dasar.",
+    class_iqro_darat:"Kelas Iqro’ Darat",
+    class_iqro_darat_desc:"Penguatan baca tulis Al-Qur’an (tahap Iqro’).",
+    class_pai_s1:"Kelas PAI Semester 1",
+    class_pai_s1_desc:"Materi PAI semester 1.",
+    class_pai_s2:"Kelas PAI Semester 2",
+    class_pai_s2_desc:"Materi PAI semester 2.",
+    class_nuroniyah:"Kelas Nuroniyah",
+    class_nuroniyah_desc:"Kelas Nuroniyah",
 
     sec_gallery:"Galeri",
     gallery_desc:"Galeri RBM Jepang",
@@ -1373,6 +1383,16 @@ const I18N = {
 
     sec_classes:"Graduating Classes",
     classes_desc:"Class list",
+    class_quran_darat:"On-site Qur’an Class",
+    class_quran_darat_desc:"Program for recitation (tilawah) and basic understanding.",
+    class_iqro_darat:"On-site Iqro’ Class",
+    class_iqro_darat_desc:"Strengthening Qur’an reading & writing (Iqro’ level).",
+    class_pai_s1:"PAI Semester 1",
+    class_pai_s1_desc:"Islamic Studies (PAI) – Semester 1.",
+    class_pai_s2:"PAI Semester 2",
+    class_pai_s2_desc:"Islamic Studies (PAI) – Semester 2.",
+    class_nuroniyah:"Nuroniyah Class",
+    class_nuroniyah_desc:"Nuroniyah class.",
 
     sec_gallery:"Gallery",
     gallery_desc:"RBM Japan Gallery",
@@ -1424,6 +1444,16 @@ const I18N = {
 
     sec_classes:"卒業クラス",
     classes_desc:"クラス一覧",
+    class_quran_darat:"クルアーン教室（対面）",
+    class_quran_darat_desc:"ティラーワと基礎理解の育成プログラム。",
+    class_iqro_darat:"イクロ（対面）",
+    class_iqro_darat_desc:"クルアーンの読み書き強化（イクロ段階）。",
+    class_pai_s1:"PAI（イスラーム学習）1学期",
+    class_pai_s1_desc:"PAI 1学期の学習内容。",
+    class_pai_s2:"PAI（イスラーム学習）2学期",
+    class_pai_s2_desc:"PAI 2学期の学習内容。",
+    class_nuroniyah:"ヌローニーヤ教室",
+    class_nuroniyah_desc:"ヌローニーヤのクラス。",
 
     sec_gallery:"ギャラリー",
     gallery_desc:"写真一覧",
@@ -1517,6 +1547,9 @@ function setLang(lang){
   $("#whenText").textContent = formatWhen(lang);
   $("#addrText").textContent = CONFIG.addressLine;
   $("#btnMap").href = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONFIG.mapQuery)}`;
+
+  // re-render dynamic sections that are not data-i18n based
+  renderClasses();
 }
 
 /***********************
@@ -1785,12 +1818,17 @@ function initReveal(){
  * Classes
  ***********************/
 function renderClasses(){
-  $("#classGrid").innerHTML = CONFIG.classes.map(c=>`
-    <div class="classCard">
-      <b>${safeText(c.name)}</b>
-      <div class="small">${safeText(c.desc || "")}</div>
-    </div>
-  `).join("");
+  const lang = state.lang || "id";
+  $("#classGrid").innerHTML = CONFIG.classes.map(c=>{
+    const tName = (c.i18nNameKey && I18N[lang] && I18N[lang][c.i18nNameKey] != null) ? I18N[lang][c.i18nNameKey] : c.name;
+    const tDesc = (c.i18nDescKey && I18N[lang] && I18N[lang][c.i18nDescKey] != null) ? I18N[lang][c.i18nDescKey] : (c.desc || "");
+    return `
+      <div class="classCard">
+        <b>${safeText(tName)}</b>
+        <div class="small">${safeText(tDesc)}</div>
+      </div>
+    `;
+  }).join("");
 }
 
 /***********************
