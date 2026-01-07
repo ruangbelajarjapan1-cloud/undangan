@@ -2,854 +2,469 @@
 <html lang="id">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <meta name="theme-color" content="#1A56FF" />
-  <meta name="description" content="Undangan Digital Wisuda & Kelulusan Siswa RBM Japan">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no, maximum-scale=1" />
+  
+  <meta name="theme-color" content="#0EA5E9" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>RBM Japan • Graduation</title>
 
   <link rel="icon" href="data:,">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;600;700&family=Noto+Naskh+Arabic:wght@700&display=swap" rel="stylesheet">
 
   <style>
+    /* --- APP-LIKE BASE STYLES --- */
     :root {
-      --sky1: #BFEFFF;
-      --sky2: #EAFBFF;
-      --accent: #00B7FF;
-      --accent2: #2D7DFF;
-      --text: #08324A;
-      --muted: rgba(8, 50, 74, .72);
-      --cardBg: rgba(255, 255, 255, .90); /* Sedikit lebih solid agar teks lebih terbaca */
-      --shadow: 0 18px 55px rgba(0, 60, 120, .14);
-      --shadow2: 0 14px 40px rgba(0, 60, 120, .10);
-      --r: 22px;
-      --tap: 48px; /* UX: Ukuran minimal tombol untuk jari (48px standard) */
-      --emerald: #16A34A;
-      --gold: #F6C453;
+      --bg-gradient-start: #E0F2FE;
+      --bg-gradient-end: #BAE6FD;
+      --accent: #F59E0B;
+      --primary: #0EA5E9;
+      --text-main: #0F172A;
+      --text-muted: #475569;
+      --card-bg: rgba(255, 255, 255, 0.94);
+      --shadow-soft: 0 8px 32px rgba(14, 165, 233, 0.15);
+      --radius-l: 24px;
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
     }
 
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    html, body { 
+      height: 100%; 
+      overflow: hidden; /* Mencegah scroll body utama, kita scroll container */
+      background: #E0F2FE; /* Fallback */
+    }
 
     body {
       margin: 0;
-      font-family: "Noto Sans", "Noto Sans JP", system-ui, -apple-system, sans-serif;
-      color: var(--text);
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      font-size: 16px;
+      font-family: "Noto Sans", sans-serif;
+      color: var(--text-main);
+      /* Animasi background halus */
+      background: linear-gradient(180deg, #E0F2FE 0%, #BAE6FD 100%);
+      background-size: 100% 200%;
+      animation: skyShift 15s ease-in-out infinite alternate;
       
-      background:
-        radial-gradient(900px 600px at 15% 15%, rgba(255, 255, 255, .95), transparent 60%),
-        radial-gradient(900px 600px at 85% 25%, rgba(134, 215, 255, .55), transparent 60%),
-        radial-gradient(900px 600px at 20% 85%, rgba(191, 239, 255, .62), transparent 65%),
-        linear-gradient(140deg, var(--sky1), var(--sky2));
-      background-size: 160% 160%;
-      animation: bgShiftKids 15s ease-in-out infinite alternate; /* Diperlambat agar tidak pusing */
+      /* UX App-like: Mencegah seleksi teks & pull-to-refresh */
+      user-select: none;
+      -webkit-user-select: none;
+      overscroll-behavior-y: none;
     }
 
-    @keyframes bgShiftKids {
-      0% { background-position: 0% 40%; filter: saturate(1.10) brightness(1.06); }
-      100% { background-position: 100% 65%; filter: saturate(1.14) brightness(1.08); }
-    }
+    @keyframes skyShift { 0% { background-position: 0% 0%; } 100% { background-position: 0% 100%; } }
 
-    body:not(.opened) { overflow: hidden; }
-    a { color: inherit; text-decoration: none; }
+    /* Scrollable Container (Area konten yang bisa discroll) */
+    .app-container {
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: calc(60px + var(--safe-top)) 16px calc(100px + var(--safe-bottom));
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch; /* Momentum scrolling iOS */
+    }
+    
+    /* Sembunyikan Scrollbar */
+    .app-container::-webkit-scrollbar { display: none; }
 
-    .container {
-      max-width: 980px;
-      margin: 0 auto;
-      padding: 16px 14px calc(92px + env(safe-area-inset-bottom));
+    /* --- SKY ANIMATION (Background) --- */
+    .sky-objects { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+    .cloud {
+      position: absolute; background: #fff; border-radius: 100px;
+      opacity: 0.5; filter: blur(6px); animation: floatCloud linear infinite;
     }
+    .cloud::after, .cloud::before {
+      content: ''; position: absolute; background: inherit; border-radius: 50%;
+    }
+    .cloud::after { width: 50%; height: 100%; top: -40%; left: 15%; }
+    .cloud::before { width: 40%; height: 120%; top: -50%; left: 40%; }
+    @keyframes floatCloud { from { transform: translateX(-150px); } to { transform: translateX(120vw); } }
 
-    /* --- Sparkles & Background FX --- */
-    body::before, body::after {
-      content: ""; position: fixed; inset: 0; pointer-events: none; z-index: 0;
-    }
-    body::before {
-      background: radial-gradient(circle at 10% 20%, rgba(255,255,255,.70) 0, transparent 3px),
-                  radial-gradient(circle at 80% 55%, rgba(255,255,255,.50) 0, transparent 3px);
-      opacity: .18; animation: sparkleDrift 14s linear infinite;
-    }
-    body::after {
-      background: radial-gradient(circle at 15% 30%, rgba(0,183,255,.28) 0, transparent 3px);
-      opacity: .12; animation: sparkleDrift2 18s linear infinite;
-    }
-    @keyframes sparkleDrift { 100% { transform: translate3d(-4vw, 6vh, 0); } }
-    @keyframes sparkleDrift2 { 100% { transform: translate3d(5vw, -5vh, 0); } }
-
-    .islamicPattern {
-      position: fixed; inset: 0; pointer-events: none; z-index: 0; opacity: .08;
-      mix-blend-mode: multiply; /* UX: Diganti multiply agar lebih blend dengan background */
-      background: repeating-radial-gradient(circle at 50% 50%, rgba(0,183,255,.10) 0 2px, transparent 2px 22px);
-    }
-
-    /* --- Stickers & Bubbles --- */
-    .bubbles { position: fixed; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
-    .bubble {
-      position: absolute; border-radius: 999px; opacity: .18;
-      border: 1px solid rgba(255, 255, 255, .38);
-      animation: floatUp 12s linear infinite;
-      background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, .78), rgba(255, 255, 255, .10));
-    }
-    @keyframes floatUp {
-      0% { transform: translate3d(0, 110vh, 0) scale(.85); }
-      100% { transform: translate3d(10vw, -30vh, 0) scale(1.12); }
-    }
-
-    .stickers { position: fixed; inset: 0; pointer-events: none; z-index: 1; overflow: hidden; }
-    .sticker {
-      position: absolute; top: -120px;
-      width: var(--s, 72px); height: var(--s, 72px);
-      opacity: var(--o, .16);
-      filter: drop-shadow(0 12px 24px rgba(0, 60, 120, .10));
-      animation: stickerFloat var(--t, 16s) ease-in-out infinite;
-    }
-    /* Sticker shapes optimized */
-    .sticker.cloud {
-      background: radial-gradient(circle at 50% 50%, rgba(255,255,255,.95), transparent 70%);
-      border-radius: 50%;
-    }
-    .sticker.star {
-      background: rgba(0, 183, 255, .18);
-      clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    }
-    /* Sticker images (SVG encoded) kept as is from original */
-    .sticker.cap, .sticker.lantern, .sticker.laurel {
-      background-repeat: no-repeat; background-position: center; background-size: contain;
-    }
-    .sticker.cap { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cpath d='M10 34L48 18l38 16-38 16-38-16Z' fill='%2300B7FF' fill-opacity='.22'/%3E%3Cpath d='M24 44v16c0 10 48 10 48 0V44L48 54 24 44Z' fill='%2316A34A' fill-opacity='.22'/%3E%3Cpath d='M78 37v28' stroke='%23F6C453' stroke-opacity='.55' stroke-width='5' stroke-linecap='round'/%3E%3Ccircle cx='78' cy='69' r='5' fill='%23F6C453' fill-opacity='.55'/%3E%3C/svg%3E"); }
-    .sticker.lantern { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cpath d='M48 10c10 0 18 8 18 18v3H30v-3c0-10 8-18 18-18Z' fill='%23F6C453' fill-opacity='.22'/%3E%3Cpath d='M30 31h36l-6 44H36l-6-44Z' fill='%2300B7FF' fill-opacity='.18'/%3E%3Cpath d='M44 75h8v7h-8z' fill='%2316A34A' fill-opacity='.22'/%3E%3C/svg%3E"); }
-    .sticker.laurel { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 96 96'%3E%3Cpath d='M34 78c-10-9-16-22-16-36 0-10 3-19 9-27' fill='none' stroke='%2316A34A' stroke-opacity='.26' stroke-width='6' stroke-linecap='round'/%3E%3Cpath d='M62 78c10-9 16-22 16-36 0-10-3-19-9-27' fill='none' stroke='%23F6C453' stroke-opacity='.28' stroke-width='6' stroke-linecap='round'/%3E%3C/svg%3E"); }
-
-    @keyframes stickerFloat {
-      0% { transform: translate3d(var(--x, 0px), 110vh, 0) rotate(0deg) scale(.98); }
-      50% { transform: translate3d(calc(var(--x, 0px) + 10px), 48vh, 0) rotate(8deg) scale(1.03); }
-      100% { transform: translate3d(calc(var(--x, 0px) - 10px), -25vh, 0) rotate(-6deg) scale(.99); }
-    }
-
-    /* --- Top Bar --- */
+    /* --- TOP BAR (Fixed Header) --- */
     .topbar {
-      position: sticky; top: 0; z-index: 20;
+      position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+      padding-top: var(--safe-top);
+      background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      background: rgba(255, 255, 255, .80);
-      border-bottom: 1px solid rgba(0, 183, 255, .18);
+      border-bottom: 1px solid rgba(255,255,255,0.4);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
     .topbar-inner {
-      max-width: 980px; margin: 0 auto; padding: 10px 14px;
-      display: flex; align-items: center; justify-content: space-between; gap: 10px;
+      height: 60px; display: flex; align-items: center; justify-content: space-between;
+      padding: 0 16px; max-width: 800px; margin: 0 auto;
     }
-    .brand { display: flex; align-items: center; gap: 10px; min-width: 200px; }
-    .logo {
-      width: 44px; height: 44px; border-radius: 12px; overflow: hidden;
-      background: #fff; box-shadow: var(--shadow2);
+    .logo-area { display: flex; align-items: center; gap: 10px; }
+    .logo-img { width: 36px; height: 36px; border-radius: 10px; object-fit: cover; background: #fff; }
+    .brand-text h1 { margin: 0; font-size: 15px; font-weight: 800; color: var(--primary); }
+    .brand-text p { margin: 0; font-size: 10px; color: var(--text-muted); }
+    .lang-switch { display: flex; gap: 4px; background: rgba(0,0,0,0.05); padding: 4px; border-radius: 20px; }
+    .lang-btn {
+      font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 14px; border: none;
+      background: transparent; color: var(--text-muted); cursor: pointer;
     }
-    .logo img { width: 100%; height: 100%; object-fit: cover; }
-    .brand h1 { margin: 0; font-size: 14px; font-weight: 800; }
-    .brand p { margin: 2px 0 0; font-size: 11px; color: var(--muted); }
-    .right { display: flex; align-items: center; gap: 8px; }
+    .lang-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
 
-    /* UI Components */
-    .chip {
-      height: 34px; padding: 0 12px; border-radius: 99px;
-      border: 1px solid rgba(0, 183, 255, .18);
-      background: rgba(255, 255, 255, .70);
-      color: var(--text); font-size: 12px; font-weight: 600;
-      cursor: pointer; transition: all .2s ease;
-      display: flex; align-items: center;
+    /* --- COVER MODAL (Halaman Depan) --- */
+    .cover-overlay {
+      position: fixed; inset: 0; z-index: 100;
+      background: radial-gradient(circle at center, #E0F2FE, #7DD3FC);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 20px; transition: transform 0.7s cubic-bezier(0.7, 0, 0.3, 1);
     }
-    .chip.active {
-      background: linear-gradient(90deg, #00B7FF, #2D7DFF);
-      color: #fff; border-color: transparent;
-    }
-    .iconBtn {
-      width: 38px; height: 38px; border-radius: 12px;
-      border: 1px solid rgba(0, 183, 255, .18);
-      background: rgba(255, 255, 255, .70);
-      display: grid; place-items: center; cursor: pointer;
-      transition: all .2s;
-    }
-    .iconBtn.active {
-      background: linear-gradient(135deg, #FFD700, #FF69B4);
-      color: white; border-color: transparent;
-    }
+    body.opened .cover-overlay { transform: translateY(-120%); pointer-events: none; }
 
-    /* --- Cover (Modal) --- */
-    .coverWrap {
-      position: fixed; inset: 0; z-index: 50;
-      display: flex; align-items: center; justify-content: center;
-      padding: 18px 14px;
-      background: rgba(8, 50, 74, .25); backdrop-filter: blur(10px);
-      transition: opacity .55s ease, transform .55s ease;
+    .cover-card {
+      width: 100%; max-width: 400px; background: rgba(255,255,255,0.95);
+      backdrop-filter: blur(20px); border-radius: 32px; padding: 40px 24px;
+      text-align: center; box-shadow: 0 20px 60px rgba(14, 165, 233, 0.3);
+      position: relative; overflow: hidden;
+      transform: scale(0.95); animation: popUp 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     }
-    body.opened .coverWrap { opacity: 0; transform: translateY(-20px); pointer-events: none; }
-
-    .coverCard {
-      width: min(980px, 100%); border-radius: 28px; overflow: hidden;
-      background: #fff; box-shadow: var(--shadow);
-      position: relative; animation: popIn .7s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    @keyframes popIn { from { opacity: 0; transform: scale(.95) translateY(20px); } to { opacity: 1; transform: scale(1) translateY(0); } }
-
-    .coverMedia { height: 320px; position: relative; background: #cfefff; overflow: hidden; }
-    .slide {
-      position: absolute; inset: 0; background-size: cover; background-position: center;
-      opacity: 0; transition: opacity 1s ease;
-      animation: kenburns 20s linear infinite alternate;
-    }
-    .slide.active { opacity: 1; }
-    @keyframes kenburns { from { transform: scale(1); } to { transform: scale(1.15); } }
-
-    .coverBody { padding: 20px 18px; position: relative; }
-    .badgeRow { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; }
-    .badge {
-      font-size: 11px; font-weight: 700; padding: 6px 10px;
-      border-radius: 6px; background: var(--sky2); color: var(--text);
-      border: 1px solid rgba(0, 183, 255, .2);
-    }
-
-    .coverTitle {
-      font-size: clamp(24px, 5vw, 36px); font-weight: 900;
-      line-height: 1.1; margin: 10px 0; color: var(--text);
-    }
-    .duaLine {
-      margin-top: 10px; padding: 10px; background: rgba(246, 196, 83, .1);
-      border-radius: 12px; font-size: 12px; display: flex; align-items: center; gap: 8px;
-    }
-    .duaAr { font-family: "Noto Naskh Arabic", serif; font-weight: 700; color: var(--emerald); }
-
-    .btnRow { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
-    .btn {
-      height: var(--tap); padding: 0 20px; border-radius: 14px;
-      border: none; font-weight: 700; font-size: 14px;
-      cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
-      transition: transform .1s; text-decoration: none; color: var(--text);
-      background: #f0f0f0;
-    }
-    .btn:active { transform: scale(0.96); }
-    .btn.primary {
-      background: linear-gradient(90deg, #16A34A, #00B7FF);
-      color: white; box-shadow: 0 4px 12px rgba(0, 183, 255, .3);
-      flex: 1; min-width: 140px;
+    @keyframes popUp { to { transform: scale(1); } }
+    
+    .ribbon {
+      position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+      width: 50px; height: 70px; background: var(--accent);
+      clip-path: polygon(0 0, 100% 0, 100% 80%, 50% 100%, 0 80%);
+      display: flex; justify-content: center; padding-top: 15px;
+      color: #fff; font-size: 20px; box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
     }
     
-    /* --- Main Content Cards --- */
-    .section { margin-top: 20px; opacity: 0; transform: translateY(20px); transition: all .6s ease; }
-    .section.show { opacity: 1; transform: translateY(0); }
-    
-    .card {
-      background: var(--cardBg); border-radius: var(--r);
-      box-shadow: var(--shadow); overflow: hidden;
-      border: 1px solid rgba(255,255,255,0.6);
+    .cover-title {
+      margin-top: 40px; font-size: 28px; font-weight: 900; line-height: 1.1;
+      background: -webkit-linear-gradient(45deg, var(--primary), #2563EB);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
-    .cardBody { padding: 20px; }
-    .card h2 { margin: 0 0 16px; font-size: 16px; font-weight: 800; display: flex; align-items: center; gap: 8px; }
-    .card h2::before {
-      content: ""; display: inline-block; width: 6px; height: 18px;
-      background: var(--accent); border-radius: 4px;
+    .open-btn {
+      width: 100%; padding: 16px; border-radius: 18px; border: none;
+      background: var(--primary); color: #fff; font-size: 16px; font-weight: 700;
+      box-shadow: 0 10px 20px rgba(14, 165, 233, 0.3);
+      cursor: pointer; transition: transform 0.1s;
     }
+    .open-btn:active { transform: scale(0.96); }
 
-    .kv { display: grid; grid-template-columns: 100px 1fr; gap: 12px; font-size: 14px; }
-    .mutedText { color: var(--muted); font-size: 12px; }
+    /* --- CARDS (Content) --- */
+    .section-card {
+      background: var(--card-bg); border-radius: var(--radius-l);
+      padding: 24px; margin-bottom: 20px;
+      box-shadow: var(--shadow-soft); border: 1px solid rgba(255,255,255,0.8);
+      opacity: 0; transform: translateY(40px); transition: all 0.6s ease;
+    }
+    .section-card.visible { opacity: 1; transform: translateY(0); }
 
-    /* Countdown */
-    .countdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
-    .cdBox {
-      background: rgba(255,255,255,.6); border: 1px solid rgba(0,183,255,.2);
-      border-radius: 12px; padding: 10px 4px; text-align: center;
+    .section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+    .icon-box {
+      width: 40px; height: 40px; border-radius: 12px;
+      background: #E0F2FE; color: var(--primary);
+      display: grid; place-items: center; font-size: 20px;
     }
-    .cdNum { font-size: 20px; font-weight: 900; color: var(--accent2); }
-    .cdLbl { font-size: 10px; color: var(--muted); margin-top: 4px; }
+    h2 { margin: 0; font-size: 18px; font-weight: 800; }
 
-    /* Classes Grid */
-    .classGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
-    .classCard {
-      background: rgba(255,255,255,.8); border: 1px solid rgba(0,183,255,.15);
-      border-radius: 12px; padding: 12px; text-align: center;
+    /* Gallery (Updated) */
+    .gallery-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;
     }
+    .gallery-item {
+      aspect-ratio: 1; border-radius: 12px; overflow: hidden;
+      background: #ddd; position: relative; cursor: pointer;
+    }
+    .gallery-item img {
+      width: 100%; height: 100%; object-fit: cover;
+      transition: transform 0.4s;
+    }
+    .gallery-item:active img { transform: scale(1.05); }
 
-    /* Carousel */
-    .carousel {
-      position: relative; border-radius: 16px; overflow: hidden;
-      aspect-ratio: 16/10; background: #eee; touch-action: pan-y; /* UX: Agar swipe tidak scroll halaman */
-    }
-    .carouselTrack { display: flex; transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1); height: 100%; }
-    .carouselItem { min-width: 100%; height: 100%; position: relative; }
-    .carouselItem img { width: 100%; height: 100%; object-fit: cover; }
-    .carouselDots {
-      position: absolute; bottom: 12px; left: 50%; transform: translateX(-50%);
-      display: flex; gap: 6px;
-    }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.5); transition: 0.3s; }
-    .dot.active { background: #fff; transform: scale(1.2); }
-    .carouselCtrl {
-      position: absolute; top: 50%; transform: translateY(-50%);
-      width: 40px; height: 40px; border-radius: 50%; border: none;
-      background: rgba(255,255,255,0.8); cursor: pointer; z-index: 2;
-      display: flex; align-items: center; justify-content: center; font-size: 20px;
-    }
-    .carouselCtrl.prev { left: 10px; }
-    .carouselCtrl.next { right: 10px; }
-
-    /* Form */
-    form { display: grid; gap: 14px; }
-    input, select, textarea {
-      width: 100%; height: 48px; padding: 0 14px; border-radius: 12px;
-      border: 1px solid #ddd; background: rgba(255,255,255,0.9);
-      font-family: inherit; font-size: 14px;
-    }
-    textarea { height: auto; min-height: 100px; padding-top: 12px; }
-    input:focus, select:focus, textarea:focus {
-      outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(0,183,255,.1);
-    }
-    .radioRow { display: flex; gap: 10px; flex-wrap: wrap; }
-    .radio {
-      display: flex; align-items: center; gap: 8px; padding: 10px 16px;
-      background: rgba(255,255,255,0.8); border-radius: 99px; cursor: pointer;
-      border: 1px solid transparent; transition: 0.2s;
-    }
-    .radio:has(input:checked) {
-      background: var(--sky2); border-color: var(--accent); color: var(--accent2); font-weight: bold;
-    }
-
-    /* Lightbox */
+    /* Lightbox (Full Screen Photo) */
     .lightbox {
-      position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,0.9);
-      display: flex; align-items: center; justify-content: center;
-      opacity: 0; pointer-events: none; transition: opacity 0.3s;
+      position: fixed; inset: 0; z-index: 200;
+      background: #000; display: none; align-items: center; justify-content: center;
     }
-    .lightbox.show { opacity: 1; pointer-events: all; }
-    .lightbox img { max-width: 95vw; max-height: 85vh; border-radius: 8px; }
-
-    /* Bottom Nav */
-    .bottomNav {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: rgba(255,255,255,0.9); backdrop-filter: blur(10px);
-      border-radius: 24px; padding: 8px 24px; display: flex; gap: 24px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15); z-index: 90;
+    .lightbox.active { display: flex; animation: fadeIn 0.3s; }
+    .lightbox img { max-width: 100%; max-height: 100%; }
+    .lightbox-close {
+      position: absolute; top: 40px; right: 20px;
+      color: #fff; font-size: 30px; cursor: pointer; padding: 10px;
     }
-    .navItem { color: var(--muted); display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: 10px; }
-    .navItem svg { width: 22px; height: 22px; stroke-width: 2; }
-    .navItem.active { color: var(--accent2); }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-    /* Toast */
-    .toast {
-      position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
-      background: #333; color: #fff; padding: 12px 24px; border-radius: 50px;
-      font-size: 14px; z-index: 110; transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    /* RSVP Form */
+    input, select, textarea {
+      width: 100%; padding: 14px; border-radius: 14px;
+      border: 1px solid #CBD5E1; background: #F8FAFC;
+      font-family: inherit; font-size: 14px; margin-bottom: 12px;
     }
-    .toast.show { transform: translateX(-50%) translateY(0); }
-
-    /* Canvas FX */
-    #kidsFx, #confetti { position: fixed; inset: 0; pointer-events: none; z-index: 2; }
-
-    /* Mobile adjustments */
-    @media (max-width: 600px) {
-      .coverTitle { font-size: 28px; }
-      .kv { grid-template-columns: 1fr; gap: 4px; }
-      .kv .mutedText { margin-top: 8px; }
-      .btnRow .btn { width: 100%; }
-      .countdown { gap: 6px; }
-      .cdNum { font-size: 16px; }
+    input:focus, textarea:focus { outline: none; border-color: var(--primary); background: #fff; }
+    
+    .radio-group { display: flex; gap: 8px; margin-bottom: 12px; }
+    .radio-btn {
+      flex: 1; padding: 12px; border-radius: 12px; border: 1px solid #CBD5E1;
+      text-align: center; font-size: 13px; font-weight: 600; cursor: pointer; background: #fff;
     }
+    .radio-btn.checked { background: #E0F2FE; border-color: var(--primary); color: var(--primary); }
+    input[type="radio"] { display: none; }
+
+    /* Bottom Nav (Floating) */
+    .bottom-nav {
+      position: fixed; bottom: calc(20px + var(--safe-bottom)); left: 50%; transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(16px);
+      padding: 10px 24px; border-radius: 50px;
+      display: flex; gap: 30px; align-items: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15); border: 1px solid rgba(255,255,255,0.5);
+      z-index: 90;
+    }
+    .nav-item { color: #94A3B8; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; font-weight: 600; }
+    .nav-item svg { width: 22px; height: 22px; stroke-width: 2.5px; }
+    .nav-item.active { color: var(--primary); }
+
+    /* Music Button */
+    .music-fab {
+      width: 44px; height: 44px; border-radius: 50%;
+      background: var(--text-main); color: #fff; border: none;
+      display: grid; place-items: center; font-size: 18px; margin-left: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer;
+    }
+    .music-fab.playing { background: var(--accent); animation: pulseMusic 1.5s infinite; }
+    @keyframes pulseMusic { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
   </style>
 </head>
 
 <body>
-  <canvas id="kidsFx"></canvas>
-  <canvas id="confetti"></canvas>
-  <div class="islamicPattern"></div>
 
-  <div class="bubbles">
-    <div class="bubble" style="left:10%; width:60px; height:60px; animation-delay:0s"></div>
-    <div class="bubble" style="left:80%; width:90px; height:90px; animation-delay:2s"></div>
-    <div class="bubble" style="left:40%; width:50px; height:50px; animation-delay:4s"></div>
+  <div class="sky-objects">
+    <div class="cloud" style="width: 100px; height: 30px; top: 15%; left: -10%; animation-duration: 28s;"></div>
+    <div class="cloud" style="width: 140px; height: 50px; top: 40%; left: -20%; animation-duration: 35s; opacity: 0.3;"></div>
   </div>
 
-  <div class="stickers">
-    <div class="sticker cloud" style="left:10%; --t:20s"></div>
-    <div class="sticker star" style="left:80%; --t:15s"></div>
-    <div class="sticker lantern" style="left:20%; --t:25s"></div>
-  </div>
-
-  <div class="coverWrap" id="coverWrap">
-    <div class="coverCard">
-      <div class="coverMedia">
-        <div class="slide active" id="slideA"></div>
-        <div class="slide" id="slideB"></div>
+  <div class="cover-overlay" id="cover">
+    <div class="cover-card">
+      <div class="ribbon">🎓</div>
+      <h1 class="cover-title">Graduation<br>Ceremony</h1>
+      <p style="color:var(--text-muted); font-size:14px; margin:10px 0 30px;">
+        RBM Japan Student Graduation<br>Class of 2026
+      </p>
+      
+      <div style="background:#F1F5F9; padding:15px; border-radius:16px; margin-bottom:25px;">
+        <span style="font-size:12px; color:#64748B; display:block; margin-bottom:4px;">Kepada Yth:</span>
+        <strong id="guestName" style="font-size:16px; color:#0F172A;">Tamu Undangan</strong>
       </div>
-      <div class="coverBody">
-        <div class="badgeRow">
-          <div class="badge" data-i18n="badge_event">Acara Kelulusan</div>
-          <div class="badge">24 Jan 2026</div>
-        </div>
 
-        <div class="toLine" id="toLine">Kepada Yth: Tamu Undangan</div>
-        <h1 class="coverTitle" data-i18n="cover_title">Undangan Wisuda RBM Japan</h1>
-        <p class="mutedText" data-i18n="cover_desc">Mari rayakan pencapaian putra-putri kita.</p>
-        
-        <div class="duaLine" data-i18n-html="dua_line"></div>
-
-        <div class="btnRow">
-          <button class="btn primary" id="btnOpen" data-i18n="btn_open">Buka Undangan</button>
-          <button class="btn" id="btnShare" data-i18n="btn_share">Bagikan</button>
-        </div>
-      </div>
+      <button class="open-btn" onclick="openApp()">Buka Undangan</button>
     </div>
   </div>
 
   <div class="topbar">
     <div class="topbar-inner">
-      <div class="brand">
-        <div class="logo"><img src="./assets/logo.png" alt="RBM" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSIjZWVlIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9MTAwIi8+PC9zdmc+'"></div>
-        <div>
-          <h1 data-i18n="top_title">RBM Japan</h1>
-          <p data-i18n="top_sub">Graduation Ceremony</p>
+      <div class="logo-area">
+        <img src="assets/logo.png" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDAgMTAwIiBmaWxsPSIjRDBFNEZGIj48cmVjdCB3aWR0aD0iMTAwIiBoZWlnaHQ9MTAwIi8+PC9zdmc+'" class="logo-img">
+        <div class="brand-text">
+          <h1>RBM Japan</h1>
+          <p>Graduation 2026</p>
         </div>
       </div>
-      <div class="right">
-        <div class="chip active" data-lang="id">ID</div>
-        <div class="chip" data-lang="en">EN</div>
-        <div class="iconBtn" id="btnMusic">♪</div>
+      <div class="lang-switch">
+        <button class="lang-btn active" onclick="setLang('id', this)">ID</button>
+        <button class="lang-btn" onclick="setLang('en', this)">EN</button>
       </div>
     </div>
   </div>
 
-  <div class="container">
+  <div class="app-container" id="mainContainer">
     
-    <section class="section card show" id="detail">
-      <div class="cardBody">
+    <section id="info" class="section-card">
+      <div class="section-header">
+        <div class="icon-box">📅</div>
         <h2 data-i18n="sec_detail">Detail Acara</h2>
-        <div class="kv">
-          <div class="mutedText" data-i18n="k_when">Waktu</div>
-          <div id="whenText">Loading...</div>
-          
-          <div class="mutedText" data-i18n="k_where">Tempat</div>
-          <div>
-            <b>十日市場地区センター</b><br>
-            <span class="mutedText" id="addrText">Yokohama, Japan</span>
-          </div>
+      </div>
+      <div style="display:grid; gap:12px; font-size:14px;">
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding-bottom:8px;">
+          <span style="color:#64748B" data-i18n="lbl_date">Tanggal</span>
+          <span style="font-weight:600">24 Jan 2026</span>
         </div>
+        <div style="display:flex; justify-content:space-between; border-bottom:1px solid #eee; padding-bottom:8px;">
+          <span style="color:#64748B" data-i18n="lbl_time">Waktu</span>
+          <span style="font-weight:600">13:00 JST</span>
+        </div>
+        <div>
+          <span style="color:#64748B; display:block; margin-bottom:4px;" data-i18n="lbl_place">Lokasi</span>
+          <span style="font-weight:600">十日市場地区センター</span>
+          <br><small style="color:#94A3B8">Yokohama, Kanagawa</small>
+        </div>
+      </div>
+      <a href="https://goo.gl/maps/PlaceHolder" target="_blank" style="display:block; text-align:center; background:#F1F5F9; color:#0EA5E9; padding:12px; border-radius:12px; margin-top:16px; font-weight:600; text-decoration:none;">
+        📍 <span data-i18n="btn_map">Buka Peta</span>
+      </a>
+    </section>
+
+    <section id="gallery" class="section-card">
+      <div class="section-header">
+        <div class="icon-box">📷</div>
+        <h2 data-i18n="sec_gallery">Galeri</h2>
+      </div>
+      <div class="gallery-grid" id="galleryGrid">
+        </div>
+    </section>
+
+    <section id="rsvp" class="section-card" style="margin-bottom:80px;">
+      <div class="section-header">
+        <div class="icon-box">💌</div>
+        <h2 data-i18n="sec_rsvp">Konfirmasi</h2>
+      </div>
+      <form id="rsvpForm">
+        <label style="font-size:12px; font-weight:600; color:#64748B; margin-left:4px;" data-i18n="form_name">Nama</label>
+        <input type="text" name="name" required placeholder="Nama Lengkap">
         
-        <div style="margin-top:16px">
-          <a class="btn" id="btnMap" target="_blank" href="#" style="width:100%; border:1px solid #ddd">
-            📍 <span data-i18n="btn_map">Lihat Peta Google</span>
-          </a>
+        <label style="font-size:12px; font-weight:600; color:#64748B; margin-left:4px;" data-i18n="form_att">Kehadiran</label>
+        <div class="radio-group">
+          <label class="radio-btn" onclick="selectRadio(this)">
+            <input type="radio" name="attendance" value="Hadir"> <span data-i18n="opt_yes">Hadir</span>
+          </label>
+          <label class="radio-btn" onclick="selectRadio(this)">
+            <input type="radio" name="attendance" value="Tidak"> <span data-i18n="opt_no">Maaf, Tidak</span>
+          </label>
         </div>
 
-        <div class="countdown">
-          <div class="cdBox"><div class="cdNum" id="cdDays">0</div><div class="cdLbl">Hari</div></div>
-          <div class="cdBox"><div class="cdNum" id="cdHours">0</div><div class="cdLbl">Jam</div></div>
-          <div class="cdBox"><div class="cdNum" id="cdMins">0</div><div class="cdLbl">Menit</div></div>
-          <div class="cdBox"><div class="cdNum" id="cdSecs">0</div><div class="cdLbl">Detik</div></div>
-        </div>
-      </div>
+        <button type="submit" class="open-btn" style="margin-top:10px;" data-i18n="btn_submit">Kirim</button>
+      </form>
     </section>
 
-    <section class="section card" id="kelas">
-      <div class="cardBody">
-        <h2 data-i18n="sec_classes">Kelas Wisuda</h2>
-        <div class="classGrid" id="classGrid">
-          </div>
-      </div>
-    </section>
-
-    <section class="section card" id="gallery">
-      <div class="cardBody">
-        <h2 data-i18n="sec_gallery">Galeri Foto</h2>
-        <div class="carousel" id="galleryCarousel">
-          <div class="carouselTrack" id="carouselTrack"></div>
-          <button class="carouselCtrl prev" id="carPrev">‹</button>
-          <button class="carouselCtrl next" id="carNext">›</button>
-          <div class="carouselDots" id="carouselDots"></div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section card" id="rsvp">
-      <div class="cardBody">
-        <h2 data-i18n="sec_rsvp">RSVP</h2>
-        <p class="mutedText" data-i18n="rsvp_hint">Mohon konfirmasi kehadiran Anda.</p>
-        
-        <form id="rsvpForm">
-          <div>
-            <label data-i18n="f_name">Nama Lengkap</label>
-            <input name="name" required placeholder="Tulis nama anda..." />
-          </div>
-          
-          <div>
-            <label data-i18n="f_attendance">Kehadiran</label>
-            <div class="radioRow">
-              <label class="radio"><input type="radio" name="attendance" value="yes" required> Hadir</label>
-              <label class="radio"><input type="radio" name="attendance" value="no"> Tidak</label>
-            </div>
-          </div>
-
-          <div>
-             <label data-i18n="f_guests">Jumlah Tamu</label>
-             <select name="guests">
-               <option value="1">1 Orang</option>
-               <option value="2">2 Orang</option>
-               <option value="3">3 Orang</option>
-               <option value="4">4 Orang</option>
-             </select>
-          </div>
-
-          <div>
-            <label>Ucapan / Pesan</label>
-            <textarea name="message" placeholder="Berikan ucapan selamat..."></textarea>
-          </div>
-
-          <button type="submit" class="btn primary" id="btnSubmitRSVP" style="width:100%" data-i18n="btn_submit">Kirim Konfirmasi</button>
-        </form>
-      </div>
-    </section>
   </div>
 
-  <div style="height:100px"></div> <nav class="bottomNav">
-    <a href="#detail" class="navItem active">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
-      Home
-    </a>
-    <a href="#kelas" class="navItem">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path></svg>
-      Kelas
-    </a>
-    <a href="#gallery" class="navItem">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-      Foto
-    </a>
-    <a href="#rsvp" class="navItem">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+  <nav class="bottom-nav">
+    <div class="nav-item active" onclick="scrollToSec('info', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+      Info
+    </div>
+    <div class="nav-item" onclick="scrollToSec('gallery', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+      Galeri
+    </div>
+    <div class="nav-item" onclick="scrollToSec('rsvp', this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
       RSVP
-    </a>
+    </div>
+    <button class="music-fab" onclick="toggleMusic()" id="musicBtn">♪</button>
   </nav>
 
-  <div class="toast" id="toast">Pesan terkirim!</div>
-
-  <div class="lightbox" id="lightbox">
-    <img id="lightboxImg" src="" alt="Zoom">
+  <div class="lightbox" id="lightbox" onclick="this.classList.remove('active')">
+    <div class="lightbox-close">&times;</div>
+    <img id="lightboxImg" src="">
   </div>
 
-  <audio id="bgm" loop preload="none">
-    <source src="./assets/bgm.mp3" type="audio/mpeg" />
-  </audio>
+  <audio id="bgm" loop><source src="assets/bgm.mp3" type="audio/mpeg"></audio>
 
   <script>
-    /** KONFIGURASI **/
+    // --- 1. CONFIG: DAFTAR FOTO MANUAL (Agar Terbaca) ---
     const CONFIG = {
-      eventTitle: "RBM Japan Student Graduation Ceremony",
-      startISO: "2026-01-24T13:00:00+09:00",
-      venueName: "十日市場地区センター",
-      addressLine: "〒226-0025 神奈川県横浜市緑区十日市場町808-3",
-      mapQuery: "十日市場地区センター",
-      // URL Google Script Anda (kosongkan jika belum ada)
-      ENDPOINT: "https://script.google.com/macros/s/AKfycbwGA8_bsewf_rmdF4DbRQoT0pRR2dQ03DUHRwZIJP0K847smDncQWiNQzur9Cl34eKu/exec",
-      coverImages: ["./assets/photos/01.jpg", "./assets/photos/02.jpg"], 
-      galleryImages: ["./assets/photos/01.jpg", "./assets/photos/02.jpg", "./assets/photos/03.jpg"]
+      // Masukkan semua nama file sesuai screenshot Anda
+      photos: [
+        "01.jpg", "02.jpg", "03.jpg",
+        "a.jpeg", "b.jpeg", "c.jpeg", "d.jpeg", 
+        "e.jpeg", "f.jpeg", "g.jpeg", "h.jpeg"
+      ]
     };
 
-    /** DATA BAHASA **/
-    const I18N = {
+    const TEXTS = {
       id: {
-        cover_title: "Undangan Kelulusan", cover_desc: "Buka undangan untuk detail acara.",
-        btn_open: "Buka Undangan", btn_share: "Bagikan",
-        sec_detail: "Detail Acara", k_when: "Waktu", k_where: "Lokasi",
-        btn_map: "Buka Google Maps",
-        sec_classes: "Kelas Wisuda",
-        sec_gallery: "Galeri Foto",
-        sec_rsvp: "Konfirmasi Kehadiran", rsvp_hint: "Mohon isi formulir di bawah ini",
-        f_name: "Nama Lengkap", f_attendance: "Apakah hadir?", f_guests: "Jumlah Orang",
-        btn_submit: "Kirim RSVP",
-        toast_sent: "RSVP Terkirim! Terima kasih."
+        sec_detail: "Detail Acara", lbl_date: "Tanggal", lbl_time: "Waktu", lbl_place: "Lokasi",
+        btn_map: "Buka Peta", sec_gallery: "Galeri Foto", sec_rsvp: "Konfirmasi",
+        form_name: "Nama Lengkap", form_att: "Kehadiran", opt_yes: "Hadir", opt_no: "Tidak",
+        btn_submit: "Kirim Konfirmasi"
       },
       en: {
-        cover_title: "Graduation Invitation", cover_desc: "Open to see event details.",
-        btn_open: "Open Invitation", btn_share: "Share",
-        sec_detail: "Event Details", k_when: "Time", k_where: "Venue",
-        btn_map: "Open Google Maps",
-        sec_classes: "Graduating Classes",
-        sec_gallery: "Photo Gallery",
-        sec_rsvp: "RSVP", rsvp_hint: "Please confirm your attendance",
-        f_name: "Full Name", f_attendance: "Attending?", f_guests: "Total Guests",
-        btn_submit: "Submit RSVP",
-        toast_sent: "RSVP Sent! Thank you."
+        sec_detail: "Event Details", lbl_date: "Date", lbl_time: "Time", lbl_place: "Venue",
+        btn_map: "Open Map", sec_gallery: "Photo Gallery", sec_rsvp: "RSVP",
+        form_name: "Full Name", form_att: "Attendance", opt_yes: "Yes", opt_no: "No",
+        btn_submit: "Submit RSVP"
       }
     };
 
-    /** STATE **/
-    const state = { lang: "id", musicOn: false, opened: false };
-    const $ = (s) => document.querySelector(s);
-    const $$ = (s) => document.querySelectorAll(s);
-
-    /** FUNGSI UTAMA **/
-
-    function init() {
-      // Set Map Link yang Benar
-      const mapUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(CONFIG.mapQuery)}`;
-      $("#btnMap").href = mapUrl;
+    // --- 2. GENERATE GALLERY ---
+    const galleryGrid = document.getElementById('galleryGrid');
+    
+    CONFIG.photos.forEach(filename => {
+      // Buat elemen div wrapper
+      const item = document.createElement('div');
+      item.className = 'gallery-item';
+      item.onclick = () => openLightbox(`assets/photos/${filename}`);
       
-      // Set teks awal
-      setLang("id");
-      startCountdown();
-      startSlideshow();
-      renderClasses();
-      renderGallery();
-      initScrollSpy();
+      // Buat elemen img
+      const img = document.createElement('img');
+      img.src = `assets/photos/${filename}`; 
+      img.loading = "lazy"; // Hemat data user
       
-      // Cek parameter ?to=Nama
-      const params = new URLSearchParams(window.location.search);
-      if(params.has("to")) {
-        const name = params.get("to");
-        $("#toLine").textContent = `Kepada Yth: ${name}`;
-        $("input[name='name']").value = name;
-      }
-    }
+      // Error handling jika gambar korup/salah nama
+      img.onerror = function() { this.style.display = 'none'; }; 
+      
+      item.appendChild(img);
+      galleryGrid.appendChild(item);
+    });
 
-    function setLang(lang) {
-      state.lang = lang;
-      $$(".chip").forEach(c => c.classList.toggle("active", c.dataset.lang === lang));
+    // --- 3. LOGIC APLIKASI ---
+    
+    function openApp() {
+      document.body.classList.add('opened');
+      toggleMusic(true);
       
-      // Ganti teks simple
-      $$("[data-i18n]").forEach(el => {
-        const k = el.dataset.i18n;
-        if(I18N[lang][k]) el.textContent = I18N[lang][k];
+      // Animasi smooth munculnya kartu
+      const cards = document.querySelectorAll('.section-card');
+      cards.forEach((c, i) => {
+        setTimeout(() => c.classList.add('visible'), 300 + (i * 150));
       });
-
-      // Format tanggal
-      const d = new Date(CONFIG.startISO);
-      const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit' };
-      $("#whenText").textContent = d.toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', opts);
     }
 
-    /* --- Actions --- */
-    $("#btnOpen").onclick = () => {
-      state.opened = true;
-      document.body.classList.add("opened");
-      
-      // Efek Confetti (sederhana)
-      confettiEffect();
-      
-      // Scroll ke detail
-      setTimeout(() => {
-        $("#detail").scrollIntoView({ behavior: "smooth" });
-        toggleMusic(true); // Coba nyalakan musik
-      }, 600);
-    };
+    // Lightbox Logic
+    function openLightbox(src) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightbox').classList.add('active');
+    }
 
-    $("#btnShare").onclick = async () => {
-      if (navigator.share) {
-        try { await navigator.share({ title: CONFIG.eventTitle, url: window.location.href }); } catch(e){}
-      } else {
-        navigator.clipboard.writeText(window.location.href);
-        showToast("Link disalin!");
-      }
-    };
+    // Scroll Logic (Smooth)
+    function scrollToSec(id, el) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      el.classList.add('active');
+    }
 
-    $("#btnMusic").onclick = () => toggleMusic();
+    // Radio Logic
+    function selectRadio(label) {
+      document.querySelectorAll('.radio-btn').forEach(b => b.classList.remove('checked'));
+      label.classList.add('checked');
+    }
 
+    // Music Logic
+    const bgm = document.getElementById('bgm');
+    let isPlaying = false;
     function toggleMusic(forcePlay) {
-      const bgm = $("#bgm");
-      if (forcePlay === true || !state.musicOn) {
+      const btn = document.getElementById('musicBtn');
+      if (forcePlay === true || !isPlaying) {
         bgm.play().then(() => {
-          state.musicOn = true;
-          $("#btnMusic").classList.add("active");
-        }).catch(() => console.log("Autoplay blocked"));
+          isPlaying = true;
+          btn.classList.add('playing');
+        }).catch(() => {});
       } else {
         bgm.pause();
-        state.musicOn = false;
-        $("#btnMusic").classList.remove("active");
+        isPlaying = false;
+        btn.classList.remove('playing');
       }
     }
 
-    /* --- Form RSVP --- */
-    $("#rsvpForm").onsubmit = async (e) => {
-      e.preventDefault();
-      const btn = $("#btnSubmitRSVP");
-      const originalText = btn.textContent;
-      
-      // UX: Loading state
-      btn.textContent = "Mengirim...";
-      btn.disabled = true;
+    // Personalization (?to=Name)
+    const params = new URLSearchParams(window.location.search);
+    if(params.has('to')) document.getElementById('guestName').innerText = params.get('to');
 
-      const fd = new FormData(e.target);
-      const data = Object.fromEntries(fd.entries());
-      data.created = new Date().toISOString();
-
-      try {
-        // Kirim ke Google Script (no-cors)
-        await fetch(CONFIG.ENDPOINT, {
-          method: "POST",
-          mode: "no-cors",
-          body: new URLSearchParams(data)
-        });
-        
-        // Simpan di localStorage sebagai backup
-        localStorage.setItem("rsvp_backup", JSON.stringify(data));
-        
-        showToast(I18N[state.lang].toast_sent);
-        e.target.reset();
-      } catch (err) {
-        showToast("Gagal koneksi, tapi data tersimpan di HP.");
-      } finally {
-        btn.textContent = originalText;
-        btn.disabled = false;
+    // Language
+    function setLang(lang, btn) {
+      document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const t = TEXTS[lang];
+      for (const k in t) {
+        const el = document.querySelector(`[data-i18n="${k}"]`);
+        if(el) el.innerText = t[k];
       }
-    };
-
-    function showToast(msg) {
-      const t = $("#toast");
-      t.textContent = msg;
-      t.classList.add("show");
-      setTimeout(() => t.classList.remove("show"), 3000);
     }
-
-    /* --- Components Logic --- */
-    function startCountdown() {
-      const target = new Date(CONFIG.startISO).getTime();
-      setInterval(() => {
-        const diff = target - Date.now();
-        if (diff < 0) return;
-        $("#cdDays").textContent = Math.floor(diff / (1000 * 60 * 60 * 24));
-        $("#cdHours").textContent = Math.floor((diff / (1000 * 60 * 60)) % 24);
-        $("#cdMins").textContent = Math.floor((diff / (1000 * 60)) % 60);
-        $("#cdSecs").textContent = Math.floor((diff / 1000) % 60);
-      }, 1000);
-    }
-
-    function startSlideshow() {
-      let active = 0;
-      const slides = [$("#slideA"), $("#slideB")];
-      const imgs = CONFIG.coverImages;
-      
-      // Init images
-      slides[0].style.backgroundImage = `url(${imgs[0]})`;
-      slides[1].style.backgroundImage = `url(${imgs[1]})`;
-
-      setInterval(() => {
-        const next = (active + 1) % 2;
-        const imgIdx = (Math.floor(Date.now() / 5000)) % imgs.length;
-        
-        slides[next].style.backgroundImage = `url(${imgs[imgIdx]})`;
-        slides[next].classList.add("active");
-        slides[active].classList.remove("active");
-        
-        active = next;
-      }, 5000);
-    }
-
-    function renderClasses() {
-      // Contoh data statis
-      const classes = ["Kelas Qur'an", "Kelas Iqro", "PAI Semester 1", "PAI Semester 2"];
-      $("#classGrid").innerHTML = classes.map(c => 
-        `<div class="classCard"><b>${c}</b></div>`
-      ).join("");
-    }
-
-    /* --- Gallery & Carousel --- */
-    let carIdx = 0;
-    function renderGallery() {
-      const track = $("#carouselTrack");
-      track.innerHTML = CONFIG.galleryImages.map(src => 
-        `<div class="carouselItem"><img src="${src}" loading="lazy" onclick="openLightbox('${src}')"></div>`
-      ).join("");
-      
-      // Dots
-      $("#carouselDots").innerHTML = CONFIG.galleryImages.map((_,i) => 
-        `<div class="dot ${i===0?'active':''}" onclick="moveCarousel(${i})"></div>`
-      ).join("");
-    }
-
-    window.moveCarousel = (idx) => {
-      const count = CONFIG.galleryImages.length;
-      if (idx < 0) idx = count - 1;
-      if (idx >= count) idx = 0;
-      
-      carIdx = idx;
-      const w = $("#galleryCarousel").offsetWidth;
-      $("#carouselTrack").style.transform = `translateX(-${idx * w}px)`;
-      
-      $$(".dot").forEach((d, i) => d.classList.toggle("active", i === idx));
-    };
-
-    $("#carNext").onclick = () => moveCarousel(carIdx + 1);
-    $("#carPrev").onclick = () => moveCarousel(carIdx - 1);
-    
-    // Auto slide gallery
-    setInterval(() => moveCarousel(carIdx + 1), 4000);
-
-    /* --- Lightbox --- */
-    window.openLightbox = (src) => {
-      $("#lightboxImg").src = src;
-      $("#lightbox").classList.add("show");
-    };
-    $("#lightbox").onclick = () => $("#lightbox").classList.remove("show");
-
-    /* --- Scroll Spy (Bottom Nav) --- */
-    function initScrollSpy() {
-      const sections = $$("section");
-      const navs = $$(".navItem");
-      
-      window.onscroll = () => {
-        let current = "";
-        sections.forEach(sec => {
-          const top = sec.offsetTop - 100;
-          if (scrollY >= top) current = "#" + sec.getAttribute("id");
-          
-          // Reveal animation
-          if (scrollY + window.innerHeight > sec.offsetTop + 50) {
-            sec.classList.add("show");
-          }
-        });
-        
-        navs.forEach(n => {
-          n.classList.toggle("active", n.getAttribute("href") === current);
-        });
-      };
-    }
-
-    /* --- Confetti Simple --- */
-    function confettiEffect() {
-      const canvas = $("#confetti");
-      const ctx = canvas.getContext("2d");
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      
-      const pieces = Array.from({length: 50}, () => ({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height - canvas.height,
-        color: `hsl(${Math.random() * 360}, 100%, 50%)`,
-        r: Math.random() * 6 + 2,
-        s: Math.random() * 5 + 2
-      }));
-
-      function draw() {
-        ctx.clearRect(0,0,canvas.width, canvas.height);
-        pieces.forEach(p => {
-          p.y += p.s;
-          if(p.y > canvas.height) p.y = -10;
-          ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-          ctx.fillStyle = p.color;
-          ctx.fill();
-        });
-        requestAnimationFrame(draw);
-      }
-      draw();
-      setTimeout(() => canvas.remove(), 5000); // Stop after 5s
-    }
-
-    // Init Language Buttons
-    $$(".chip").forEach(c => c.onclick = () => setLang(c.dataset.lang));
-
-    // Jalankan
-    init();
-
   </script>
 </body>
 </html>
