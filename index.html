@@ -14,7 +14,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700;800&family=Noto+Naskh+Arabic:wght@700&display=swap" rel="stylesheet">
 
   <style>
-    /* --- TEMA: LIGHT ISLAMIC (HIJAU MINT & EMAS) --- */
+    /* --- TEMA: LIGHT ISLAMIC --- */
     :root {
       --bg-start: #F0FDFA; 
       --bg-end: #CCFBF1;
@@ -156,21 +156,37 @@
     .dot { width: 8px; height: 8px; background: rgba(255,255,255,0.5); border-radius: 50%; transition: 0.3s; }
     .dot.active { background: #fff; transform: scale(1.3); }
 
-    /* GUEST LIST (SCROLLABLE) */
-    .guest-list-container {
-      max-height: 300px; overflow-y: auto;
-      background: #F8FAFC; border-radius: 16px; padding: 10px;
-      border: 1px solid #E2E8F0; margin-top: 10px;
+    /* --- [BARU] DAFTAR HADIR (NAMA SAJA) --- */
+    .guest-grid {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      background: #F8FAFC; border-radius: 16px; padding: 12px; border: 1px solid #E2E8F0;
     }
-    .guest-item {
-      background: #fff; padding: 12px; border-radius: 12px; margin-bottom: 8px;
-      border-left: 4px solid var(--primary); box-shadow: 0 2px 4px rgba(0,0,0,0.03);
-      animation: slideIn 0.5s ease;
+    .guest-chip {
+      background: #fff; padding: 6px 12px; border-radius: 20px;
+      font-size: 13px; font-weight: 600; color: var(--primary);
+      border: 1px solid var(--primary);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      display: flex; align-items: center; gap: 5px;
     }
-    @keyframes slideIn { from{opacity:0; transform:translateX(-10px);} to{opacity:1; transform:translateX(0);} }
-    .guest-name { font-weight: 700; font-size: 14px; color: var(--primary); margin-bottom: 4px; }
-    .guest-msg { font-size: 13px; color: var(--text-main); font-style: italic; }
-    .empty-msg { text-align:center; padding: 20px; font-size:12px; color:var(--text-muted); }
+    .guest-chip span { color: #aaa; font-size: 10px; }
+
+    /* --- [BARU] UCAPAN & DOA (PESAN) --- */
+    .wishes-container {
+      max-height: 300px; overflow-y: auto; 
+      background: #F8FAFC; border-radius: 16px; border: 1px solid #E2E8F0;
+      padding: 12px; margin-top: 10px; position: relative;
+    }
+    .empty-state { text-align: center; padding: 30px 20px; color: var(--text-muted); font-style: italic; font-size: 13px; }
+    .wish-card {
+      background: #fff; padding: 12px; border-radius: 12px;
+      border-left: 3px solid var(--primary); margin-bottom: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.03); animation: slideIn 0.4s ease;
+    }
+    @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    .wish-header { display: flex; justify-content: space-between; margin-bottom: 4px; }
+    .wish-name { font-size: 13px; font-weight: 700; color: var(--primary); }
+    .wish-time { font-size: 10px; color: var(--text-muted); }
+    .wish-body { font-size: 13px; color: var(--text-main); line-height: 1.4; }
 
     /* Form */
     .form-label { font-size: 12px; font-weight: 700; color: var(--text-muted); margin: 0 0 6px 4px; display: block; }
@@ -376,8 +392,20 @@
       </div>
       <p style="font-size:13px; color:var(--text-muted); margin-bottom:10px;" data-i18n="guestbook_desc">Tamu yang telah konfirmasi hadir:</p>
       
-      <div class="guest-list-container" id="guestList">
+      <div class="guest-grid" id="guestGrid">
         <div class="empty-msg">Memuat data...</div>
+      </div>
+    </section>
+
+    <section id="wishes" class="section-card">
+      <div class="section-header">
+        <div class="icon-box">💬</div>
+        <h2 data-i18n="sec_wishes">Ucapan & Doa</h2>
+      </div>
+      <p style="font-size:13px; color:var(--text-muted); margin-bottom:10px;" data-i18n="wishes_desc">Doa terbaik dari kerabat:</p>
+      
+      <div class="wishes-container" id="wishesList">
+        <div class="empty-state" id="emptyState" data-i18n="empty_wishes">Belum ada ucapan. Jadilah yang pertama!</div>
       </div>
     </section>
 
@@ -496,9 +524,9 @@
   <audio id="bgm" loop><source src="assets/bgm.mp3" type="audio/mpeg"></audio>
 
   <script>
-    // --- KONFIGURASI FOTO ---
+    // --- KONFIGURASI ---
     const CONFIG = {
-      // ⚠️ GANTI INI DENGAN URL WEB APP GOOGLE SCRIPT ANDA!
+      // ⚠️ WAJIB DIGANTI dengan URL Web App Anda
       ENDPOINT: "https://script.google.com/macros/s/AKfycbwGA8_bsewf_rmdF4DbRQoT0pRR2dQ03DUHRwZIJP0K847smDncQWiNQzur9Cl34eKu/exec", 
       photos: [
         "01.jpg", "02.jpg", "03.jpg",
@@ -507,7 +535,7 @@
       ]
     };
 
-    // --- DATA KADO HIKMAH (QUOTES) ---
+    // --- QUOTES ---
     const QUOTES = [
       "Barangsiapa menempuh jalan untuk menuntut ilmu, Allah akan mudahkan baginya jalan menuju surga. (HR. Muslim)",
       "Didiklah anak-anakmu sesuai dengan zamannya, karena mereka hidup bukan di zamanmu. (Sayyidina Ali RA)",
@@ -525,6 +553,7 @@
         sec_detail: "Detail Acara", lbl_date: "Tanggal", lbl_time: "Waktu", lbl_place: "Lokasi", btn_map: "Buka Peta",
         sec_gallery: "Galeri Foto",
         sec_guestbook: "Daftar Hadir", guestbook_desc: "Tamu yang telah konfirmasi hadir:",
+        sec_wishes: "Ucapan & Doa", wishes_desc: "Doa terbaik dari kerabat:", empty_wishes: "Belum ada ucapan. Jadilah yang pertama!",
         sec_rsvp: "Konfirmasi Kehadiran",
         notice_title: "Pengumuman:", notice_msg: "Untuk Bapak-bapak, mohon menunggu di luar ruangan selama acara.",
         form_name: "Nama Lengkap", form_contact: "Kontak (WA/Email)", form_att: "Apakah akan hadir?", 
@@ -540,6 +569,7 @@
         sec_detail: "Event Details", lbl_date: "Date", lbl_time: "Time", lbl_place: "Venue", btn_map: "Open Map",
         sec_gallery: "Photo Gallery",
         sec_guestbook: "Guest List", guestbook_desc: "Guests who confirmed attendance:",
+        sec_wishes: "Wishes & Prayers", wishes_desc: "Best wishes from family and friends:", empty_wishes: "No wishes yet. Be the first!",
         sec_rsvp: "RSVP (Confirmation)",
         notice_title: "Notice:", notice_msg: "For fathers/men, please kindly wait outside the room during the event.",
         form_name: "Full Name", form_contact: "Contact (WA/Email)", form_att: "Will you attend?", 
@@ -566,47 +596,59 @@
       if(val) select.value = val;
     }
 
-    // --- LOAD GUESTS (FETCH DATA) ---
+    // --- LOAD GUESTS (SEPARATED) ---
     async function loadGuests() {
-      const listContainer = document.getElementById('guestList');
-      if (!listContainer) return;
-      if (CONFIG.ENDPOINT.includes("GANTI")) {
-        listContainer.innerHTML = '<div class="empty-msg">Data belum terhubung.</div>';
-        return;
-      }
-
-      listContainer.innerHTML = '<div class="empty-msg">Memuat data...</div>';
-
+      const guestGrid = document.getElementById('guestGrid');
+      const wishesList = document.getElementById('wishesList');
+      
+      guestGrid.innerHTML = '<div class="empty-msg">Memuat data...</div>';
+      
       try {
         const response = await fetch(CONFIG.ENDPOINT + "?mode=get_guests");
         const json = await response.json();
 
         if (json.result === 'success' && json.data && json.data.length > 0) {
-          listContainer.innerHTML = ''; 
-          json.data.forEach(guest => {
-            const div = document.createElement('div');
-            div.className = 'guest-item'; 
-            
-            // Escape HTML simple
-            const safeName = (guest.name || 'Tanpa Nama').replace(/</g, "&lt;");
-            const safeMsg = (guest.message || 'Hadir').replace(/</g, "&lt;");
+          guestGrid.innerHTML = ''; 
+          wishesList.innerHTML = ''; // Reset ucapan juga
 
-            div.innerHTML = `
-              <div class="guest-name">${safeName}</div>
-              <div class="guest-msg">"${safeMsg}"</div>
-            `;
-            listContainer.appendChild(div);
+          json.data.forEach(guest => {
+            const safeName = (guest.name || 'Tanpa Nama').replace(/</g, "&lt;");
+            const safeMsg = (guest.message || '').replace(/</g, "&lt;");
+
+            // 1. Masukkan ke DAFTAR HADIR (Nama saja)
+            const chip = document.createElement('div');
+            chip.className = 'guest-chip';
+            chip.innerHTML = `${safeName} <span>• Hadir</span>`;
+            guestGrid.appendChild(chip);
+
+            // 2. Masukkan ke UCAPAN (Jika ada pesan)
+            if(safeMsg.length > 2) { // Minimal 2 karakter
+                const wishCard = document.createElement('div');
+                wishCard.className = 'wish-card';
+                wishCard.innerHTML = `
+                  <div class="wish-header">
+                    <span class="wish-name">${safeName}</span>
+                  </div>
+                  <div class="wish-body">"${safeMsg}"</div>
+                `;
+                wishesList.appendChild(wishCard);
+            }
           });
+
+          // Jika tidak ada ucapan sama sekali
+          if(wishesList.innerHTML === '') {
+             wishesList.innerHTML = '<div class="empty-state">Belum ada ucapan.</div>';
+          }
+
         } else {
-          listContainer.innerHTML = '<div class="empty-msg">Belum ada tamu yang terdaftar.</div>';
+          guestGrid.innerHTML = '<div class="empty-msg">Belum ada tamu.</div>';
         }
       } catch (e) {
         console.error("Gagal memuat data:", e);
-        listContainer.innerHTML = '<div class="empty-msg">Gagal memuat data.</div>';
       }
     }
 
-    // --- FORM SUBMIT (POST DATA) ---
+    // --- FORM SUBMIT ---
     document.getElementById('rsvpForm').addEventListener('submit', function(e) {
       e.preventDefault();
       
@@ -624,15 +666,9 @@
         mode: 'no-cors' 
       }).then(() => {
         // SUKSES
-        // 1. Tampilkan Tiket
         showTicket(nameVal);
-        
-        // 2. Reset Form
         this.reset();
-        
-        // 3. Reload Daftar Tamu
         setTimeout(loadGuests, 1000); 
-
       }).catch(err => {
         alert("Gagal koneksi. Coba lagi.");
       }).finally(() => {
@@ -671,7 +707,7 @@
 
     setInterval(() => { currentIndex++; updateCarousel(); }, 3000);
 
-    // --- ANIMASI SCROLL ---
+    // --- SCROLL ANIMATION ---
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) entry.target.classList.add('in-view');
@@ -679,7 +715,7 @@
     }, { threshold: 0.1 });
     document.querySelectorAll('.section-card').forEach(card => observer.observe(card));
 
-    // --- LANGUAGE LOGIC ---
+    // --- LANGUAGE ---
     let currentLang = 'id';
     function setLang(lang) {
       currentLang = lang;
@@ -708,15 +744,12 @@
       }
     }
 
-    // --- MODAL & GIFT LOGIC ---
+    // --- MODAL ---
     function showRandomQuote() {
       document.getElementById('modalQuote').style.display = 'block';
       document.getElementById('modalTicket').style.display = 'none';
-      
       const text = document.getElementById('quoteText');
-      const randomQ = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-      text.innerText = randomQ;
-      
+      text.innerText = QUOTES[Math.floor(Math.random() * QUOTES.length)];
       document.getElementById('globalModal').classList.add('active');
     }
 
@@ -736,7 +769,7 @@
       document.body.classList.add('opened');
       toggleMusic(true);
       fireConfetti();
-      loadGuests(); // Load data saat buka
+      loadGuests(); 
       setTimeout(() => window.scrollBy(0, 1), 500);
     }
     function scrollToSec(id, el) { 
@@ -762,6 +795,7 @@
         conf.style.animationDuration = (Math.random() * 2 + 2) + 's';
         conf.style.transform = `rotate(${Math.random() * 360}deg)`;
         container.appendChild(conf);
+        setTimeout(() => conf.remove(), 4000);
       }
     }
     const bgm = document.getElementById('bgm');
